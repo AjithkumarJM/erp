@@ -11,14 +11,17 @@ import { dashboardData, monthlyNotifications } from '../services/dashboard/reduc
  */
 const rootReducer = combineReducers({
     userInformation,
+    
     previousEmpId,
     reportingToList,
     designationList,
     systemRoles,
     employeeById,
+
     dashboardData,
     monthlyNotifications,
     allEmployeeInfo,
+    
     form: formReducer,
 });
 

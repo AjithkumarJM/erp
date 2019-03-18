@@ -13,8 +13,8 @@ import Projects from '../src/pages/ProjectManagement/projects/projects';
 import Client from '../src/pages/ProjectManagement/client/client';
 
 const routes = [
-  { path: '/', exact: true, name: 'dashboard', component: Dashboard },
   { path: '/dashboard', exact: true, name: 'dashboard', component: Dashboard },
+  { path: '/dashboard', name: 'dashboard', component: Dashboard },
   { path: '/employee_tracker', name: 'employee_tracker', component: EmployeeTrackerHome },
   // { path: '/create_employee', name: 'create_employee', component: Employee },
   // { path: '/leave_management', name: 'leave_management', component: LeaveManagement },

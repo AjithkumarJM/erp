@@ -12,7 +12,7 @@ const getSystemRole = () => API_CALL('get', 'rolelist/systemrole', null, systemR
 
 const getReportingToList = () => API_CALL('get', 'employee/reportingto/list', null, reportingToListType);
 
-const getDesignationList = () => API_CALL('get', 'employee/reportingto/list', null, designationListType);
+const getDesignationList = () => API_CALL('get', 'employee/designation/list', null, designationListType);
 
 const getPrevEmployeeId = () => API_CALL('get', 'get/last/employee/id', null, prevEmpIdType)
 

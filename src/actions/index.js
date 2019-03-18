@@ -170,7 +170,6 @@ export function LeaveBulkUpload(value, callback) {
 
 
 export function systemRole(values, callback) {
-    console.log(values)
     return API_CALL('get', 'rolelist/systemrole', values, 'UPDATE_SYSTEMROLE_DETAILS', callback);
 }
 

@@ -24,9 +24,9 @@ const reportingToListType = {
 }
 
 const designationListType = {
-    REQ: 'REPORTNG_LIST_REQ',
-    RES: 'REPORTNG_LIST_RES',
-    FAIL: 'REPORTNG_LIST_FAIL'
+    REQ: 'DESIGNATION_LIST_REQ',
+    RES: 'DESIGNATION_LIST_RES',
+    FAIL: 'DESIGNATION_LIST_FAIL'
 }
 
 const prevEmpIdType = {

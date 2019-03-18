@@ -30,9 +30,10 @@ class CreateEmployee extends Component {
     }
 
     componentWillReceiveProps = ({ systemRoles, reportingToList, designationList }) => {
-        if (systemRoles.response) {
+
+        if (designationList.response) {
             this.setState({
-                systemRoles: systemRoles.response.data,
+                // systemRoles: systemRoles.response.data,
                 reportingToList: reportingToList.response.data,
                 designationList: designationList.response.data,
             })
@@ -174,226 +175,207 @@ class CreateEmployee extends Component {
         })
     }
 
-    normalizePhone(value) {
-        if (!value) {
-            return value
-        }
-
+    normalizePhone = value => {
+        if (!value) return value;
         const onlyNums = value.replace(/[^\d]/g, '')
-        if (onlyNums.length <= 3) {
-            return onlyNums
-        }
-        if (onlyNums.length <= 7) {
-            return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3)}`
-        }
-        return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3, 6)}-${onlyNums.slice(
-            6,
-            10
-        )}`
-    }
+        if (onlyNums.length <= 3) return onlyNums
+        if (onlyNums.length <= 7) return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3)}`
 
-    goback() {
-        this.props.reset();
-        this.props.callback();
-    }
-
-    renderOnchange(e) {
-        const val = e.target.value;
-        this.props.placeholderApi(val, (data) => {
-            this.props.change('id', data.data.data)
-        })
+        return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3, 6)}-${onlyNums.slice(6, 10)}`
     }
 
     render() {
-        const { handleSubmit, reset, pristine, submitting } = this.props;
+        const { handleSubmit, reset, pristine, submitting, previousEmpId } = this.props;
         const { loader, designationList, systemroles, reportingToList } = this.state;
 
-        return (
-            <div className='p-2'>
-                <Loader show={loader} message={spinner} />
-                <AlertContainer ref={a => this.msg = a} {...alertOptions} />
-                <div className='row'>
-                    <div className="col-12 page-header">
-                        <h2>Add Employee</h2>
-                        <Link to='/employee_tracker' className='btn btn-sm float-right modalBtn'><i className="fa fa-arrow-left" aria-hidden="true"></i> Back</Link>
+        if (previousEmpId.requesting === true) return <Loader show={true} message={spinner} />
+        else {
+            return (
+                <div className='p-2'>
+                    <Loader show={loader} message={spinner} />
+                    <AlertContainer ref={a => this.msg = a} {...alertOptions} />
+                    <div className='row'>
+                        <div className="col-12 page-header">
+                            <h2>Add Employee</h2>
+                            <Link to='/employee_tracker' className='btn btn-sm float-right modalBtn'><i className="fa fa-arrow-left" aria-hidden="true"></i> Back</Link>
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <form className="row">
-                        <div className='col-md-6'>
-                            <Field
-                                label={<div><span className='text-danger'>*</span> First Name</div>}
-                                name="first_name"
-                                component={this.renderField}
-                                placeholder="Enter the First Name"
-                            />
-                            <Field
-                                label={<div><span className='text-danger'>*</span> Last Name</div>}
-                                name="last_name"
-                                component={this.renderField}
-                                placeholder="Enter the Last Name"
-                            />
+                    <div>
+                        <form className="row">
+                            <div className='col-md-6'>
+                                <Field
+                                    label={<div><span className='text-danger'>*</span> First Name</div>}
+                                    name="first_name"
+                                    component={this.renderField}
+                                    placeholder="Enter the First Name"
+                                />
+                                <Field
+                                    label={<div><span className='text-danger'>*</span> Last Name</div>}
+                                    name="last_name"
+                                    component={this.renderField}
+                                    placeholder="Enter the Last Name"
+                                />
 
-                            <Field
-                                label={<div><span className='text-danger'>*</span> Employee Type</div>}
-                                type="empType"
-                                name="emp_type"
-                                component={this.renderField}
-                                onChange={this.renderOnchange.bind(this)}
-                            />
+                                <Field
+                                    label={<div><span className='text-danger'>*</span> Employee Type</div>}
+                                    type="empType"
+                                    name="emp_type"
+                                    component={this.renderField}
+                                />
 
-                            <Field
-                                label={<div><span className='text-danger'>*</span> Employee ID</div>}
-                                name="id"
-                                component={this.renderField}
-                                disable={true}
-                            />
+                                <Field
+                                    label={<div><span className='text-danger'>*</span> Employee ID</div>}
+                                    name="id"
+                                    component={this.renderField}
+                                    disable={true}
+                                />
 
-                            <Field
-                                label={<div><span className='text-danger'>*</span> Gender</div>}
-                                type="gender"
-                                name="gender"
-                                component={this.renderField}
-                            />
+                                <Field
+                                    label={<div><span className='text-danger'>*</span> Gender</div>}
+                                    type="gender"
+                                    name="gender"
+                                    component={this.renderField}
+                                />
 
-                            <Field
-                                label={<div><span className='text-danger'>*</span> Date Of Birth</div>}
-                                type='dob'
-                                name="date_of_birth"
-                                component={this.renderField}
-                                placeholder="YYYY/MM/DD"
-                            />
+                                <Field
+                                    label={<div><span className='text-danger'>*</span> Date Of Birth</div>}
+                                    type='dob'
+                                    name="date_of_birth"
+                                    component={this.renderField}
+                                    placeholder="YYYY/MM/DD"
+                                />
 
-                            <Field
-                                label={<div><span className='text-danger'>*</span> Date Of Joining</div>}
-                                type='dob'
-                                name="date_of_joining"
-                                component={this.renderField}
-                                placeholder="YYYY/MM/DD"
-                            />
+                                <Field
+                                    label={<div><span className='text-danger'>*</span> Date Of Joining</div>}
+                                    type='dob'
+                                    name="date_of_joining"
+                                    component={this.renderField}
+                                    placeholder="YYYY/MM/DD"
+                                />
 
-                            <Field
-                                label={<div><span className='text-danger'>*</span> Email</div>}
-                                name="email"
-                                component={this.renderField}
-                                placeholder="Eg: someone@cloudix.io"
-                            />
+                                <Field
+                                    label={<div><span className='text-danger'>*</span> Email</div>}
+                                    name="email"
+                                    component={this.renderField}
+                                    placeholder="Eg: someone@cloudix.io"
+                                />
 
-                            <Field
-                                label={<div><span className='text-danger'>*</span> Experience</div>}
-                                name="year_of_experience"
-                                component={this.renderField}
-                                placeholder="Eg : 0.00"
-                            />
+                                <Field
+                                    label={<div><span className='text-danger'>*</span> Experience</div>}
+                                    name="year_of_experience"
+                                    component={this.renderField}
+                                    placeholder="Eg : 0.00"
+                                />
 
-                            <Field
-                                label={<div><span className='text-danger'>*</span> Designation</div>}
-                                type="dropDown" //api
-                                id='id'
-                                parse={this.parse}
-                                displayName='name'
-                                name="designation_id"
-                                list={designationList}
-                                component={this.renderField}
-                            />
+                                <Field
+                                    label={<div><span className='text-danger'>*</span> Designation</div>}
+                                    type="dropDown" //api
+                                    id='id'
+                                    parse={this.parse}
+                                    displayName='name'
+                                    name="designation_id"
+                                    list={designationList}
+                                    component={this.renderField}
+                                />
 
-                            <Field
-                                label={<div><span className='text-danger'>*</span> System Role</div>}
-                                type='dropDown' //api
-                                name='role_id'
-                                id='id'
-                                displayName='role_name'
-                                list={systemroles}
-                                component={this.renderField}
-                            />
+                                <Field
+                                    label={<div><span className='text-danger'>*</span> System Role</div>}
+                                    type='dropDown' //api
+                                    name='role_id'
+                                    id='id'
+                                    displayName='role_name'
+                                    list={systemroles}
+                                    component={this.renderField}
+                                />
 
-                        </div>
-                        <div className='col-md-6'>
-                            <Field
-                                label={<div><span className='text-danger'>*</span> Reporting To</div>}
-                                type="dropDown" //api
-                                name='reporting_to'
-                                id='emp_id'
-                                displayName='emp_name'
-                                list={reportingToList}
-                                component={this.renderField}
-                            />
-                            <Field
-                                label={<div><span className='text-danger'>*</span> Contact #</div>}
-                                name="contact_no"
-                                component={this.renderField}
-                                placeholder="xxx-xxx-xxxx"
-                                normalize={this.normalizePhone}
-                            />
-                            <Field
-                                label="Blood Group"
-                                placeholder="Eg :  A+"
-                                name="blood_group"
-                                component={this.renderField}
-                            />
+                            </div>
+                            <div className='col-md-6'>
+                                <Field
+                                    label={<div><span className='text-danger'>*</span> Reporting To</div>}
+                                    type="dropDown" //api
+                                    name='reporting_to'
+                                    id='emp_id'
+                                    displayName='emp_name'
+                                    list={reportingToList}
+                                    component={this.renderField}
+                                />
+                                <Field
+                                    label={<div><span className='text-danger'>*</span> Contact #</div>}
+                                    name="contact_no"
+                                    component={this.renderField}
+                                    placeholder="xxx-xxx-xxxx"
+                                    normalize={this.normalizePhone}
+                                />
+                                <Field
+                                    label="Blood Group"
+                                    placeholder="Eg :  A+"
+                                    name="blood_group"
+                                    component={this.renderField}
+                                />
 
-                            <Field
-                                label="Bank Account #"
-                                name="bank_account_no"
-                                component={this.renderField}
-                                placeholder="Enter Bank Account #"
-                            />
+                                <Field
+                                    label="Bank Account #"
+                                    name="bank_account_no"
+                                    component={this.renderField}
+                                    placeholder="Enter Bank Account #"
+                                />
 
-                            <Field
-                                label="PAN ID"
-                                name="pan_no"
-                                component={this.renderField}
-                                placeholder="Enter PAN ID"
-                            />
+                                <Field
+                                    label="PAN ID"
+                                    name="pan_no"
+                                    component={this.renderField}
+                                    placeholder="Enter PAN ID"
+                                />
 
-                            <Field
-                                label="PF ID"
-                                name="pF_no"
-                                component={this.renderField}
-                                placeholder="Enter PF ID"
-                            />
+                                <Field
+                                    label="PF ID"
+                                    name="pF_no"
+                                    component={this.renderField}
+                                    placeholder="Enter PF ID"
+                                />
 
-                            <Field
-                                label="CTC"
-                                name="ctc"
-                                component={this.renderField}
-                                placeholder='Enter CTC'
-                            />
+                                <Field
+                                    label="CTC"
+                                    name="ctc"
+                                    component={this.renderField}
+                                    placeholder='Enter CTC'
+                                />
 
-                            <Field
-                                label="Medical Insurance ID"
-                                name="medical_insurance_no"
-                                component={this.renderField}
-                                placeholder="Enter Medical Insurance ID"
-                            />
+                                <Field
+                                    label="Medical Insurance ID"
+                                    name="medical_insurance_no"
+                                    component={this.renderField}
+                                    placeholder="Enter Medical Insurance ID"
+                                />
 
-                            <Field
-                                label="Emer. Contact #"
-                                name="emergency_contact_no"
-                                component={this.renderField}
-                                placeholder="xxx-xxx-xxxx"
-                                normalize={this.normalizePhone}
-                            />
-                            <Field
-                                label="Emer. Contact Person Name"
-                                name="emergency_contact_person"
-                                component={this.renderField}
-                                placeholder="Enter Con. Person name"
-                            />
-                        </div>
-                        {/* <div className='col-12'><p><span className='text-danger'>*</span> Mandatory fields </p></div> */}
-                    </form >
-                    <div className="row justify-content-md-center">
-                        <div >
-                            <button type='submit' onClick={handleSubmit(this.submitForm.bind(this))} className="btn-spacing btn btn-sm btn-ems-primary" disabled={pristine || submitting}>Add</button>
-                        </div>
-                        <div >
-                            <button type='reset' onClick={reset} disabled={pristine || submitting} className="btn btn-sm btn-ems-clear">Clear</button>
-                        </div>
+                                <Field
+                                    label="Emer. Contact #"
+                                    name="emergency_contact_no"
+                                    component={this.renderField}
+                                    placeholder="xxx-xxx-xxxx"
+                                    normalize={this.normalizePhone}
+                                />
+                                <Field
+                                    label="Emer. Contact Person Name"
+                                    name="emergency_contact_person"
+                                    component={this.renderField}
+                                    placeholder="Enter Con. Person name"
+                                />
+                            </div>
+                            {/* <div className='col-12'><p><span className='text-danger'>*</span> Mandatory fields </p></div> */}
+                        </form >
+                        <div className="row justify-content-md-center">
+                            <div >
+                                <button type='submit' onClick={handleSubmit(this.submitForm.bind(this))} className="btn-spacing btn btn-sm btn-ems-primary" disabled={pristine || submitting}>Add</button>
+                            </div>
+                            <div >
+                                <button type='reset' onClick={reset} disabled={pristine || submitting} className="btn btn-sm btn-ems-clear">Clear</button>
+                            </div>
+                        </div >
                     </div >
                 </div >
-            </div >
-        );
+            );
+        }
     }
 }
 
@@ -559,7 +541,7 @@ function validate(values) {
 const mapTostateProps = ({ systemRoles, reportingToList, designationList, previousEmpId }) => {
     let initialValues = { id: previousEmpId.response.data }
 
-    return { systemRoles, reportingToList, designationList, initialValues }
+    return { systemRoles, reportingToList, designationList, initialValues, previousEmpId }
 }
 
 CreateEmployee = reduxForm({
