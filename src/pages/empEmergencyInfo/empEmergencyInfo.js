@@ -16,7 +16,7 @@ class CommonEmpDetails extends Component {
         })
     }
 
-    renderDoj(doj) {
+    formatDate(doj) {
         if (typeof (doj) == 'string') {
             return moment((doj.split('T'))[0]).format('YYYY/MM/DD');
         } else {

@@ -2,7 +2,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { reducer as formReducer } from 'redux-form';
 
-import { allEmployeeInfo, employeeById } from '../services/employeeTracker/reducers'
+import { allEmployeeInfo, employeeById, systemRoles, reportingToList, designationList, previousEmpId } from '../services/employeeTracker/reducers'
 import userInformation from "./../services/userDetails/reducers";
 import { dashboardData, monthlyNotifications } from '../services/dashboard/reducers';
 /**
@@ -11,6 +11,10 @@ import { dashboardData, monthlyNotifications } from '../services/dashboard/reduc
  */
 const rootReducer = combineReducers({
     userInformation,
+    previousEmpId,
+    reportingToList,
+    designationList,
+    systemRoles,
     employeeById,
     dashboardData,
     monthlyNotifications,

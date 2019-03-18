@@ -52,7 +52,7 @@ class LeaveHistory extends Component {
 
     cancelLeave(cell, row) {
         if (row.leave_status == 'Pending' || row.leave_status == 'Approved') {
-            if (this.renderDoj(row.from_date) > moment().format('YYYY/MM/DD')) {
+            if (this.formatDate(row.from_date) > moment().format('YYYY/MM/DD')) {
                 return <button className='btn ems-btn-ternary btn-sm' onClick={() => { this.setState({ rowData: row }) }} data-toggle="modal" data-target="#emp_cancel">Cancel Leave</button>
             }
         }
@@ -62,7 +62,7 @@ class LeaveHistory extends Component {
         return rowIdx % 2 === 0 ? 'td-column-function-even-example' : 'td-column-function-odd-example';
     }
 
-    renderDoj(doj) {
+    formatDate(doj) {
         if (typeof (doj) == 'string') {
             return moment((doj.split('T'))[0]).format('YYYY/MM/DD');
         } else {
@@ -113,8 +113,8 @@ class LeaveHistory extends Component {
             <BootstrapTable data={this.state.empleavehistory} maxHeight='500' version='4' options={options} trClassName={this.rowClassNameFormat} ignoreSinglePage pagination>
                 <TableHeaderColumn isKey dataField='type_name' dataAlign="center" filterFormatted
                     formatExtraData={this.state.data.gender == 'Female' ? typeOfLeaveML : typeOfLeave} filter={{ type: 'SelectFilter', options: this.state.data.gender == 'Female' ? typeOfLeaveML : typeOfLeave, defaultValue: 2 }}>Leave Type</TableHeaderColumn>
-                <TableHeaderColumn dataField='from_date' dataFormat={this.renderDoj} dataAlign="center" dataSort>From Date</TableHeaderColumn>
-                <TableHeaderColumn dataField='to_date' dataFormat={this.renderDoj} dataAlign="center" dataSort>To Date</TableHeaderColumn>
+                <TableHeaderColumn dataField='from_date' dataFormat={this.formatDate} dataAlign="center" dataSort>From Date</TableHeaderColumn>
+                <TableHeaderColumn dataField='to_date' dataFormat={this.formatDate} dataAlign="center" dataSort>To Date</TableHeaderColumn>
                 <TableHeaderColumn dataField='no_of_days' dataAlign="center" dataSort>Duration (days)</TableHeaderColumn>
                 <TableHeaderColumn dataAlign="center" dataField='leave_status' filterFormatted
                     formatExtraData={LeaveType} filter={{ type: 'SelectFilter', options: LeaveType, defaultValue: 2 }} columnClassName={this.statusFromat}>Status</TableHeaderColumn>

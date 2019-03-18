@@ -5,6 +5,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import CreateEmployee from './createEmployee';
 import EmployeeTracker from './employeeTracker';
 import UpdateEmployee from './updateEmployee';
+import EmployeeDetails from './employeeDetails';
 
 class EmployeeTrackerHome extends Component {
 
@@ -14,7 +15,9 @@ class EmployeeTrackerHome extends Component {
                 <Switch>
                     <Route path='/employee_tracker/create_employee' render={(props) => <CreateEmployee {...props} />} />
                     <Route path='/employee_tracker/update_employee/:employeeId' render={(props) => <UpdateEmployee {...props} />} />
+                    <Route path='/employee_tracker/info/:employeeId' render={(props) => <EmployeeDetails {...props} />} />
                     <Route path='/employee_tracker' render={(props) => <EmployeeTracker {...props} />} />
+
                     <Redirect to='/employee_tracker' />
                 </Switch>
             </div>
@@ -22,4 +25,4 @@ class EmployeeTrackerHome extends Component {
     }
 }
 
-export default connect(null, { })(EmployeeTrackerHome)
+export default connect(null, {})(EmployeeTrackerHome)

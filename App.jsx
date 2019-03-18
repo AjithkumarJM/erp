@@ -7,13 +7,13 @@ import {
     AppHeader,
 } from '@coreui/react';
 
-import { placeholderApi } from './src/./actions';
 import Login from './src/pages/Login/login';
 import Loader from 'react-loader-advanced';
 import ForgotPassword from './src/components/forms/forgotPassword'
 import routes from './src/./routes';
 import DefaultHeader from './src/components/headers/DefaultHeader';
 import SideNav from './src/components/sideBar/sidenav';
+import { spinner, userInfo } from './src/const';
 
 import 'jquery';
 import 'bootstrap';
@@ -26,20 +26,14 @@ import 'assets/scss/react_datepicker.scss';
 import 'assets/scss/react-timeline.scss';
 import 'assets/scss/timeline_min.scss';
 
+export default class App extends Component {
 
+    componentWillMount = () => this.setState({ isSession: userInfo });
 
-class App extends Component {
+    ForgotPasswordroute = () => {
+        const { isSession } = this.state;
 
-    componentWillMount = () => this.setState({ isSession: cookie.load('session') });
-
-    componentDidMount = () => {
-        const { placeholderApi } = this.props;
-
-        placeholderApi(response => this.setState({ previousEmployeeId: { id: response.data.data } }))
-    }
-
-    ForgotPasswordroute() {
-        if (!this.state.isSession) {
+        if (!isSession) {
             return (
                 <span>
                     <Route exact path="/" component={Login} />
@@ -51,7 +45,6 @@ class App extends Component {
 
     render() {
         const { isSession } = this.state;
-        const spinner = <div className="lds-ripple"><div></div><div></div></div>
 
         if (isSession === 1) {
             <Loader show={true} message={spinner} />
@@ -70,22 +63,15 @@ class App extends Component {
                                 <div className="p-2">
                                     <Switch>
                                         {routes.map((route, idx) => {
-                                            return route.component ?
-                                                (<Route
-                                                    key={idx} path={route.path}
-                                                    exact={route.exact}
-                                                    name={route.name}
-                                                    render={props => {
-                                                        // to send the last added employee id props to Create Employee Form Component
-                                                        if (route.name === 'create_employee') {
-                                                            return (
-                                                                <route.component initialValues={this.state.previousEmployeeId} {...props} />
-                                                            )
-                                                        }
-                                                        return (<route.component {...props} />)
-                                                    }} />) : (null);
-                                        },
-                                        )}
+                                            const { component, path, name, exact } = route;
+                                            
+                                            return component ?
+                                                <Route
+                                                    key={idx} path={path}
+                                                    exact={exact}
+                                                    name={name}
+                                                    render={props => <route.component {...props} />} /> : null;
+                                        })}
                                         <Redirect from="/" to="/dashboard" />
                                     </Switch>
                                 </div>
@@ -106,5 +92,3 @@ class App extends Component {
         }
     }
 }
-
-export default connect(null, { placeholderApi })(App);

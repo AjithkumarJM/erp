@@ -1,48 +1,42 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import { createPost, designation, systemRole, reportingTo, placeholderApi } from '../../actions';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import AlertContainer from 'react-alert'
 import Loader from 'react-loader-advanced';
 import { Link } from 'react-router-dom';
 
-class Employee extends Component {
+import { createPost, placeholderApi } from '../../actions';
+import { getDesignationList, getReportingToList, getSystemRole, getPrevEmployeeId, createEmployee } from '../../services/employeeTracker'
+import { spinner, alertOptions } from '../../const';
+
+class CreateEmployee extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            _notify: null,
-            designation: [],
-            systemrole: [],
-            reportingto: [],
-            loader: {
-                visible: false,
-            },
-            spinner: <div className="lds-ripple"><div></div><div></div></div>,
-            alertOptions: {
-                offset: 14,
-                position: 'bottom right',
-                theme: 'dark',
-                time: 5000,
-                transition: 'scale'
-            }
+            loader: false
         };
-        this.dropDownApis();
     }
 
-    dropDownApis(values) {
+    componentDidMount = () => {
+        const { getDesignationList, getReportingToList, getSystemRole, getPrevEmployeeId } = this.props;
 
-        this.props.designation(values, (data) => {
-            this.setState({ designation: data.data.data });
-        })
-        this.props.reportingTo(values, (data) => {
-            this.setState({ reportingto: data.data.data });
-        })
-        this.props.systemRole((data) => {
-            this.setState({ systemrole: data.data.data });
-        })
+        getDesignationList();
+        getReportingToList();
+        getSystemRole();
+        getPrevEmployeeId();
+    }
+
+    componentWillReceiveProps = ({ systemRoles, reportingToList, designationList }) => {
+        if (systemRoles.response) {
+            this.setState({
+                systemRoles: systemRoles.response.data,
+                reportingToList: reportingToList.response.data,
+                designationList: designationList.response.data,
+            })
+        }
     }
 
     renderField(field) {
@@ -141,23 +135,24 @@ class Employee extends Component {
         );
     }
 
-    submitForm(values) {
-        if (values.date_of_birth._isValid) {
-            values.date_of_birth = moment(values.date_of_birth._d).format('YYYY/MM/DD')
-        }
-        if (values.date_of_joining._isValid) {
-            values.date_of_joining = moment(values.date_of_joining._d).format('YYYY/MM/DD')
-        }
-        Object.keys(values).map(function (key, index) {
+    submitForm = values => {
+
+        const { createEmployee, reset } = this.props;
+        const { date_of_birth, date_of_joining } = values;
+
+        if (date_of_birth._isValid) return values.date_of_birth = moment(date_of_birth._d).format('YYYY/MM/DD')
+        if (date_of_joining._isValid) return values.date_of_joining = moment(date_of_joining._d).format('YYYY/MM/DD')
+
+        Object.keys(values).map((key, index) => {
             let trim = values[key]
             key = key.trim()
         });
 
-        this.setState({ loader: { visible: true } })
-        this.props.createPost(values, (data) => {
+        this.setState({ loader: true })
+        createEmployee(values, (data) => {
             if (data.data.code == 'EMS_001') {
-                this.setState({ loader: { visible: false } })
-                this.props.reset();
+                this.setState({ loader: false })
+                reset();
                 this.msg.show(data.data.message, {
                     position: 'bottom right',
                     type: 'success',
@@ -165,12 +160,10 @@ class Employee extends Component {
                     time: 3000
                 })
                 setTimeout(() => {
-                    // <Link to='\employee_tracker' />
-                    // this.props.history.push('./employee_tracker')
                     window.location.href = '/employee_tracker';
                 }, 3000);
             } else {
-                this.setState({ loader: { visible: false } })
+                this.setState({ loader: false })
                 this.msg.show(data.data.message, {
                     position: 'bottom right',
                     type: 'error',
@@ -213,11 +206,11 @@ class Employee extends Component {
 
     render() {
         const { handleSubmit, reset, pristine, submitting } = this.props;
-        const { loader, spinner, alertOptions, designation, systemrole, reportingto } = this.state;
+        const { loader, designationList, systemroles, reportingToList } = this.state;
 
         return (
-            <div>
-                <Loader show={loader.visible} message={spinner} />
+            <div className='p-2'>
+                <Loader show={loader} message={spinner} />
                 <AlertContainer ref={a => this.msg = a} {...alertOptions} />
                 <div className='row'>
                     <div className="col-12 page-header">
@@ -300,7 +293,7 @@ class Employee extends Component {
                                 parse={this.parse}
                                 displayName='name'
                                 name="designation_id"
-                                list={designation}
+                                list={designationList}
                                 component={this.renderField}
                             />
 
@@ -310,7 +303,7 @@ class Employee extends Component {
                                 name='role_id'
                                 id='id'
                                 displayName='role_name'
-                                list={systemrole}
+                                list={systemroles}
                                 component={this.renderField}
                             />
 
@@ -322,7 +315,7 @@ class Employee extends Component {
                                 name='reporting_to'
                                 id='emp_id'
                                 displayName='emp_name'
-                                list={reportingto}
+                                list={reportingToList}
                                 component={this.renderField}
                             />
                             <Field
@@ -563,10 +556,16 @@ function validate(values) {
     return errors;
 }
 
-export default reduxForm({
+const mapTostateProps = ({ systemRoles, reportingToList, designationList, previousEmpId }) => {
+    let initialValues = { id: previousEmpId.response.data }
+
+    return { systemRoles, reportingToList, designationList, initialValues }
+}
+
+CreateEmployee = reduxForm({
     validate,
-    enableReinitialize: true,
-    form: 'PostsNewForm'
-})(
-    connect(null, { createPost, designation, systemRole, reportingTo, placeholderApi })(Employee)
-);
+    form: 'CreateEmployeeForm',
+    enableReinitialize: true
+})(CreateEmployee)
+
+export default connect(mapTostateProps, { getDesignationList, getPrevEmployeeId, getReportingToList, getSystemRole, createPost, placeholderApi })(CreateEmployee)

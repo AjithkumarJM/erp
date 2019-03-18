@@ -19,7 +19,7 @@ class HolidayList extends Component {
         })
     }
 
-    renderDoj(doj) {
+    formatDate(doj) {
         if (typeof (doj) == 'string') {
             return moment((doj.split('T'))[0]).format('YYYY/MM/DD');
         } else {
@@ -52,7 +52,7 @@ class HolidayList extends Component {
         return (
             <BootstrapTable data={this.state.holidaylist} version='4' options={options} ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
                 <TableHeaderColumn isKey dataField='holiday_name' dataAlign="center">Holiday Name</TableHeaderColumn>
-                <TableHeaderColumn dataField='holiday_date' dataFormat={this.renderDoj} dataAlign="center" dataSort>Date</TableHeaderColumn>
+                <TableHeaderColumn dataField='holiday_date' dataFormat={this.formatDate} dataAlign="center" dataSort>Date</TableHeaderColumn>
                 <TableHeaderColumn dataField='day' dataAlign="center">Day</TableHeaderColumn>
             </BootstrapTable>
         )

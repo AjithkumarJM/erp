@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Route, Switch } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -8,9 +8,7 @@ import _ from 'lodash';
 
 import { getUserList, empLeaveHistory, leaveBalance, hrEmpTracker, getEmpDetails, getEmployeeAsset } from '../../actions'
 import { getEmployeesInfo } from '../../services/employeeTracker';
-import Update from './updateEmployee'
 import { userInfo, spinner } from '../../const'
-import CreateEmployee from './createEmployee';
 
 class EmployeeTracker extends Component {
     constructor(props) {
@@ -20,10 +18,6 @@ class EmployeeTracker extends Component {
             childVisible: false,
             modal: false
         }
-
-        // bind functions
-        this.triggerModal = this.triggerModal.bind(this);
-        this.toggle = this.toggle.bind(this);
     }
 
     componentDidMount = () => {
@@ -35,29 +29,7 @@ class EmployeeTracker extends Component {
 
     componentWillReceiveProps = ({ allEmployeeInfo }) => this.setState({ allEmployeeInfo: allEmployeeInfo.response });
 
-
-    // to filter date from time
-    renderDoj(doj) {
-        if (typeof (doj) == 'string') {
-            return moment((doj.split('T'))[0]).format('YYYY/MM/DD');
-        } else {
-            return doj;
-        }
-    }
-
-    //update function
-    update(values, e) {
-        e.stopPropagation()
-        this.props.getEmpDetails(values.id, (data) => {
-            // let IntoString = data.data.data.year_of_experience.toFixed(2)
-            data.data.data.date_of_birth = this.renderDoj(data.data.data.date_of_birth),
-                data.data.data.date_of_joining = this.renderDoj(data.data.data.date_of_joining),
-                this.setState({
-                    updateData: data.data.data,
-                    childVisible: !this.state.childVisible
-                });
-        })
-    }
+    formatDate = doj => typeof (doj == 'string') ? moment(doj).format('YYYY/MM/DD') : doj
 
     leavebalancetable() {
         const options = {
@@ -102,7 +74,6 @@ class EmployeeTracker extends Component {
         };
         return (
             < BootstrapTable
-                // selectRow={selectRowProp}
                 data={this.state.empAsset}
                 maxHeight='500' version='4' options={options}
                 ignoreSinglePage pagination
@@ -111,49 +82,21 @@ class EmployeeTracker extends Component {
                 <TableHeaderColumn dataField='make' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>Make</TableHeaderColumn>
                 <TableHeaderColumn dataField='model' dataAlign="center">Model</TableHeaderColumn>
                 <TableHeaderColumn dataField='type_name' dataAlign="center">Type</TableHeaderColumn>
-                <TableHeaderColumn dataField='assigned_on' dataFormat={this.renderDoj} dataAlign="center">Assigned On</TableHeaderColumn>
+                <TableHeaderColumn dataField='assigned_on' dataFormat={this.formatDate} dataAlign="center">Assigned On</TableHeaderColumn>
             </BootstrapTable>
         )
     }
 
-    renderupdate = (row, cell) => <Link to={`/employee_tracker/update_employee/${cell.id}`} className="btn ems-btn-ternary">Update</Link>
+    renderupdate = (row, cell) => <Link to={`/employee_tracker/update_employee/${cell.id}`} className="btn ems-btn-ternary mr-1">Update</Link>
 
-    fullName = (row, cell) => cell.first_name + " " + cell.last_name
+    generateName = (row, cell) => <Link to={`/employee_tracker/info/${cell.id}`}>{`${cell.first_name} ${cell.last_name}`}</Link>
 
-    rowClassNameFormat(row, rowIdx) {
-        return rowIdx % 2 === 0 ? 'td-column-function-even-example' : 'td-column-function-odd-example';
-    }
+    toggle = () => this.setState({ modal: !this.state.modal });
 
-    triggerModal(row) {
-        this.props.getEmpDetails(row.id, (data) => {
-            this.setState({
-                empDetails: data.data.data
-            })
-        })
-        //leave balance api
-        this.props.leaveBalance(row.id, (data) => {
-            this.setState({ leavebalance: data.data.data })
-        })
-
-        this.props.getEmployeeAsset(row.id, ((data) => {
-            this.setState({ empAsset: data.data.data.currentAssignedAsset })
-        }))
-
-        this.setState({
-            modal: !this.state.modal
-        });
-    }
-
-    toggle() {
-        this.setState({
-            modal: !this.state.modal
-        });
-    }
-
-    renderTable() {
-        const { allEmployeeInfo } = this.state;
-
+    renderTable = () => {
+        const { allEmployeeInfo: { data } } = this.state;
         const { role_id } = userInfo;
+
         const options = {
             sizePerPage: 10,  // which size per page you want to locate as default            
             sizePerPageList: [{
@@ -167,44 +110,31 @@ class EmployeeTracker extends Component {
             }],
             paginationSize: 3,  // the pagination bar size.            
             paginationShowsTotal: this.renderShowsTotal,  // Accept bool or function     
-            onRowClick: this.triggerModal
         };
 
         return (
-            <BootstrapTable data={allEmployeeInfo.data} hover tableStyle={{ cursor: "pointer" }} maxHeight='500' version='4' options={options} ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
-                <TableHeaderColumn isKey dataField='first_name' dataAlign="center" dataFormat={this.fullName} searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>Employee Name</TableHeaderColumn>
+            <BootstrapTable data={data} maxHeight='500' version='4' options={options} ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
+                <TableHeaderColumn isKey dataField='first_name' dataAlign="center" dataFormat={this.generateName} searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>Employee Name</TableHeaderColumn>
                 <TableHeaderColumn dataField='id' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>Employee ID</TableHeaderColumn>
-                <TableHeaderColumn dataField='date_of_joining' dataAlign="center" dataSort dataFormat={this.renderDoj}>DOJ</TableHeaderColumn>
-                <TableHeaderColumn dataField='date_of_birth' dataAlign="center" dataSort dataFormat={this.renderDoj}>DOB</TableHeaderColumn>
+                <TableHeaderColumn dataField='date_of_joining' dataAlign="center" dataSort dataFormat={this.formatDate}>DOJ</TableHeaderColumn>
+                <TableHeaderColumn dataField='date_of_birth' dataAlign="center" dataSort dataFormat={this.formatDate}>DOB</TableHeaderColumn>
                 <TableHeaderColumn dataField='designation' dataAlign="center" dataSort>Designation</TableHeaderColumn>
                 <TableHeaderColumn dataField='reportingto_name' dataAlign="center" dataSort >Reporting To</TableHeaderColumn>
                 <TableHeaderColumn dataField='role_name' dataAlign="center" dataSort >Role</TableHeaderColumn>
-                <TableHeaderColumn dataField='' dataAlign="center" dataFormat={this.renderupdate.bind(this)} hidden={role_id == 3 ? false : true}>Update Details</TableHeaderColumn>
+                <TableHeaderColumn dataField='' dataAlign="center" dataFormat={this.renderupdate} hidden={role_id == 3 ? false : true}>Actions</TableHeaderColumn>
             </BootstrapTable>
         )
     }
 
-    reRoute = () => {
-        const { getEmployeesInfo } = this.props;
+    reRoute = () => this.props.getEmployeesInfo()
 
-        getEmployeesInfo()
-        this.setState({ childVisible: false })
-    }
-
-    leaveBalance() {
+    leaveBalance = () => {
         const { leavebalance } = this.state;
-
-        let output = _.map(leavebalance, data => {
-            return (
-                <li className='li_class'><span className='li_class2'>{data.type_name} </span><a>{data.no_of_days} </a></li>
-            )
-        })
-
-        return output;
+        return _.map(leavebalance, data => <li className='li_class'><span className='li_class2'>{data.type_name} </span><a>{data.no_of_days} </a></li>);
     }
 
     render() {
-        const { updateData, modal, allEmployeeInfo } = this.state;
+        const { modal, allEmployeeInfo } = this.state;
         const { role_id } = userInfo;
 
         if (!allEmployeeInfo) return <Loader show={true} message={spinner} />
@@ -213,13 +143,11 @@ class EmployeeTracker extends Component {
                 <div className="row">
                     <div className="col-12 page-header">
                         <h2>Employee Tracker</h2>
-                        {(() => {
-                            if (role_id == 3) {
-                                return (
-                                    <Link to='/employee_tracker/create_employee' className='btn float-right ems-btn-ternary'><i className="fa fa-plus"></i> Add Employee</Link>
-                                )
-                            }
-                        })()}
+                        {
+                            role_id === 3 ? < Link
+                                to='/employee_tracker/create_employee'
+                                className='btn float-right ems-btn-ternary'><i className="fa fa-plus"></i> Add Employee</Link> : null
+                        }
                     </div>
                     <div className="col-md-12">
                         {this.renderTable()}
@@ -249,13 +177,13 @@ class EmployeeTracker extends Component {
                                                 <div className='col-md-3'><p >:          {this.state.empDetails.bank_account_no ? this.state.empDetails.bank_account_no : 'Not Entered'}</p></div>
 
                                                 <div className='col-md-3'><h6 className='font-weight-bold'>Date Of Birth  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.renderDoj(this.state.empDetails.date_of_birth)}</p></div>
+                                                <div className='col-md-3'><p >:          {this.formatDate(this.state.empDetails.date_of_birth)}</p></div>
 
                                                 <div className='col-md-3'><h6 className='font-weight-bold'>PAN ID  </h6></div>
                                                 <div className='col-md-3'><p >:          {this.state.empDetails.pan_no ? this.state.empDetails.pan_no : 'Not Entered'}  </p></div>
 
                                                 <div className='col-md-3'><h6 className='font-weight-bold'>Date Of Joining  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.renderDoj(this.state.empDetails.date_of_joining)}</p></div>
+                                                <div className='col-md-3'><p >:          {this.formatDate(this.state.empDetails.date_of_joining)}</p></div>
 
                                                 <div className='col-md-3'><h6 className='font-weight-bold'>PF ID  </h6></div>
                                                 <div className='col-md-3'><p >:          {this.state.empDetails.pF_no ? this.state.empDetails.pF_no : 'Not Entered'} </p></div>
@@ -310,13 +238,13 @@ class EmployeeTracker extends Component {
                                                 <div className='col-md-3'><p >:          {this.state.empDetails.contact_no}</p></div>
 
                                                 <div className='col-md-3'><h6 className='font-weight-bold'>Date Of Birth  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.renderDoj(this.state.empDetails.date_of_birth)}</p></div>
+                                                <div className='col-md-3'><p >:          {this.formatDate(this.state.empDetails.date_of_birth)}</p></div>
 
                                                 <div className='col-md-3'><h6 className='font-weight-bold'>Blood Group  </h6></div>
                                                 <div className='col-md-3'><p >:          {this.state.empDetails.blood_group ? this.state.empDetails.blood_group : 'Not Entered'}</p></div>
 
                                                 <div className='col-md-3'><h6 className='font-weight-bold'>Date Of Joining  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.renderDoj(this.state.empDetails.date_of_joining)}</p></div>
+                                                <div className='col-md-3'><p >:          {this.formatDate(this.state.empDetails.date_of_joining)}</p></div>
 
                                                 <div className='col-md-3'><h6 className='font-weight-bold'>Medical Ins. #  </h6></div>
                                                 <div className='col-md-3'><p >:          {this.state.empDetails.medical_insurance_no ? this.state.empDetails.medical_insurance_no : 'Not Entered'}</p></div>
@@ -358,7 +286,7 @@ class EmployeeTracker extends Component {
                             </ModalBody>
                         </Modal>
                     </div>
-                </div>
+                </div >
             )
         }
     }

@@ -8,4 +8,12 @@ const spinner = <div className="lds-ripple"><div></div><div></div></div>
 
 const userInfo = cookie.load('session');
 
-export { ROOT_URL, spinner, userInfo }
+const alertOptions = {
+    offset: 14,
+    position: 'bottom right',
+    theme: 'dark',
+    time: 5000,
+    transition: 'scale'
+}
+
+export { ROOT_URL, spinner, userInfo, alertOptions }

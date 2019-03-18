@@ -1,61 +1,44 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import AlertContainer from 'react-alert'
 import Loader from 'react-loader-advanced';
+import { Link } from 'react-router-dom';
 
-import { createPost, designation, systemRole, reportingTo, placeholderApi } from '../../actions';
-import { getEmployeeById } from '../../services/employeeTracker'
-import { spinner} from '../../const'
+import { createPost, placeholderApi } from '../../actions';
+import { getDesignationList, getReportingToList, getSystemRole, getEmployeeById, updateEmployee } from '../../services/employeeTracker'
+import { spinner, alertOptions } from '../../const';
 
-class Employee extends Component {
+class updateEmployee extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            _notify: null,
-            designation: [],
-            systemrole: [],
-            reportingto: [],
-            loader: {
-                visible: false,
-            },
-            alertOptions: {
-                offset: 14,
-                position: 'bottom right',
-                theme: 'dark',
-                time: 5000,
-                transition: 'scale'
-            }
-        };
-        this.dropDownApis();
+        this.state = { laoder: false };
     }
 
     componentDidMount = () => {
+        const { getDesignationList, getReportingToList, getSystemRole } = this.props;
         const { employeeId } = this.props.match.params;
-        const { getEmployeeById } = this.props;
 
-        getEmployeeById(employeeId)
+        getEmployeeById(employeeId);
+        getDesignationList();
+        getReportingToList();
+        getSystemRole();
     }
 
-
-    dropDownApis(values) {
-
-        this.props.designation(values, (data) => {
-            this.setState({ designation: data.data.data });
-        })
-        this.props.reportingTo(values, (data) => {
-            this.setState({ reportingto: data.data.data });
-        })
-        this.props.systemRole((data) => {
-            this.setState({ systemrole: data.data.data });
-        })
+    componentWillReceiveProps = ({ systemRoles, reportingToList, designationList }) => {
+        if (systemRoles.response) {
+            this.setState({
+                systemRoles: systemRoles.response.data,
+                reportingToList: reportingToList.response.data,
+                designationList: designationList.response.data,
+            })
+        }
     }
 
-    renderField(field) {
+    renderField = field => {
         const { meta: { touched, error } } = field;
         const parentClassName = `form-group row`
         const childClassName = `form-control form-control-sm ${touched && error ? 'is-invalid' : ''}`
@@ -151,36 +134,33 @@ class Employee extends Component {
         );
     }
 
-    submitForm(values) {
-        if (values.date_of_birth._isValid) {
-            values.date_of_birth = moment(values.date_of_birth._d).format('YYYY/MM/DD')
-        }
-        if (values.date_of_joining._isValid) {
-            values.date_of_joining = moment(values.date_of_joining._d).format('YYYY/MM/DD')
-        }
-        Object.keys(values).map(function (key, index) {
+    submitForm = values => {
+
+        const { updateEmployee, reset, history } = this.props;
+        const { date_of_birth, date_of_joining } = values;
+
+        if (date_of_birth._isValid) return values.date_of_birth = moment(date_of_birth._d).format('YYYY/MM/DD')
+        if (date_of_joining._isValid) return values.date_of_joining = moment(date_of_joining._d).format('YYYY/MM/DD')
+
+        Object.keys(values).map((key, index) => {
             let trim = values[key]
             key = key.trim()
         });
 
-        this.setState({ loader: { visible: true } })
-        this.props.createPost(values, (data) => {
+        this.setState({ loader: true })
+        updateEmployee(values, (data) => {
             if (data.data.code == 'EMS_001') {
-                this.setState({ loader: { visible: false } })
-                this.props.reset();
+                this.setState({ loader: false })
+                reset();
                 this.msg.show(data.data.message, {
                     position: 'bottom right',
                     type: 'success',
                     theme: 'dark',
                     time: 3000
                 })
-                setTimeout(() => {
-                    // <Link to='\employee_tracker' />
-                    // this.props.history.push('./employee_tracker')
-                    window.location.href = '/employee_tracker';
-                }, 3000);
+                setTimeout(() => history.push('/employee_tracker'), 3000);
             } else {
-                this.setState({ loader: { visible: false } })
+                this.setState({ loader: false })
                 this.msg.show(data.data.message, {
                     position: 'bottom right',
                     type: 'error',
@@ -191,43 +171,22 @@ class Employee extends Component {
         })
     }
 
-    normalizePhone(value) {
-        if (!value) {
-            return value
-        }
-
+    normalizePhone = value => {
+        if (!value) return value;
         const onlyNums = value.replace(/[^\d]/g, '')
-        if (onlyNums.length <= 3) {
-            return onlyNums
-        }
-        if (onlyNums.length <= 7) {
-            return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3)}`
-        }
-        return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3, 6)}-${onlyNums.slice(
-            6,
-            10
-        )}`
-    }
+        if (onlyNums.length <= 3) return onlyNums
+        if (onlyNums.length <= 7) return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3)}`
 
-    goback() {
-        this.props.reset();
-        this.props.callback();
-    }
-
-    renderOnchange(e) {
-        const val = e.target.value;
-        this.props.placeholderApi(val, (data) => {
-            this.props.change('id', data.data.data)
-        })
+        return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3, 6)}-${onlyNums.slice(6, 10)}`
     }
 
     render() {
         const { handleSubmit, reset, pristine, submitting } = this.props;
-        const { loader, alertOptions, designation, systemrole, reportingto } = this.state;
+        const { loader, designationList, systemroles, reportingToList } = this.state;
 
         return (
-            <div>
-                <Loader show={loader.visible} message={spinner} />
+            <div className='p-2'>
+                <Loader show={loader} message={spinner} />
                 <AlertContainer ref={a => this.msg = a} {...alertOptions} />
                 <div className='row'>
                     <div className="col-12 page-header">
@@ -256,7 +215,6 @@ class Employee extends Component {
                                 type="empType"
                                 name="emp_type"
                                 component={this.renderField}
-                                onChange={this.renderOnchange.bind(this)}
                             />
 
                             <Field
@@ -310,7 +268,7 @@ class Employee extends Component {
                                 parse={this.parse}
                                 displayName='name'
                                 name="designation_id"
-                                list={designation}
+                                list={designationList}
                                 component={this.renderField}
                             />
 
@@ -320,7 +278,7 @@ class Employee extends Component {
                                 name='role_id'
                                 id='id'
                                 displayName='role_name'
-                                list={systemrole}
+                                list={systemroles}
                                 component={this.renderField}
                             />
 
@@ -332,7 +290,7 @@ class Employee extends Component {
                                 name='reporting_to'
                                 id='emp_id'
                                 displayName='emp_name'
-                                list={reportingto}
+                                list={reportingToList}
                                 component={this.renderField}
                             />
                             <Field
@@ -573,15 +531,26 @@ function validate(values) {
     return errors;
 }
 
-const mapStateToProps = ({ employeeById }) => {
-    return {
-        initialValues: employeeById.response.data
+const mapTostateProps = ({ systemRoles, reportingToList, designationList, employeeById }) => {
+    let initialValues = employeeById.response.data;
+    console.log(initialValues)
+
+    if (initialValues) {
+        let { date_of_birth, date_of_joining } = initialValues;
+
+        initialValues.date_of_birth = moment(date_of_birth).format('YYYY/MM/DD');
+        initialValues.date_of_joining = moment(date_of_joining).format('YYYY/MM/DD');
     }
+
+    return { systemRoles, reportingToList, designationList, initialValues }
 }
-export default reduxForm({
+
+
+
+updateEmployee = reduxForm({
     validate,
-    enableReinitialize: true,
-    form: 'PostsNewForm'
-})(
-    connect(mapStateToProps, { getEmployeeById, createPost, designation, systemRole, reportingTo, placeholderApi })(Employee)
-);
+    form: 'updateEmployeeForm',
+    enableReinitialize: true
+})(updateEmployee)
+
+export default connect(mapTostateProps, { getDesignationList, getReportingToList, getSystemRole, createPost, placeholderApi })(updateEmployee)
