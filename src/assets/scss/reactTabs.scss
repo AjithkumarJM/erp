@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+.nav-tab {
+    font-family: 'Roboto', sans-serif;
+    background-color: #fff;
+    display: inline-block;
+    padding: 10px 25px;
+    color: #bbb;
+    border-bottom: 1px solid #ddd;
+    text-decoration: none;
+    &:hover {
+        color: #25a8d8 !important;
+        background: #25a8d81c;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    &.active {
+        color: #25a8d8 !important;
+        border-bottom: 2px solid #25a8d8 !important;
+        text-decoration: none;
+        background: #25a8d81c;
+        text-decoration: none;
+        cursor: context-menu;
+    }
+}

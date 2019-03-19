@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import Loader from 'react-loader-advanced';
@@ -15,7 +14,6 @@ class EmployeeTracker extends Component {
         super(props);
         this.state = {
             empDetails: {},
-            childVisible: false,
             modal: false
         }
     }
@@ -27,7 +25,7 @@ class EmployeeTracker extends Component {
         if (role_id === 3) getEmployeesInfo();
     }
 
-    componentWillReceiveProps = ({ allEmployeeInfo }) => this.setState({ allEmployeeInfo: allEmployeeInfo.response });
+    componentWillReceiveProps = ({ allEmployeeInfo }) => this.setState({ allEmployeeInfo: allEmployeeInfo.response.data });
 
     formatDate = doj => typeof (doj == 'string') ? moment(doj).format('YYYY/MM/DD') : doj
 
@@ -94,7 +92,7 @@ class EmployeeTracker extends Component {
     toggle = () => this.setState({ modal: !this.state.modal });
 
     renderTable = () => {
-        const { allEmployeeInfo: { data } } = this.state;
+        const { allEmployeeInfo } = this.state;
         const { role_id } = userInfo;
 
         const options = {
@@ -113,7 +111,7 @@ class EmployeeTracker extends Component {
         };
 
         return (
-            <BootstrapTable data={data} maxHeight='500' version='4' options={options} ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
+            <BootstrapTable data={allEmployeeInfo} maxHeight='500' version='4' options={options} ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
                 <TableHeaderColumn isKey dataField='first_name' dataAlign="center" dataFormat={this.generateName} searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>Employee Name</TableHeaderColumn>
                 <TableHeaderColumn dataField='id' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>Employee ID</TableHeaderColumn>
                 <TableHeaderColumn dataField='date_of_joining' dataAlign="center" dataSort dataFormat={this.formatDate}>DOJ</TableHeaderColumn>
@@ -134,157 +132,19 @@ class EmployeeTracker extends Component {
     }
 
     render() {
-        const { modal, allEmployeeInfo } = this.state;
+        const { allEmployeeInfo: { requesting } } = this.props;
         const { role_id } = userInfo;
 
-        if (!allEmployeeInfo) return <Loader show={true} message={spinner} />
+        if (requesting) return <Loader show={true} message={spinner} />
         else {
             return (
                 <div className="row">
                     <div className="col-12 page-header">
                         <h2>Employee Tracker</h2>
-                        {
-                            role_id === 3 ? < Link
-                                to='/employee_tracker/create_employee'
-                                className='btn float-right ems-btn-ternary'><i className="fa fa-plus"></i> Add Employee</Link> : null
-                        }
+                        {role_id === 3 ? < Link to='/employee_tracker/create_employee' className='btn float-right ems-btn-ternary'><i className="fa fa-plus"></i> Add Employee</Link> : null}
                     </div>
                     <div className="col-md-12">
                         {this.renderTable()}
-                        <Modal isOpen={modal} toggle={this.toggle} backdrop='static' size='lg' className={this.props.className}>
-                            <ModalHeader toggle={this.toggle}>Employee Details</ModalHeader>
-                            <ModalBody>
-                                {(() => {
-                                    if (role_id === 3) {
-                                        return (
-                                            <div className='row nameAlignment'>
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Name  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.first_name} {this.state.empDetails.last_name}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Contact #  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.contact_no}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Employee ID  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.id}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Blood Group  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.blood_group ? this.state.empDetails.blood_group : 'Not Entered'}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Gender  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.gender}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Bank Account #  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.bank_account_no ? this.state.empDetails.bank_account_no : 'Not Entered'}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Date Of Birth  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.formatDate(this.state.empDetails.date_of_birth)}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>PAN ID  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.pan_no ? this.state.empDetails.pan_no : 'Not Entered'}  </p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Date Of Joining  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.formatDate(this.state.empDetails.date_of_joining)}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>PF ID  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.pF_no ? this.state.empDetails.pF_no : 'Not Entered'} </p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Email Address  </h6></div>
-                                                <div className='col-md-3'><p className='font-weight-bolde'>: {this.state.empDetails.email}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>CTC  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.ctc} </p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Experience  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.year_of_experience}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Medical Ins. #  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.medical_insurance_no ? this.state.empDetails.medical_insurance_no : 'Not Entered'}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Designation  </h6></div>
-                                                <div className='col-md-3'><p className='font-weight-boldeDesignation'>:          {this.state.empDetails.designation}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Emer. Contact Person  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.emergency_contact_person ? this.state.empDetails.emergency_contact_person : 'Not Entered'}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>System Role  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.role_name}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Emer. Contact #  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.emergency_contact_no ? this.state.empDetails.emergency_contact_no : 'Not Entered'}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Reporting To  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.reportingto_name}</p></div>
-                                            </div>
-                                        )
-                                    } else {
-                                        return (
-                                            <div className='row nameAlignment'>
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Name  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.first_name} {this.state.empDetails.last_name}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Designation  </h6></div>
-                                                <div className='col-md-3'><p className='font-weight-boldeDesignation'>:          {this.state.empDetails.designation}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Employee ID  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.id}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>System Role  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.role_name}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Gender  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.gender}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Contact #  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.contact_no}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Date Of Birth  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.formatDate(this.state.empDetails.date_of_birth)}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Blood Group  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.blood_group ? this.state.empDetails.blood_group : 'Not Entered'}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Date Of Joining  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.formatDate(this.state.empDetails.date_of_joining)}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Medical Ins. #  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.medical_insurance_no ? this.state.empDetails.medical_insurance_no : 'Not Entered'}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Email Address  </h6></div>
-                                                <div className='col-md-3'><p className='font-weight-bolde'>: {this.state.empDetails.email}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Emer. Contact #  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.emergency_contact_no ? this.state.empDetails.emergency_contact_no : 'Not Entered'}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Experience  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.year_of_experience}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Emer. Contact Person  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.emergency_contact_person ? this.state.empDetails.emergency_contact_person : 'Not Entered'}</p></div>
-
-                                                <div className='col-md-3'><h6 className='font-weight-bold'>Reporting To  </h6></div>
-                                                <div className='col-md-3'><p >:          {this.state.empDetails.reportingto_name}</p></div>
-                                            </div>
-                                        )
-                                    }
-                                })()}
-
-                                <div>
-                                    <ol className="breadcrumb">
-                                        <h5><li className="breadcrumb-item active">Leave Balance <small>(Days)</small></li></h5>
-                                    </ol>
-                                    <ul className='ul_class text-center'>
-                                        <li>{this.leaveBalance.bind(this)}<span></span></li>
-                                    </ul>
-                                </div>
-                                <br></br>
-                                <div>
-                                    <ol className="breadcrumb">
-                                        <h5><li className="breadcrumb-item active">Currently Assigned Assets</li></h5>
-                                    </ol>
-                                </div>
-                                <div>{this.renderEmpAsset()}</div>
-                            </ModalBody>
-                        </Modal>
                     </div>
                 </div >
             )

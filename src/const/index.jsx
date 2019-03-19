@@ -16,4 +16,8 @@ const alertOptions = {
     transition: 'scale'
 }
 
-export { ROOT_URL, spinner, userInfo, alertOptions }
+const genderList = [
+    { name: 'Male', value: 'Male' }, { name: 'Female', value: 'Female' }
+]
+
+export { ROOT_URL, spinner, userInfo, alertOptions, genderList }

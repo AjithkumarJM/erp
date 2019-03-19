@@ -1,7 +1,7 @@
 
 import Dashboard from '../src/pages/dashboard/dashboard';
 import EmployeeTrackerHome from '../src/pages/employeeManagement';
-import LeaveManagement from '../src/pages/leaveManagement/index';
+import LeaveManagementHome from '../src/pages/leaveManagement/index';
 import Employee from '../src/pages/employeeManagement/createEmployee';
 import HolidayList from '../src/pages/holidayList/holidayList';
 import CommonEmpDetails from '../src/pages/empEmergencyInfo/empEmergencyInfo.js';
@@ -16,8 +16,7 @@ const routes = [
   { path: '/dashboard', exact: true, name: 'dashboard', component: Dashboard },
   { path: '/dashboard', name: 'dashboard', component: Dashboard },
   { path: '/employee_tracker', name: 'employee_tracker', component: EmployeeTrackerHome },
-  // { path: '/create_employee', name: 'create_employee', component: Employee },
-  // { path: '/leave_management', name: 'leave_management', component: LeaveManagement },
+  { path: '/leave_management', name: 'leave_management', component: LeaveManagementHome },
   // { path: '/asset_management', name: 'asset_management', component: AssetManagement },
   // { path: '/holiday_list', name: 'holiday_list', component: HolidayList },
   // { path: '/udpate_details/:id', name: 'udpate_details', component: Update },

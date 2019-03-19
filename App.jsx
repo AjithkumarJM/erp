@@ -25,6 +25,7 @@ import 'assets/scss/styles.scss';
 import 'assets/scss/react_datepicker.scss';
 import 'assets/scss/react-timeline.scss';
 import 'assets/scss/timeline_min.scss';
+import 'assets/scss/reactTabs.scss';
 
 export default class App extends Component {
 

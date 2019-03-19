@@ -8,7 +8,7 @@ import Loader from 'react-loader-advanced';
 import AlertContainer from 'react-alert';
 import moment from 'moment';
 
-import { approveReject, getPendingHistory, empLeaveHistory, leaveBalance, leaveList, getTypesOfLeaves, applyLeave } from './../../actions';
+import { approveReject, getPendingHistory, empLeaveHistory, leaveBalance, leaveList, getTypesOfLeaves, applyLeave } from '../../actions';
 import { getUserDetails } from '../../services/userDetails';
 
 class ApproveReject extends Component {

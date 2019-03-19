@@ -2,7 +2,7 @@ import * as types from "./actionTypes";
 import cookie from "react-cookies";
 
 const initState = {
-    data: {},
+    response: {},
     requesting: false
 }
 

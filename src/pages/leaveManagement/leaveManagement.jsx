@@ -13,8 +13,8 @@ import Loader from 'react-loader-advanced';
 import {
     approveReject, cancelLeavePrompt, getPendingHistory,
     holidayList, leaveBalance, getAllLeaveHistory, leaveList, getTypesOfLeaves, empLeaveHistory, applyLeave
-} from './../../actions';
-import ApproveReject from './approveReject.js'
+} from '../../actions';
+import ApproveReject from './approveReject.jsx'
 import LeaveHistory from './leaveHistory'
 import ReporteesLeaveList from './reporteesLeaveList'
 
@@ -278,48 +278,6 @@ class LeaveManagement extends Component {
         }
     }
 
-    renderList() {
-
-        if (this.props.userDetails.role_id === 8 || this.props.userDetails.role_id === 9 || this.props.userDetails.role_id === 3) {
-            return (
-                <ul className="nav nav-tabs nav-justified " role="tablist">
-                    <li className="nav-item">
-                        <a className="nav-link active" data-toggle="tab" href="#pending" role="tab" onClick={this.functioncall.bind(this)}>Apply Leave</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" onClick={this.functioncall.bind(this)} data-toggle="tab" href="#leaveList" role="tab" >My Leave History</a>
-                    </li>
-                    <li className="nav-item" >
-                        <a className="nav-link " onClick={this.functioncall.bind(this)} data-toggle="tab" href="#empleave" role="tab">Reportees Leave History</a>
-                    </li>
-                    <li className="nav-item" >
-                        <a className="nav-link " onClick={this.functioncall.bind(this)} data-toggle="tab" href="#pendingApproval" role="tab">Pending Approvals</a>
-                    </li>
-                    {(() => {
-                        if (this.props.userDetails.role_id === 3) {
-                            return (
-                                <li className="nav-item">
-                                    <a className="nav-link " data-toggle="tab" href="#bulkupload" role="tab">Bulk Upload</a>
-                                </li>
-                            )
-                        }
-                    })()}
-                </ul>
-            )
-        } else {
-            return (
-                <ul className="nav nav-tabs nav-justified " role="tablist">
-                    <li className="nav-item">
-                        <a className="nav-link active" data-toggle="tab" href="#pending" role="tab" onClick={this.functioncall.bind(this)}>Apply Leave</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" data-toggle="tab" href="#leaveList" role="tab" onClick={this.functioncall.bind(this)}>My Leave History</a>
-                    </li>
-                </ul>
-            )
-        }
-    }
-
     render() {
         const { handleSubmit, pristine, reset, submitting, formState } = this.props;
         const { alertOptions, spinner, loader, leavetypes } = this.state;
@@ -332,88 +290,64 @@ class LeaveManagement extends Component {
             < div >
                 <AlertContainer ref={a => this.msg = a} {...alertOptions} />
                 <Loader show={loader.visible} message={spinner} />
-                <div className='row'>
-                    <div className="col-12 page-header">
-                        <h2>Leave Management</h2>
-                    </div>
-                </div>
-                <div className="tab-set">
-                    {this.renderList()}
-                    <div className="tab-content">
-                        <div className="tab-pane active" id="pending" role="tabpanel">
-                            <div className='row'>
-                                <div className='col-6'>
-                                    <form >
-                                        <div className='col-12'>
-                                            <Field
-                                                placeholder="Leave type"
-                                                type='leave'
-                                                displayLeavetype='type_name'
-                                                id='leavetype_id'
-                                                name='leavetype_id'
-                                                label='Leave Type '
-                                                list={leavetypes}
-                                                component={this.generateInputField}
-                                            />
-                                        </div>
-                                        <div className='col-12'>
-                                            <Field
-                                                placeholder='From Date'
-                                                type='date'
-                                                name='from_date'
-                                                onChange={this.handlechangeFromDate}
-                                                usage={pristine}
-                                                label='From Date '
-                                                component={this.generateInputField}
-                                            />
-                                        </div>
-                                        <div className='col-12'>
-                                            <Field
-                                                placeholder='To Date'
-                                                type='date'
-                                                name='to_date'
-                                                usage={this.state.usage || pristine}
-                                                label='To Date'
-                                                component={this.generateInputField} />
-                                        </div>
+                <div className='row pt-3'>
+                    <div className='col-6'>
+                        <form >
+                            <div className='col-12'>
+                                <Field
+                                    placeholder="Leave type"
+                                    type='leave'
+                                    displayLeavetype='type_name'
+                                    id='leavetype_id'
+                                    name='leavetype_id'
+                                    label='Leave Type '
+                                    list={leavetypes}
+                                    component={this.generateInputField}
+                                />
+                            </div>
+                            <div className='col-12'>
+                                <Field
+                                    placeholder='From Date'
+                                    type='date'
+                                    name='from_date'
+                                    onChange={this.handlechangeFromDate}
+                                    usage={pristine}
+                                    label='From Date '
+                                    component={this.generateInputField}
+                                />
+                            </div>
+                            <div className='col-12'>
+                                <Field
+                                    placeholder='To Date'
+                                    type='date'
+                                    name='to_date'
+                                    usage={this.state.usage || pristine}
+                                    label='To Date'
+                                    component={this.generateInputField} />
+                            </div>
 
-                                        <div className='col-12'>
-                                            <Field
-                                                placeholder='Reason for your leave'
-                                                type='textarea'
-                                                name='Leave_Reason'
-                                                usage={this.state.usage || pristine}
-                                                label='Reason'
-                                                component={this.generateInputField} />
-                                        </div>
+                            <div className='col-12'>
+                                <Field
+                                    placeholder='Reason for your leave'
+                                    type='textarea'
+                                    name='Leave_Reason'
+                                    usage={this.state.usage || pristine}
+                                    label='Reason'
+                                    component={this.generateInputField} />
+                            </div>
 
-                                        <div className='col-md-12'>
-                                            <div className='float-right'>
-                                                <button type='submit' className=" btn btn-sm btn-ems-primary btn-spacing" onClick={handleSubmit(this.applyLeave.bind(this))} disabled={pristine || submitting}>Apply</button>
-                                                <button type='reset' className="btn btn-sm btn-ems-clear" onClick={reset} disabled={pristine || submitting}>Clear</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div className='col-6'>
-                                    {this.leavebalancetable()}
-                                    <br></br>
-                                    {this.holidayListtable()}
+                            <div className='col-md-12'>
+                                <div className='float-right'>
+                                    <button type='submit' className=" btn btn-sm btn-ems-primary btn-spacing" onClick={handleSubmit(this.applyLeave.bind(this))} disabled={pristine || submitting}>Apply</button>
+                                    <button type='reset' className="btn btn-sm btn-ems-clear" onClick={reset} disabled={pristine || submitting}>Clear</button>
                                 </div>
                             </div>
-                        </div>
-                        <div className="tab-pane fade" id="leaveList" role="tabpanel">
-                            <LeaveHistory />
-                        </div>
-                        <div className="tab-pane fade" id="pendingApproval" role="tabpanel">
-                            <ApproveReject />
-                        </div>
-                        <div className="tab-pane fade" id="empleave" role="tabpanel">
-                            <ReporteesLeaveList />
-                        </div>
-                        <div className="tab-pane fade" id="bulkupload" role="tabpanel">
-                            <Bulkupload />
-                        </div>
+                        </form>
+                    </div>
+                    <div className='col-6'>
+                        {this.leavebalancetable()}
+                        <br></br>
+                        {this.holidayListtable()}
                     </div>
                 </div>
             </div>

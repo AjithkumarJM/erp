@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { leaveList, getAllLeaveHistory } from './../../actions';
+import { leaveList, getAllLeaveHistory } from '../../actions';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import cookie from 'react-cookies';

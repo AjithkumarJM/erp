@@ -29,7 +29,7 @@ class DefaultHeader extends Component {
 
   componentDidMount = () => this.props.getUserDetails();
 
-  componentWillReceiveProps = ({ userInformation }) => this.setState({ userInformation: userInformation.data.data })
+  componentWillReceiveProps = ({ userInformation }) => this.setState({ userInformation: userInformation.response.data })
 
   toggle = () => this.setState({ modal: !this.state.modal });
 
@@ -42,47 +42,49 @@ class DefaultHeader extends Component {
 
   render() {
     const { userInformation, modal } = this.state;
-    const { className } = this.props;
+    const { className, userInformation: { requesting } } = this.props;
 
-    if (userInformation) {
-      const { first_name, last_name, id } = userInformation;
+    if (requesting) return <Loader show={true} message={spinner} />
+    else return <div>hey</div>
+    // else {
+    //   const { first_name, last_name, id } = userInformation;
 
-      return (
-        <React.Fragment>
-          <AppSidebarToggler className="d-lg-none" display="md" mobile />
-          <AppNavbarBrand
-            full={{ src: logo, width: 'auto', height: 39, alt: 'Tetra Tech Logo' }}
-            minimized={{ src: logoMini, width: 25, height: 25, alt: 'Tetra Tech Logo' }}
-          />
-          <AppSidebarToggler className="d-md-down-none" display="lg" />
+    //   return (
+    //     <React.Fragment>
+    //       <AppSidebarToggler className="d-lg-none" display="md" mobile />
+    //       <AppNavbarBrand
+    //         full={{ src: logo, width: 'auto', height: 39, alt: 'Tetra Tech Logo' }}
+    //         minimized={{ src: logoMini, width: 25, height: 25, alt: 'Tetra Tech Logo' }}
+    //       />
+    //       <AppSidebarToggler className="d-md-down-none" display="lg" />
 
-          <Nav className="d-md-down-none" navbar>
-            <NavItem className="px-3">
-              <h5>EMS</h5>
-            </NavItem>
-          </Nav>
-          <Nav className="ml-auto" navbar>
-            <AppHeaderDropdown direction="down">
-              <DropdownToggle nav>
-                {first_name + ' ' + last_name} ({id}) <img src={user} className="img-avatar" alt="Admin" />
-              </DropdownToggle>
-              <DropdownMenu right style={{ right: 'auto' }}>
-                <DropdownItem onClick={this.toggle}><i className="fa fa-key"></i> Change Password</DropdownItem>
-                <DropdownItem onClick={this.logout}><i className="fa fa-lock"></i> Logout</DropdownItem>
+    //       <Nav className="d-md-down-none" navbar>
+    //         <NavItem className="px-3">
+    //           <h5>EMS</h5>
+    //         </NavItem>
+    //       </Nav>
+    //       <Nav className="ml-auto" navbar>
+    //         <AppHeaderDropdown direction="down">
+    //           <DropdownToggle nav>
+    //             {first_name + ' ' + last_name} ({id}) <img src={user} className="img-avatar" alt="Admin" />
+    //           </DropdownToggle>
+    //           <DropdownMenu right style={{ right: 'auto' }}>
+    //             <DropdownItem onClick={this.toggle}><i className="fa fa-key"></i> Change Password</DropdownItem>
+    //             <DropdownItem onClick={this.logout}><i className="fa fa-lock"></i> Logout</DropdownItem>
 
-              </DropdownMenu>
-            </AppHeaderDropdown>
-          </Nav>
+    //           </DropdownMenu>
+    //         </AppHeaderDropdown>
+    //       </Nav>
 
-          <Modal isOpen={modal} toggle={this.toggle} className={className} backdrop='static'>
-            <ModalHeader toggle={this.toggle}>Change Password</ModalHeader>
-            <ModalBody>
-              <ChangePassword />
-            </ModalBody>
-          </Modal>
-        </React.Fragment>
-      );
-    } else return <Loader show={true} message={spinner} />
+    //       <Modal isOpen={modal} toggle={this.toggle} className={className} backdrop='static'>
+    //         <ModalHeader toggle={this.toggle}>Change Password</ModalHeader>
+    //         <ModalBody>
+    //           <ChangePassword />
+    //         </ModalBody>
+    //       </Modal>
+    //     </React.Fragment>
+    //   );
+    // }
   }
 }
 

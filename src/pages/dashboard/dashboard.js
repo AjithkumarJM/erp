@@ -29,18 +29,18 @@ class Dashboard extends Component {
     }
 
     componentWillReceiveProps = ({ dashboardData, monthlyNotifications, userInformation }) => {
+        console.log(userInformation, dashboardData, monthlyNotifications)
+        // this.setState({ userInformation: userInformation.response.data })
+        // if (!_.isEmpty(dashboardData.response)) {
 
-        this.setState({ userInformation: userInformation.data.data })
+        //     const { reporties_Pending_Leave, available_CL_EL, pending_Leave_Application } = dashboardData.response.data;
+        //     this.setState({ reporties_Pending_Leave, available_CL_EL, pending_Leave_Application })
+        // // }
 
-        if (!_.isEmpty(dashboardData.response)) {
-            const { reporties_Pending_Leave, available_CL_EL, pending_Leave_Application } = dashboardData.response.data;
-            this.setState({ reporties_Pending_Leave, available_CL_EL, pending_Leave_Application })
-        }
-
-        if (!_.isEmpty(monthlyNotifications.response)) {
-            const { birthday, anniversary } = monthlyNotifications.response.data;
-            this.setState({ anniversary, birthday })
-        }
+        // // if (!_.isEmpty(monthlyNotifications.response)) {
+        //     const { birthday, anniversary } = monthlyNotifications.response.data;
+        //     this.setState({ anniversary, birthday })
+        // }
     }
 
     renderReporteesLeave = () => {
@@ -82,7 +82,7 @@ class Dashboard extends Component {
     renderName = (row, col) => {
         const { first_name, last_name } = col;
         return (
-            <div><h3 className='font-weight-normal'>{first_name} {last_name}</h3>
+            <div className='text-muted'><h5 className='font-weight-normal'>{first_name} {last_name}</h5>
                 <span> Anniversary </span>
             </div>
         )
@@ -112,39 +112,42 @@ class Dashboard extends Component {
 
     render() {
         const { available_CL_EL, pending_Leave_Application, userInformation } = this.state;
+        const { userInformation: { requesting } } = this.props;
 
-        if (userInformation) {
-            const { first_name, designation, reportingto_name, last_name } = userInformation;
+        if (requesting) return <Loader show={true} message={spinner} />
+        else return <div>coming...</div>
+        // else {
+        //     const { first_name, designation, reportingto_name, last_name } = userInformation;
 
-            return (
-                <div>
-                    <div className="text-center welcome-block">
-                        <h1>Hi, {first_name + ' ' + last_name}</h1>
-                        <div className="description">
-                            Your designation is <strong>{designation}</strong> & reporting to <strong>{reportingto_name}</strong>
-                        </div>
-                    </div>
-                    <div>
-                        <div className='row tiles'>
-                            <div className='col-sm-4 col-xs-12 col-md-4 text-center'>
-                                <div className="tile-header"><i className="fa fa-columns" aria-hidden="true"></i> Available Leave</div>
-                                <div className="tile-css">
-                                    <div>{available_CL_EL === null ? "0" : available_CL_EL}<span className='leave-analytics'><small> day(s)</small></span></div>
-                                </div>
-                            </div>
-                            <div className='col-sm-4 col-xs-12 col-md-4 text-center'>
-                                <div className="tile-header"><i className="fa fa-clock-o" aria-hidden="true"></i> Awaiting for Approval</div>
-                                <div className="tile-css text-danger">
-                                    <div>{pending_Leave_Application === null ? "0" : pending_Leave_Application}<span className='leave-analytics'><small> leave(s)</small></span></div>
-                                </div>
-                            </div>
-                            {this.renderReporteesLeave()}
-                        </div>
-                    </div>
-                    {this.renderMonthlyNotifications()}
-                </div>
-            )
-        } else return <Loader show={true} message={spinner} />
+        //     return (
+        //         <div>
+        //             <div className="text-center welcome-block">
+        //                 <h1>Hi, {first_name + ' ' + last_name}</h1>
+        //                 <div className="description">
+        //                     Your designation is <strong>{designation}</strong> & reporting to <strong>{reportingto_name}</strong>
+        //                 </div>
+        //             </div>
+        //             <div>
+        //                 <div className='row tiles'>
+        //                     <div className='col-sm-4 col-xs-12 col-md-4 text-center'>
+        //                         <div className="tile-header"><i className="fa fa-columns" aria-hidden="true"></i> Available Leave</div>
+        //                         <div className="tile-css">
+        //                             <div>{available_CL_EL === null ? "0" : available_CL_EL}<span className='leave-analytics'><small> day(s)</small></span></div>
+        //                         </div>
+        //                     </div>
+        //                     <div className='col-sm-4 col-xs-12 col-md-4 text-center'>
+        //                         <div className="tile-header"><i className="fa fa-clock-o" aria-hidden="true"></i> Awaiting for Approval</div>
+        //                         <div className="tile-css text-danger">
+        //                             <div>{pending_Leave_Application === null ? "0" : pending_Leave_Application}<span className='leave-analytics'><small> leave(s)</small></span></div>
+        //                         </div>
+        //                     </div>
+        //                     {this.renderReporteesLeave()}
+        //                 </div>
+        //             </div>
+        //             {this.renderMonthlyNotifications()}
+        //         </div>
+        //     )
+        // }
     }
 }
 
