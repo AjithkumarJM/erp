@@ -1,5 +1,4 @@
 import * as types from "./actionTypes";
-import cookie from "react-cookies";
 
 const initState = {
     response: {},
@@ -18,13 +17,13 @@ export default function (state = initState, action) {
 
             return {
                 ...state,
-                data: action.payload.data,
+                response: action.payload.data,
                 requesting: false
             }
         case types.FAIL:
             return {
                 ...state,
-                error: action.payload.data,
+                response: action.payload.data,
                 requesting: false
             }
         default:

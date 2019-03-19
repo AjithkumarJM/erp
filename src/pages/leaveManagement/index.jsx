@@ -35,7 +35,7 @@ class LeaveManagementHome extends Component {
                     <Route path='/leave_management/leave_history' render={props => <LeaveHistory {...props} />} />
                     <Route path='/leave_management/reportees_leaveHistory' render={props => <ReporteesLeaveHistory {...props} />} />
                     <Route path='/leave_management/approve_reject' render={props => <ApproveReject {...props} />} />
-                    <Redirect to='//leave_management/apply_leave' />
+                    <Redirect to='/leave_management/' />
                 </Switch>
             </div>
         );

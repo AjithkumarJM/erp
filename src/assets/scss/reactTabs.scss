@@ -1,24 +1,24 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url("https://fonts.googleapis.com/css?family=Roboto");
 .nav-tab {
-    font-family: 'Roboto', sans-serif;
-    background-color: #fff;
-    display: inline-block;
-    padding: 10px 25px;
-    color: #bbb;
-    border-bottom: 1px solid #ddd;
+  font-family: "Roboto", sans-serif;
+  background-color: #f3f3f3;
+  display: inline-block;
+  padding: 10px 25px;
+  color: #bbb;
+  border-bottom: 1px solid #ddd;
+  text-decoration: none;
+  &:hover {
+    color: #fe922f !important;
+    background: #ff943024;
+    cursor: pointer;
     text-decoration: none;
-    &:hover {
-        color: #25a8d8 !important;
-        background: #25a8d81c;
-        cursor: pointer;
-        text-decoration: none;
-    }
-    &.active {
-        color: #25a8d8 !important;
-        border-bottom: 2px solid #25a8d8 !important;
-        text-decoration: none;
-        background: #25a8d81c;
-        text-decoration: none;
-        cursor: context-menu;
-    }
+  }
+  &.active {
+    color: #fe922f !important;
+    text-decoration: none;
+    cursor: context-menu;
+    background-color: #fffefe;
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(255, 153, 51, 0.31);
+    border-bottom: 2px solid #ff9430;
+  }
 }

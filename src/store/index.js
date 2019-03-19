@@ -4,6 +4,8 @@ import { reducer as formReducer } from 'redux-form';
 
 import { allEmployeeInfo, employeeById, systemRoles, reportingToList, designationList, previousEmpId } from '../services/employeeTracker/reducers'
 import userInformation from "./../services/userDetails/reducers";
+import { leaveTypes, holidayList, leaveBalance } from './../services/leaveManagement/reducers';
+
 import { dashboardData, monthlyNotifications } from '../services/dashboard/reducers';
 /**
  * combineReducers is simply a utility function to simplify the most common use case when writing Redux reducers.
@@ -11,7 +13,7 @@ import { dashboardData, monthlyNotifications } from '../services/dashboard/reduc
  */
 const rootReducer = combineReducers({
     userInformation,
-    
+
     previousEmpId,
     reportingToList,
     designationList,
@@ -21,7 +23,11 @@ const rootReducer = combineReducers({
     dashboardData,
     monthlyNotifications,
     allEmployeeInfo,
-    
+
+    leaveTypes,
+    leaveBalance,
+    holidayList,
+
     form: formReducer,
 });
 

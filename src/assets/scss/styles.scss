@@ -18,7 +18,7 @@
 }
 
 .btn-ems-primary {
-    background-color: #ff641e;
+    background-color: rgba(255, 101, 30, 0.922);
     color: #fff;
 }
 
@@ -373,6 +373,12 @@ h6 {
 
 .customHeight {
     margin: 0px 0px 55px 0px !important;
+}
+
+.btn-ems-clear {
+    background: #999;
+    color: #fff;
+    box-shadow: 0 2px 2px 0 rgba(153, 153, 153, 0.14), 0 3px 1px -2px rgba(153, 153, 153, 0.2), 0 1px 5px 0 rgba(153, 153, 153, 0.12)
 }
 
 .display {

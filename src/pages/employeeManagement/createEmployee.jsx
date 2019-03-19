@@ -68,6 +68,7 @@ class CreateEmployee extends Component {
             }
         })
     }
+    
     normalizePhone = value => {
         if (!value) return value;
         const onlyNums = value.replace(/[^\d]/g, '')

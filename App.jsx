@@ -47,10 +47,6 @@ export default class App extends Component {
     render() {
         const { isSession } = this.state;
 
-        if (isSession === 1) {
-            <Loader show={true} message={spinner} />
-        }
-
         if (isSession) {
             return (
                 <BrowserRouter>
@@ -64,8 +60,8 @@ export default class App extends Component {
                                 <div className="p-2">
                                     <Switch>
                                         {routes.map((route, idx) => {
-                                            const { component, path, name, exact } = route;
-                                            
+                                            const { component, path, name, exact, onEnter } = route;
+
                                             return component ?
                                                 <Route
                                                     key={idx} path={path}
