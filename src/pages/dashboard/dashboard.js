@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Row, Col, ListGroup, ListGroupItem } from 'reactstrap';
 import _ from 'lodash';
 import moment from 'moment';
 import Loader from 'react-loader-advanced';
@@ -20,7 +21,7 @@ class Dashboard extends Component {
         }
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         const { getDashboardDetails, getMonthlyNotifications } = this.props;
         const { employee_id } = userInfo;
 
@@ -61,8 +62,8 @@ class Dashboard extends Component {
         }
     }
 
-    renderBirthdayDate = (row, col) => {
-        let date = moment(row).format('ddd MMM DD YYYY');
+    renderBirthdayDate = date => {
+        ;
         let split = date.split('');
 
         let month = [];
@@ -72,16 +73,12 @@ class Dashboard extends Component {
             if (index > 7 && index < 10) deStructuredDate.push(date)
         });
 
-        return (
-            <div>
-                <h2>{deStructuredDate.join('')}</h2>
-                <h4>{month.join('')}</h4>
-            </div>
-        );
+        return <span className='font-weight-bold' style={{ color: '#2baffe' }}>{deStructuredDate.join('')}  {month.join('')}</span>
     }
 
     renderName = (row, col) => {
         const { first_name, last_name } = col;
+
         return (
             <div className='text-muted'><h5 className='font-weight-normal'>{first_name} {last_name}</h5>
                 <span> Anniversary </span>
@@ -89,22 +86,42 @@ class Dashboard extends Component {
         )
     }
 
+    renderEventList = events => {
+        let list;
+
+        if (events.length !== 0) {
+            list = _.map(events, (event, index) => {
+                const { date_of_joining, first_name, last_name } = event;
+                return (
+                    <ListGroupItem className='d-inline-block' key={index} style={{ borderLeft: '3px solid #2baffe' }}>
+                        {this.renderBirthdayDate(moment(date_of_joining).format('ddd MMM DD YYYY'))} Work anniversary of <span className='font-weight-bold'>{first_name} {last_name}</span>
+                    </ListGroupItem>
+                )
+            })
+        } else return list = <ListGroupItem> No work anniversary events in this month</ListGroupItem >
+
+        return <ListGroup>{list}</ListGroup>
+    }
+
     renderMonthlyNotifications = () => {
         const { birthday, anniversary, userInformation: { role_id } } = this.state;
 
         if (role_id === 3) {
             return (
-                <div className='mt-5 col-md-12'>
-                    <div className="tile-header text-dark">Birthday & Anniversary events in {moment().format('MMMM')}</div>
-                    <div className='mt-3'>
-                        <BootstrapTable
-                            data={anniversary}
-                            maxHeight='500' version='4'
-                            ignoreSinglePage pagination >
-                            <TableHeaderColumn isKey={true} width='10%' dataField='date_of_joining' dataAlign="center" className='d-none ' columnClassName='dateSection' dataFormat={this.renderBirthdayDate}>Emp ID</TableHeaderColumn>
-                            <TableHeaderColumn dataField='first_name' className='d-none' dataFormat={this.renderName} columnClassName='align-top'>Date Of birth</TableHeaderColumn>
-                            <TableHeaderColumn dataField='anniversary' className='d-none'>Anniversary</TableHeaderColumn>
-                        </BootstrapTable>
+                <div className='mt-5 ml-2 eventSection'>
+                    <div className="h5"><span className='font-weight-bold'>Events</span> <span className='text-muted h6'>In {moment().format('MMMM')}</span></div>
+                    <div className='mt-2'>
+                        <Row>
+                            <Col md={6} sm={12}>
+                                <div className="h6 font-weight-bold">Anniversary</div>
+                                {this.renderEventList(anniversary)}
+                            </Col>
+
+                            <Col md={6} sm={12}>
+                                <div className="h6 font-weight-bold">Birthday</div>
+                                {this.renderEventList(birthday)}
+                            </Col>
+                        </Row>
                     </div>
                 </div>
             );
@@ -116,12 +133,12 @@ class Dashboard extends Component {
         const { dashboardData: { requesting } } = this.props;
 
         if (requesting) return <Loader show={true} message={spinner} />
-        else if(userInformation){
+        else {
             const { first_name, designation, reportingto_name, last_name } = userInformation;
 
             return (
                 <div>
-                    <div className="text-center welcome-block">
+                    <div className="text-center mt-4 mb-4">
                         <h1>Hi, {first_name + ' ' + last_name}</h1>
                         <div className="description">
                             Your designation is <strong>{designation}</strong> & reporting to <strong>{reportingto_name}</strong>

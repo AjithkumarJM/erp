@@ -22,15 +22,6 @@
     color: #fff;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-weight: lighter;
-}
-
 /* login css */
 
 //imported to login folder
@@ -199,15 +190,9 @@ h6 {
     font-size: 25px;
 }
 
-.welcome-block {
-    margin: 35px 0px 60px 0px;
-    h1 {
-        margin-bottom: 20px;
-    }
-    >.description {
-        color: #464a4c;
-        font-size: 15px;
-    }
+.description {
+    color: #464a4c;
+    font-size: 15px;
 }
 
 .hide-bullets {

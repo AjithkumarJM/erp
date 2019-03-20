@@ -12,6 +12,13 @@ import { userInfo } from '../../const';
 
 class LeaveManagementHome extends Component {
 
+
+    componentDidMount() {
+        const { location: { pathname }, history } = this.props;;
+
+        pathname === '/leave_management/' || pathname === '/leave_management' ? history.push('/leave_management/apply_leave') : null
+    }
+
     render() {
         const { role_id } = userInfo;
 

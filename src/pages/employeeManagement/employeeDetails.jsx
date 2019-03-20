@@ -6,8 +6,10 @@ import moment from 'moment';
 import { Row, Col } from 'reactstrap';
 
 import { getEmployeeById } from '../../services/employeeTracker';
+import { getLeaveBalance } from '../../services/leaveManagement';
 import { spinner } from '../../const';
 import { userInfo } from '../../const'
+import LeaveBalance from '../../const/leaveBalance/index';
 
 class EmployeeDetails extends Component {
     constructor(props) {
@@ -16,16 +18,17 @@ class EmployeeDetails extends Component {
     }
 
     componentDidMount = () => {
-        const { getEmployeeById } = this.props;
+        const { getEmployeeById, getLeaveBalance } = this.props;
         const { employeeId } = this.props.match.params;
 
         getEmployeeById(employeeId);
+        getLeaveBalance(employeeId);
     }
 
     componentWillReceiveProps = ({ employeeById }) => this.setState({ employeeById: employeeById.response.data })
 
     render() {
-        const { employeeById: { requesting } } = this.props;
+        const { employeeById: { requesting }, leaveBalance: { response: { data } } } = this.props;
         const { employeeById } = this.state;
 
         if (requesting === true) return <Loader show={true} message={spinner} />
@@ -198,16 +201,19 @@ class EmployeeDetails extends Component {
                             </div>
                         </Row>
                     </div>
+                    <Row>
+                        <Col md={12}><LeaveBalance leaveBalance={data} /></Col>
+                    </Row>
                 </div>
             );
         }
     }
 }
 
-const mapStateToProps = ({ employeeById }) => {
-    return { employeeById }
+const mapStateToProps = ({ employeeById, leaveBalance }) => {
+    return { employeeById, leaveBalance }
 }
 
 export default connect(
-    mapStateToProps, { getEmployeeById }
+    mapStateToProps, { getEmployeeById, getLeaveBalance }
 )(EmployeeDetails);

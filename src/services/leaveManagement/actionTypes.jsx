@@ -16,4 +16,10 @@ const holidayListType = {
     FAIL: 'HOLIDAY_LIST_FAIL'
 }
 
-export { leaveTypesActionType, leaveBalanceType, holidayListType }
+const upcomingHolidayListType = {
+    REQ: 'UPCOMING_HOLIDAY_LIST_REQ',
+    RES: 'UPCOMING_HOLIDAY_LIST_RES',
+    FAIL: 'UPCOMING_HOLIDAY_LIST_FAIL'
+}
+
+export { leaveTypesActionType, leaveBalanceType, holidayListType, upcomingHolidayListType }

@@ -26,6 +26,7 @@ import 'assets/scss/react_datepicker.scss';
 import 'assets/scss/react-timeline.scss';
 import 'assets/scss/timeline_min.scss';
 import 'assets/scss/reactTabs.scss';
+import 'react-circular-progressbar/dist/styles.css';
 
 export default class App extends Component {
 
