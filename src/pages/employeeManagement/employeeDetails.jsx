@@ -28,7 +28,7 @@ class EmployeeDetails extends Component {
     componentWillReceiveProps = ({ employeeById }) => this.setState({ employeeById: employeeById.response.data })
 
     render() {
-        const { employeeById: { requesting }, leaveBalance: { response: { data } } } = this.props;
+        const { employeeById: { requesting }, filteredLeaveType } = this.props;
         const { employeeById } = this.state;
 
         if (requesting === true) return <Loader show={true} message={spinner} />
@@ -41,7 +41,7 @@ class EmployeeDetails extends Component {
 
             return (
                 <div className='p-2'>
-                    <div className="shadow p-3 mb-5 bg-light rounded">
+                    <div className="shadow p-3 mb-3 bg-white rounded">
                         <Row>
                             <Col md={3} className='align-self-center'>
                                 <div className='text-center'>
@@ -202,7 +202,7 @@ class EmployeeDetails extends Component {
                         </Row>
                     </div>
                     <Row>
-                        <Col md={12}><LeaveBalance leaveBalance={data} /></Col>
+                        <Col md={6} cls><LeaveBalance leaveBalance={filteredLeaveType} /></Col>
                     </Row>
                 </div>
             );
@@ -210,7 +210,8 @@ class EmployeeDetails extends Component {
     }
 }
 
-const mapStateToProps = ({ employeeById, leaveBalance }) => {
+const mapStateToProps = ({ employeeById, leaveBalance}) => {
+
     return { employeeById, leaveBalance }
 }
 

@@ -138,7 +138,7 @@ class Dashboard extends Component {
 
             return (
                 <div>
-                    <div className="text-center mt-4 mb-4">
+                    <div className="text-center mt-4 mb-4 secondary-text">
                         <h1>Hi, {first_name + ' ' + last_name}</h1>
                         <div className="description">
                             Your designation is <strong>{designation}</strong> & reporting to <strong>{reportingto_name}</strong>

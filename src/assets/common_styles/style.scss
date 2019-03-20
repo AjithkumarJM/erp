@@ -1,13 +1,26 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url("https://fonts.googleapis.com/css?family=Roboto");
 
 body {
   font-size: 13px;
   margin: 0px;
-  background: hsla(0, 0%, 94.1%, .5215686274509804)!important;
+  background: hsla(0, 0%, 94.1%, 0.5215686274509804) !important;
   padding: 0px !important;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
+  color: #4f5663;
+
 }
 
 .secondary-text {
   color: #4f5663;
+}
+
+thead {
+  background-color: #24b3fe17;
+  color: #006ebb !important;
+  text-align: center;
+}
+
+td {
+  background-color: white;
+  color: #4f5663
 }

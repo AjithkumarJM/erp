@@ -4,7 +4,7 @@ import { reducer as formReducer } from 'redux-form';
 
 import { allEmployeeInfo, employeeById, systemRoles, reportingToList, designationList, previousEmpId } from '../services/employeeTracker/reducers'
 import userInformation from "./../services/userDetails/reducers";
-import { leaveTypes, holidayList, leaveBalance, upcomingHolidayList } from './../services/leaveManagement/reducers';
+import { leaveTypes, holidayList, leaveBalance, upcomingHolidayList, leaveHistory } from './../services/leaveManagement/reducers';
 
 import { dashboardData, monthlyNotifications } from '../services/dashboard/reducers';
 /**
@@ -28,6 +28,7 @@ const rootReducer = combineReducers({
     leaveBalance,
     holidayList,
     upcomingHolidayList,
+    leaveHistory,
 
     form: formReducer,
 });

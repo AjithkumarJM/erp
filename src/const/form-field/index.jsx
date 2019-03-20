@@ -11,10 +11,7 @@ import "./style.scss";
 
 class FormField extends Component {
 
-    isWeekday = date => {
-        const day = date.day()
-        return day !== 0 && day !== 6
-    }
+    isWeekday = date => date.day() !== 0 && date.day() !== 6
 
     generateComponent = field => {
         const { type, input, placeholder, keyword, list, label, option, disable,

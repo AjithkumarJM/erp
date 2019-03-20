@@ -1,5 +1,5 @@
 import {
-    leaveTypesActionType, leaveBalanceType, holidayListType, upcomingHolidayListType
+    leaveTypesActionType, leaveBalanceType, holidayListType, upcomingHolidayListType, leaveHistoryType
 } from './actionTypes';
 
 const initialState = {
@@ -30,4 +30,6 @@ const holidayList = (state = initialState, action) => reducer(state, action, hol
 
 const upcomingHolidayList = (state = initialState, action) => reducer(state, action, upcomingHolidayListType);
 
-export { leaveTypes, leaveBalance, holidayList, upcomingHolidayList }
+const leaveHistory = (state = initialState, action) => reducer(state, action, leaveHistoryType);
+
+export { leaveTypes, leaveBalance, holidayList, upcomingHolidayList, leaveHistory }

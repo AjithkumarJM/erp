@@ -13,29 +13,37 @@ function API_CALL(method, url, data, type, callback, file) {
     if (token) header['Authorization'] = token;
     if (callback) {
         return async () => {
-            axios({
-                method,
-                url: ROOT_URL + url,
-                data,
-                headers: {
-                    "access-token": token
-                },
-                responseType: file ? 'arraybuffer' : 'json',
-            }).then(data => callback(data))
+            let callbackRequest;
+            try {
+                callbackRequest = await axios({
+                    method,
+                    url: ROOT_URL + url,
+                    data,
+                    headers: { "access-token": token },
+                    responseType: file ? 'arraybuffer' : 'json',
+                })
+
+                callback(callbackRequest)
+            } catch (error) {
+                callback(error)
+            }
         }
     } else {
         return async dispatch => {
+            let nonCallbackRequest;
             dispatch({ type: type.REQ })
-            axios({
-                method,
-                url: ROOT_URL + url,
-                data,
-                headers: {
-                    "access-token": token
-                },
-            })
-                .then(response => dispatch({ type: type.RES, payload: response }))
-                .catch((error) => dispatch({ type: type.FAIL, payload: error }))
+
+            try {
+                nonCallbackRequest = await axios({
+                    method,
+                    url: ROOT_URL + url,
+                    data,
+                    headers: { "access-token": token },
+                })
+                dispatch({ type: type.RES, payload: nonCallbackRequest })
+            } catch (error) {
+                dispatch({ type: type.RES, payload: error })
+            }
         }
     }
 }

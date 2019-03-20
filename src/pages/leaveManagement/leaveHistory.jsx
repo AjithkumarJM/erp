@@ -2,43 +2,34 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import Loader from 'react-loader-advanced';
-import AlertContainer from 'react-alert'
-import cookie from 'react-cookies';
+import AlertContainer from 'react-alert';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { Modal, ModalBody, ModalFooter } from 'reactstrap';
 
-import { empLeaveHistory, cancelLeavePrompt, leaveBalance, leaveList } from '../../actions';
+import { userInfo, spinner, alertOptions } from '../../const';
+import { getLeaveHistory, postCancelLeave } from '../../services/leaveManagement';
 
 class LeaveHistory extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: cookie.load('session'),
-            loader: {
-                visible: false,
-            },
-            spinner: <div className="lds-ripple"><div></div><div></div></div>,
-            alertOptions: {
-                offset: 14,
-                position: 'bottom right',
-                theme: 'dark',
-                time: 5000,
-                transition: 'scale'
-            }
+            loader: false, modal: false
         };
-        this.props.empLeaveHistory(this.state.data.employee_id)
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            empleavehistory: nextProps.empHistory
-        })
+
+    componentWillMount = () => {
+        const { getLeaveHistory } = this.props;
+        const { employeeId } = this.props.match.params;
+
+        getLeaveHistory(employeeId);
     }
 
-    functioncall() {
-        this.props.empLeaveHistory(this.state.data.employee_id)
-    }
+    componentWillReceiveProps = ({ leaveHistory }) => this.setState({ leaveHistory: leaveHistory.response.data })
 
-    statusFromat(fieldValue, row, rowIdx, colIdx) {
+    toggle = () => this.setState({ modal: !this.state.modal })
+
+    statusFromat = (fieldValue, row, rowIdx, colIdx) => {
         if (fieldValue == 'Rejected') {
             return 'bg-rejected'
         } else if (fieldValue == 'Cancelled') {
@@ -50,27 +41,21 @@ class LeaveHistory extends Component {
         }
     }
 
-    cancelLeave(cell, row) {
-        if (row.leave_status == 'Pending' || row.leave_status == 'Approved') {
-            if (this.formatDate(row.from_date) > moment().format('YYYY/MM/DD')) {
-                return <button className='btn ems-btn-ternary btn-sm' onClick={() => { this.setState({ rowData: row }) }} data-toggle="modal" data-target="#emp_cancel">Cancel Leave</button>
+    renderCancelAction = (cell, row) => {
+        const { leave_status, from_date } = row;
+        if (leave_status == 'Pending' || leave_status == 'Approved') {
+            if (this.formatDate(from_date) > moment().format('YYYY/MM/DD')) {
+                return <button className='btn ems-btn-ternary btn-sm' onClick={() => this.setState({ rowData: row, modal: !this.state.modal })} data-toggle="modal" data-target="#emp_cancel">Cancel Leave</button>
             }
         }
     }
 
-    rowClassNameFormat(row, rowIdx) {
-        return rowIdx % 2 === 0 ? 'td-column-function-even-example' : 'td-column-function-odd-example';
-    }
+    formatDate = date => moment((date.split('T'))[0]).format('YYYY/MM/DD');
 
-    formatDate(doj) {
-        if (typeof (doj) == 'string') {
-            return moment((doj.split('T'))[0]).format('YYYY/MM/DD');
-        } else {
-            return doj;
-        }
-    }
+    renderLeaveHistory = () => {
+        const { leaveHistory } = this.state;
+        const { gender } = userInfo;
 
-    renderEmpLeaveHistory() {
         const typeOfLeaveML = {
             'CL': 'CL',
             'EL': 'EL',
@@ -110,79 +95,75 @@ class LeaveHistory extends Component {
         };
 
         return (
-            <BootstrapTable data={this.state.empleavehistory} maxHeight='500' version='4' options={options} trClassName={this.rowClassNameFormat} ignoreSinglePage pagination>
+            <BootstrapTable data={leaveHistory}
+                maxHeight='500' version='4' options={options} ignoreSinglePage pagination>
                 <TableHeaderColumn isKey dataField='type_name' dataAlign="center" filterFormatted
-                    formatExtraData={this.state.data.gender == 'Female' ? typeOfLeaveML : typeOfLeave} filter={{ type: 'SelectFilter', options: this.state.data.gender == 'Female' ? typeOfLeaveML : typeOfLeave, defaultValue: 2 }}>Leave Type</TableHeaderColumn>
+                    formatExtraData={gender === 'Female' ? typeOfLeaveML : typeOfLeave} filter={{ type: 'SelectFilter', options: gender === 'Female' ? typeOfLeaveML : typeOfLeave, defaultValue: 2 }}>Leave Type</TableHeaderColumn>
                 <TableHeaderColumn dataField='from_date' dataFormat={this.formatDate} dataAlign="center" dataSort>From Date</TableHeaderColumn>
                 <TableHeaderColumn dataField='to_date' dataFormat={this.formatDate} dataAlign="center" dataSort>To Date</TableHeaderColumn>
                 <TableHeaderColumn dataField='no_of_days' dataAlign="center" dataSort>Duration (days)</TableHeaderColumn>
                 <TableHeaderColumn dataAlign="center" dataField='leave_status' filterFormatted
                     formatExtraData={LeaveType} filter={{ type: 'SelectFilter', options: LeaveType, defaultValue: 2 }} columnClassName={this.statusFromat}>Status</TableHeaderColumn>
-                <TableHeaderColumn dataFormat={this.cancelLeave.bind(this)} dataAlign="center">Action</TableHeaderColumn>
+                <TableHeaderColumn dataFormat={this.renderCancelAction} dataAlign="center">Action</TableHeaderColumn>
             </BootstrapTable>
         )
     }
 
-    cancelPrompt() {
+    notify = (message, type) => this.msg.show(message, { type });
+
+    onSubmitCancelLeave = () => {
+        const { rowData: { leave_id } } = this.state;
+        const { postCancelLeave } = this.props;
+
         let values = {}
-        this.setState({ loader: { visible: true } })
-        values.leave_id = this.state.rowData.leave_id;
+        this.setState({ loader: true })
+        values.leave_id = leave_id;
         values.is_approved = 4;
-        this.props.cancelLeavePrompt(values, (data) => {
-            if (data.data.code == 'EMS_001') {
-                this.setState({ loader: { visible: false } })
-                this.msg.show(data.data.message, {
-                    position: 'bottom right',
-                    type: 'success',
-                    theme: 'dark',
-                    time: 5000
-                })
-                this.functioncall();
+        postCancelLeave(values, (data) => {
+            const { code, message } = data.data;
+
+            if (code === 'EMS_001') {
+                this.setState({ loader: false })
+                this.notify(message, 'success');
             } else {
-                this.setState({ loader: { visible: false } })
-                this.msg.show(data.data.message, {
-                    position: 'bottom right',
-                    type: 'error',
-                    theme: 'dark',
-                    time: 5000
-                })
-                this.functioncall();
+                this.setState({ loader: false })
+                this.notify(message, 'error');
             }
         })
     }
 
     render() {
+        const { loader, modal } = this.state;
+        const { leaveHistory: { requesting } } = this.props;
+
+        if (requesting) return <Loader show={true} message={spinner} />
         return (
-            <div>
-                <Loader show={this.state.loader.visible} message={this.state.spinner} />
-                <AlertContainer ref={a => this.msg = a} {...this.state.alertOptions} />
+            <div className='p-2 pt-3'>
+                <Loader show={loader} message={spinner} />
+                <AlertContainer ref={a => this.msg = a} {...alertOptions} />
 
                 <div>
-                    {this.renderEmpLeaveHistory()}
+                    {this.renderLeaveHistory()}
                 </div>
-                <div className="modal fade" id="emp_cancel" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                            <h4 className="modal-body text-center">
-                                Are you sure, you want to cancel the leave ?
+
+                <Modal isOpen={modal} toggle={this.toggle} className={this.props.className}>
+                    <ModalBody>
+                        <h4 className="text-center">
+                            Are you sure, you want to cancel the leave ?
                             </h4>
-                            <div className="modal-footer  justify-content-md-center">
-                                <button type="button" className="btn btn-sm btn-ems-primary" onClick={this.cancelPrompt.bind(this)} data-dismiss="modal">Yes</button>
-                                <button type="button" className="btn btn-sm btn-ems-secondary" data-dismiss="modal">No</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <button type="button" className="btn btn-sm btn-ems-primary" onClick={this.onSubmitCancelLeave} data-dismiss="modal">Yes</button>
+                        <button type="button" className="btn btn-sm btn-ems-secondary" onClick={() => this.toggle}>No</button>
+                    </ModalFooter>
+                </Modal>
             </div>
         )
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        userDetails: state.userInformation,
-        empHistory: state.employeeHistory
-    };
+const mapStateToProps = ({ leaveHistory }) => {
+    return { leaveHistory };
 }
 
-export default (connect(mapStateToProps, { empLeaveHistory, cancelLeavePrompt, leaveBalance, leaveList }))(LeaveHistory);
+export default connect(mapStateToProps, { getLeaveHistory, postCancelLeave })(LeaveHistory);

@@ -11,10 +11,9 @@ import Loader from 'react-loader-advanced';
 
 import logo from '../../assets/images/logo.png';
 import logoMini from '../../assets/images/icon-logo.png';
-import user from '../../assets/images/user.png';
 import ChangePassword from '../forms/passwordChange';
 import { getUserDetails } from '../../services/userDetails';
-import { spinner } from '../../const/index';
+import { spinner, userInfo } from '../../const/index';
 
 class DefaultHeader extends Component {
 
@@ -47,7 +46,8 @@ class DefaultHeader extends Component {
 
     if (requesting === true) return <Loader show={true} message={spinner} />
     else {
-      const { first_name, last_name, id } = userInformation;
+      const { first_name, last_name, id, gender } = userInformation;
+      const image = `/src/assets/images/${gender === 'Male' ? 'userMaleLogo' : 'userFemaleLogo'}.png`;
 
       return (
         <React.Fragment>
@@ -66,7 +66,7 @@ class DefaultHeader extends Component {
           <Nav className="ml-auto" navbar>
             <AppHeaderDropdown direction="down">
               <DropdownToggle nav>
-                {first_name + ' ' + last_name} ({id}) <img src={user} className="img-avatar" alt="Admin" />
+                {first_name + ' ' + last_name} ({id}) <img src={image} className="img-avatar" alt="user" />
               </DropdownToggle>
               <DropdownMenu right style={{ right: 'auto' }}>
                 <DropdownItem onClick={this.toggle}><i className="fa fa-key"></i> Change Password</DropdownItem>

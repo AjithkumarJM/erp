@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Route, Link, Switch, Redirect } from "react-router-dom";
-import { RoutedTabs, NavTab } from 'react-router-tabs';
+import { Route, Switch, Redirect } from "react-router-dom";
+import { NavTab } from 'react-router-tabs';
 
 import ApplyLeave from './leaveManagement';
 import LeaveHistory from './leaveHistory';
@@ -10,8 +9,7 @@ import ApproveReject from './approveReject';
 import { userInfo } from '../../const';
 
 
-class LeaveManagementHome extends Component {
-
+export default class LeaveManagementHome extends Component {
 
     componentDidMount() {
         const { location: { pathname }, history } = this.props;;
@@ -20,26 +18,27 @@ class LeaveManagementHome extends Component {
     }
 
     render() {
-        const { role_id } = userInfo;
+        const { role_id, employee_id } = userInfo;
+        const styling = role_id === 3 || role_id === 8 || role_id === 9 ? { width: '25%' } : { width: '50%' }
 
         return (
             <div>
                 <div className="col-12 page-header mb-3">
                     <h2>Leave Management</h2>
                 </div>
-                <NavTab to="/leave_management/apply_leave">Apply Leave</NavTab>
-                <NavTab to="/leave_management/leave_history">Leave History</NavTab>
+                <NavTab to="/leave_management/apply_leave" style={styling}>Apply Leave</NavTab>
+                <NavTab to={`/leave_management/leave_history/${employee_id}`} style={styling}>Leave History</NavTab>
                 {role_id === 3 || role_id === 8 || role_id === 9 ?
                     <span>
-                        <NavTab to="/leave_management/reportees_leaveHistory">Reportees Leave History</NavTab>
-                        <NavTab to="/leave_management/approve_reject">Approve - Reject</NavTab>
+                        <NavTab to="/leave_management/reportees_leaveHistory" style={styling} >Reportees Leave History</NavTab>
+                        <NavTab to="/leave_management/approve_reject" style={styling}>Approve - Reject</NavTab>
                     </span>
                     : null
                 }
 
                 <Switch>
                     <Route exact path='/leave_management/apply_leave' render={props => <ApplyLeave {...props} />} />
-                    <Route path='/leave_management/leave_history' render={props => <LeaveHistory {...props} />} />
+                    <Route path='/leave_management/leave_history/:employeeId' render={props => <LeaveHistory {...props} />} />
                     <Route path='/leave_management/reportees_leaveHistory' render={props => <ReporteesLeaveHistory {...props} />} />
                     <Route path='/leave_management/approve_reject' render={props => <ApproveReject {...props} />} />
                     <Redirect to='/leave_management/' />
@@ -48,13 +47,3 @@ class LeaveManagementHome extends Component {
         );
     }
 }
-
-const mapStateToProps = ({ }) => {
-    return {
-
-    }
-}
-
-export default connect(
-    mapStateToProps,
-)(LeaveManagementHome);

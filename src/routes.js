@@ -17,12 +17,13 @@ const routes = [
   { path: '/dashboard', name: 'dashboard', component: Dashboard },
   { path: '/employee_tracker', name: 'employee_tracker', component: EmployeeTrackerHome },
   { path: '/leave_management', name: 'leave_management', component: LeaveManagementHome },
+  { path: '/holiday_list', name: 'holiday_list', component: HolidayList },
+  { path: '/jaishuIans', name: 'JaishuIans', component: CommonEmpDetails },
+
   // { path: '/asset_management', name: 'asset_management', component: AssetManagement },
-  // { path: '/holiday_list', name: 'holiday_list', component: HolidayList },
   // { path: '/udpate_details/:id', name: 'udpate_details', component: Update },
   // { path: '/asset_management/assign', name: 'asset_management_assign', component: AssignForm },
   // { path: '/create_asset', name: 'create_asset', component: addAsset },
-  // { path: '/common_emp_details', name: 'common_emp_details', component: CommonEmpDetails },
   // { path: '/project_management/client', name: 'client', component: Client},
   // { path: '/project_management/projects', name: 'projects', component: Projects}
   

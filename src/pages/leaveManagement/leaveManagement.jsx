@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FormGroup, Row, Col } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import CircularProgressbar from 'react-circular-progressbar';
 import { reduxForm, change, formValueSelector } from 'redux-form';
 import AlertContainer from 'react-alert'
-import Loader from 'react-loader-advanced';import moment from 'moment';
+import moment from 'moment';
+import Loader from 'react-loader-advanced';
 import _ from 'lodash';
 
 import { getLeaveTypes, getLeaveBalance, alertOptions, postApplyLeave, getUpcomingHolidayList } from '../../services/leaveManagement';
 import { userInfo, spinner } from '../../const';
-import FormField from '../../const/form-field';
 import { validator } from '../../const/form-field/validator';
-import Bulkupload from './leaveBulkupload'
+import FormField from '../../const/form-field';
+import LeaveBalance from '../../const/leaveBalance';
 
 class LeaveManagement extends Component {
 
@@ -72,37 +72,6 @@ class LeaveManagement extends Component {
         )
     }
 
-    renderLeaveBalance = () => {
-        const { leaveBalance } = this.state;
-
-        let balance = _.map(leaveBalance, balance => {
-            console.log(balance)
-            return <CircularProgressbar percentage={percentage} text={`${percentage}%`} />
-        })
-        // const options = {
-        //     sizePerPage: 10,  // which size per page you want to locate as default
-        //     sizePerPageList: [{
-        //         text: '10', value: 10
-        //     }, {
-        //         text: '25', value: 25
-        //     }, {
-        //         text: '50', value: 50
-        //     }, {
-        //         text: '100', value: 100
-        //     }],
-        //     paginationSize: 3,  // the pagination bar size.
-        //     paginationShowsTotal: this.renderShowsTotal,  // Accept bool or function
-        // };
-
-        // return (
-        //     <BootstrapTable data={leaveBalance} version='4' options={options} trClassName={this.rowClassNameFormat}>
-        //         <TableHeaderColumn isKey dataField='type_name' dataAlign="center">Leave Type</TableHeaderColumn>
-        //         <TableHeaderColumn dataField='no_of_days' dataFormat={this.renderDates} dataAlign="center">Balance</TableHeaderColumn>
-        //     </BootstrapTable>
-        // )
-        return balance;
-    }
-
     notify = (message, type) => this.msg.show(message, { type });
 
     applyLeave = values => {
@@ -124,7 +93,7 @@ class LeaveManagement extends Component {
                 reset();
             } else {
                 this.setState({ loader: false })
-                this.notify(message, 'success')
+                this.notify(message, 'error')
             }
         });
     }
@@ -138,7 +107,7 @@ class LeaveManagement extends Component {
 
     render() {
         const { handleSubmit, pristine, reset, submitting, leaveTypes: { requesting } } = this.props;
-        const { loader, leaveTypes, upcomingHolidayList } = this.state;
+        const { loader, leaveTypes, upcomingHolidayList, leaveBalance } = this.state;
         const { required } = validator;
 
         if (requesting === true) return <Loader show={true} message={spinner} />
@@ -185,7 +154,7 @@ class LeaveManagement extends Component {
                                 />
 
                                 <FormField
-                                    placeholder='Reason for your leave'
+                                    placeholder='Reason for leave'
                                     type='textarea'
                                     name='Leave_Reason'
                                     disable={pristine}
@@ -203,7 +172,7 @@ class LeaveManagement extends Component {
                         </Col>
                         <Col md={6} sm={12}>
 
-                            {this.renderLeaveBalance()}
+                            <LeaveBalance leaveBalance={leaveBalance} />
                             <br></br>
                             {this.holidayListtable()}
                         </Col>
@@ -219,12 +188,13 @@ const selector = formValueSelector('leaveManagementForm')
 const mapStateToProps = state => {
     let { leaveBalance, leaveTypes, upcomingHolidayList } = state;
 
+    // to set date automatically in TO DATE FIELD.
     let formValues = selector(state, 'leavetype_id')
     return { leaveBalance, leaveTypes, formValues, upcomingHolidayList }
 }
 
 LeaveManagement = reduxForm({
-    form: 'leaveManagementForm'  // a unique identifier for this form
+    form: 'leaveManagementForm'
 })(LeaveManagement)
 
 export default connect(mapStateToProps, {
