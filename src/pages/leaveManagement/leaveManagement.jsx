@@ -35,11 +35,12 @@ class LeaveManagement extends Component {
     componentWillReceiveProps = ({ leaveTypes, leaveBalance, upcomingHolidayList }) => {
         const { gender } = userInfo;
         let filteredLeaveType = _.filter(leaveTypes.response.data, type => type.leavetype_id !== 3);
+        let filteredLeavebalance = _.filter(leaveBalance.response.data, type => type.leavetype_id !== 3);
 
         this.setState({
             upcomingHolidayList: upcomingHolidayList.response.data,
             leaveTypes: gender !== 'Female' ? filteredLeaveType : leaveTypes.response.data,
-            leaveBalance: leaveBalance.response.data,
+            leaveBalance: gender !== 'Female' ? filteredLeavebalance : leaveBalance.response.data,
         })
     }
 
@@ -64,7 +65,7 @@ class LeaveManagement extends Component {
         };
 
         return (
-            <BootstrapTable data={upcomingHolidayList} maxHeight='200' options={options} version='4' trClassName={this.rowClassNameFormat}>
+            <BootstrapTable data={upcomingHolidayList}  options={options} version='4' trClassName={this.rowClassNameFormat}>
                 <TableHeaderColumn isKey dataField='holiday_name' dataAlign="center">Holiday Name</TableHeaderColumn>
                 <TableHeaderColumn dataField='holiday_date' dataFormat={this.renderDates} dataAlign="center">Date</TableHeaderColumn>
                 <TableHeaderColumn dataField='day' dataAlign="center">Day</TableHeaderColumn>
@@ -163,17 +164,17 @@ class LeaveManagement extends Component {
                                 />
                             </FormGroup>
 
-                            <div className='col-md-12'>
-                                <div className='float-right'>
-                                    <button type='submit' className=" btn btn-sm btn-ems-primary btn-spacing" onClick={handleSubmit(this.applyLeave.bind(this))} disabled={pristine || submitting}>Apply</button>
-                                    <button type='reset' className="btn btn-sm btn-ems-clear" onClick={reset} disabled={pristine || submitting}>Clear</button>
-                                </div>
+                            <div className='float-right'>
+                                <button type='submit' className=" btn btn-sm btn-ems-primary btn-spacing" onClick={handleSubmit(this.applyLeave.bind(this))} disabled={pristine || submitting}>Apply</button>
+                                <button type='reset' className="btn btn-sm btn-ems-clear" onClick={reset} disabled={pristine || submitting}>Clear</button>
+                            </div>
+
+                            <br />
+                            <div className='mt-3 pt-3' style={{ borderTop:'1px solid rgba(228, 231, 234, 0.56)'}}>
+                                <LeaveBalance leaveBalance={leaveBalance} color='#3e98c7' />
                             </div>
                         </Col>
                         <Col md={6} sm={12}>
-
-                            <LeaveBalance leaveBalance={leaveBalance} />
-                            <br></br>
                             {this.holidayListtable()}
                         </Col>
                     </Row >

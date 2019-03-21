@@ -8,11 +8,11 @@ function API_CALL(method, url, data, type, callback, file) {
     console.log("Calling API for the method of " + method + " : " + ROOT_URL + url);
 
     if (callback) {
-        return async (dispatch) => {
+        return async dispatch => {
             try {
                 let request = await axios({
                     method,
-                    url: ROOT_URL + url, 
+                    url: ROOT_URL + url,
                     data,
                     headers: {
                         "access-token": cookie.load('session').token
@@ -22,7 +22,7 @@ function API_CALL(method, url, data, type, callback, file) {
 
                 //immediate callback method
                 callback(request);
-            } catch (error) {                
+            } catch (error) {
                 if (error.response.status === 400) {
                     console.log('comes here');
                     // cookie.remove('session', { path: '/' });
@@ -31,7 +31,7 @@ function API_CALL(method, url, data, type, callback, file) {
             }
         }
     } else {
-        return async (dispatch) => {
+        return async dispatch => {
             try {
                 let request = await axios({
                     method,
@@ -46,7 +46,7 @@ function API_CALL(method, url, data, type, callback, file) {
                 // using thunk for dispatch                
                 dispatch({ type: type, payload: request });
 
-            } catch (error) {                
+            } catch (error) {
                 if (error.response.status === 400) {
                     console.log('comes here');
                     // cookie.remove('session', { path: '/' });

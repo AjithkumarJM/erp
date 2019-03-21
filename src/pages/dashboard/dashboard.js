@@ -89,7 +89,7 @@ class Dashboard extends Component {
     renderEventList = events => {
         let list;
 
-        if (events.length !== 0) {
+        if (events) {
             list = _.map(events, (event, index) => {
                 const { date_of_joining, first_name, last_name } = event;
                 return (

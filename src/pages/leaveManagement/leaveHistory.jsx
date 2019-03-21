@@ -17,7 +17,6 @@ class LeaveHistory extends Component {
         };
     }
 
-
     componentWillMount = () => {
         const { getLeaveHistory } = this.props;
         const { employeeId } = this.props.match.params;
@@ -29,16 +28,13 @@ class LeaveHistory extends Component {
 
     toggle = () => this.setState({ modal: !this.state.modal })
 
-    statusFromat = (fieldValue, row, rowIdx, colIdx) => {
-        if (fieldValue == 'Rejected') {
-            return 'bg-rejected'
-        } else if (fieldValue == 'Cancelled') {
-            return 'bg-cancelled'
-        } else if (fieldValue == 'Pending') {
-            return 'bg-pending'
-        } else if (fieldValue == 'Approved') {
-            return 'bg-approved'
-        }
+    statusFormat = (cell, row) => {
+        const { leave_status } = row;
+
+        if (leave_status === 'Rejected') return <div className='badge p-2 rounded bg-rejected secondary-text'>{leave_status}</div>
+        else if (leave_status === 'Cancelled') return <div className='badge p-2 rounded bg-cancelled secondary-text'>{leave_status}</div>
+        else if (leave_status === 'Pending') return <div className='badge p-2 rounded bg-pending secondary-text'>{leave_status}</div>
+        else if (leave_status === 'Approved') return <div className='badge p-2 rounded bg-approved secondary-text'>{leave_status}</div>
     }
 
     renderCancelAction = (cell, row) => {
@@ -80,7 +76,7 @@ class LeaveHistory extends Component {
             sortName: this.state.sortName,
             sortOrder: this.state.sortOrder,
             onSortChange: this.onSortChange,
-            sizePerPage: 10,  // which size per page you want to locate as default            
+            sizePerPage: 10,  // which size per page you want to locate as default
             sizePerPageList: [{
                 text: '10', value: 10
             }, {
@@ -90,8 +86,8 @@ class LeaveHistory extends Component {
             }, {
                 text: '100', value: 100
             }],
-            paginationSize: 3,  // the pagination bar size.            
-            paginationShowsTotal: this.renderShowsTotal,  // Accept bool or function     
+            paginationSize: 3,  // the pagination bar size.
+            paginationShowsTotal: this.renderShowsTotal,  // Accept bool or function
         };
 
         return (
@@ -102,8 +98,9 @@ class LeaveHistory extends Component {
                 <TableHeaderColumn dataField='from_date' dataFormat={this.formatDate} dataAlign="center" dataSort>From Date</TableHeaderColumn>
                 <TableHeaderColumn dataField='to_date' dataFormat={this.formatDate} dataAlign="center" dataSort>To Date</TableHeaderColumn>
                 <TableHeaderColumn dataField='no_of_days' dataAlign="center" dataSort>Duration (days)</TableHeaderColumn>
-                <TableHeaderColumn dataAlign="center" dataField='leave_status' filterFormatted
-                    formatExtraData={LeaveType} filter={{ type: 'SelectFilter', options: LeaveType, defaultValue: 2 }} columnClassName={this.statusFromat}>Status</TableHeaderColumn>
+                <TableHeaderColumn dataAlign="center" dataField='leave_status'
+                    filterFormatted
+                    formatExtraData={LeaveType} filter={{ type: 'SelectFilter', options: LeaveType, defaultValue: 2 }} dataFormat={this.statusFormat}>Status</TableHeaderColumn>
                 <TableHeaderColumn dataFormat={this.renderCancelAction} dataAlign="center">Action</TableHeaderColumn>
             </BootstrapTable>
         )
@@ -134,7 +131,7 @@ class LeaveHistory extends Component {
 
     render() {
         const { loader, modal } = this.state;
-        const { leaveHistory: { requesting } } = this.props;
+        const { leaveHistory: { requesting }, className } = this.props;
 
         if (requesting) return <Loader show={true} message={spinner} />
         return (
@@ -142,11 +139,9 @@ class LeaveHistory extends Component {
                 <Loader show={loader} message={spinner} />
                 <AlertContainer ref={a => this.msg = a} {...alertOptions} />
 
-                <div>
-                    {this.renderLeaveHistory()}
-                </div>
+                {this.renderLeaveHistory()}
 
-                <Modal isOpen={modal} toggle={this.toggle} className={this.props.className}>
+                <Modal isOpen={modal} toggle={this.toggle} className={className}>
                     <ModalBody>
                         <h4 className="text-center">
                             Are you sure, you want to cancel the leave ?

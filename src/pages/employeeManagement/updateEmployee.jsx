@@ -279,7 +279,7 @@ class UpdateEmployee extends Component {
                                     />
                                     <FormField
                                         label="Emer. Contact Person Name"
-                                        name="emergency_contact_no"
+                                        name="emergency_contact_person"
                                         fieldRequire={false}
                                         type="text"
                                         placeholder="Enter Con. Person name"

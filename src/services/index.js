@@ -1,49 +1,37 @@
 import axios from 'axios';
-import cookie from 'react-cookies';
-import { stringify } from 'query-string';
-
-import { ROOT_URL, userInfo } from "../const";
+import { ROOT_URL, userInfo } from '../const';
 
 function API_CALL(method, url, data, type, callback, file) {
     console.log("Calling API for the method of " + method + " : " + ROOT_URL + url);
+    axios.interceptors.response.use(undefined, function (err) {
+        // Handling the errors (e.g: 401 Unauthorized)
+        console.log(err);
+    });
 
-    const { token } = userInfo;
+    let headers = {};
+    if (userInfo) {
+        const { token } = userInfo;
+        headers['Authorization'] = token;
+    }
 
-    let header = {};
-    if (token) header['Authorization'] = token;
     if (callback) {
-        return async () => {
-            let callbackRequest;
-            try {
-                callbackRequest = await axios({
-                    method,
-                    url: ROOT_URL + url,
-                    data,
-                    headers: { "access-token": token },
-                    responseType: file ? 'arraybuffer' : 'json',
-                })
-
-                callback(callbackRequest)
-            } catch (error) {
-                callback(error)
-            }
-        }
+        axios({
+            method,
+            url: ROOT_URL + url,
+            data,
+            headers,
+            responseType: file ? 'arraybuffer' : 'json',
+        }).then(data => callback(data)).catch(error => callback(error.response))
     } else {
-        return async dispatch => {
-            let nonCallbackRequest;
+        return dispatch => {
             dispatch({ type: type.REQ })
-
-            try {
-                nonCallbackRequest = await axios({
-                    method,
-                    url: ROOT_URL + url,
-                    data,
-                    headers: { "access-token": token },
-                })
-                dispatch({ type: type.RES, payload: nonCallbackRequest })
-            } catch (error) {
-                dispatch({ type: type.RES, payload: error })
-            }
+            axios({
+                method,
+                url: ROOT_URL + url,
+                data,
+                headers,
+                responseType: file ? 'arraybuffer' : 'json',
+            }).then(response => dispatch({ type: type.RES, payload: response })).catch(error => dispatch({ type: type.FAIL, payload: error }))
         }
     }
 }

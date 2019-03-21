@@ -15,7 +15,7 @@ class FormField extends Component {
 
     generateComponent = field => {
         const { type, input, placeholder, keyword, list, label, option, disable,
-            meta: { error, touched }, inApplyLeave, fieldRequire, excludeDatesList
+            meta: { error, touched }, inApplyLeave, fieldRequire, excludeDatesList, login
         } = field;
 
         const childFormClassName = `form-control form-control-sm ${touched && error ? 'input-error' : ''}`;
@@ -28,11 +28,12 @@ class FormField extends Component {
             let optionList = _.map(list, (data, index) => <option value={data[keyword]} key={index}>{data[option]} </option>)
             return (
                 <Row className='form-group'>
-                    <Col md={5} >
-                        <Label >{labelText}</Label>
-                    </Col>
+                    {login !== true ?
+                        <Col md={5} >
+                            <Label >{labelText}</Label>
+                        </Col> : null}
 
-                    <Col md={7}>
+                    <Col md={login !== true ? 7 : 12}>
                         <select className={childFormClassName} {...input}>
                             <option value="">Select</option>
                             {optionList}
@@ -70,11 +71,12 @@ class FormField extends Component {
         } else {
             return (
                 <Row className={'form-group'}>
-                    <Col md={5} >
-                        <Label >{labelText}</Label>
-                    </Col>
+                    {login !== true ?
+                        <Col md={5} >
+                            <Label >{labelText}</Label>
+                        </Col> : null}
 
-                    <Col md={7}>
+                    <Col md={login !== true ? 7 : 12}>
                         <Input
                             type={type}
                             className={childFormClassName}

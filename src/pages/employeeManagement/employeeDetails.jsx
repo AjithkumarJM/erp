@@ -25,11 +25,20 @@ class EmployeeDetails extends Component {
         getLeaveBalance(employeeId);
     }
 
-    componentWillReceiveProps = ({ employeeById }) => this.setState({ employeeById: employeeById.response.data })
+    componentWillReceiveProps = ({ employeeById, leaveBalance }) => {
+        let filteredLeaveBalance = _.filter(leaveBalance.response.data, type => type.leavetype_id !== 3)
+
+        if (employeeById.response.data) {
+            this.setState({
+                employeeById: employeeById.response.data,
+                leaveBalance: employeeById.response.data.gender === 'Male' ? filteredLeaveBalance : leaveBalance.response.data
+            })
+        }
+    }
 
     render() {
-        const { employeeById: { requesting }, filteredLeaveType } = this.props;
-        const { employeeById } = this.state;
+        const { employeeById: { requesting } } = this.props;
+        const { employeeById, leaveBalance } = this.state;
 
         if (requesting === true) return <Loader show={true} message={spinner} />
         else if (employeeById) {
@@ -202,7 +211,7 @@ class EmployeeDetails extends Component {
                         </Row>
                     </div>
                     <Row>
-                        <Col md={6} cls><LeaveBalance leaveBalance={filteredLeaveType} /></Col>
+                        <Col md={5} className='shadow p-3 mb-3 bg-white rounded ml-3'><LeaveBalance leaveBalance={leaveBalance} color='rgb(84, 145, 135)' /></Col>
                     </Row>
                 </div>
             );
@@ -210,7 +219,7 @@ class EmployeeDetails extends Component {
     }
 }
 
-const mapStateToProps = ({ employeeById, leaveBalance}) => {
+const mapStateToProps = ({ employeeById, leaveBalance }) => {
 
     return { employeeById, leaveBalance }
 }

@@ -3,11 +3,11 @@
   // width: 25%;
   text-align: center;
   font-family: "Roboto", sans-serif;
-  background-color: #f3f3f3;
+  // background-color: #f3f3f3;
   display: inline-block;
   padding: 10px 25px;
-  color: #bbb;
-  border-bottom: 1px solid #ddd;
+  color: #262526ba;
+  border-bottom: 1px solid #d1d5db;
   text-decoration: none;
   &:hover {
     color: #28b2fe !important;
@@ -19,8 +19,8 @@
     color: #28b2fe !important;
     text-decoration: none;
     cursor: context-menu;
-    background-color: #ffffff;
-    box-shadow: 0 4px 20px 0 rgba(37, 180, 254, 0.15), 0 7px 10px -5px rgba(39, 179, 254, 0.16);
+    // background-color: #ffffff;
+    box-shadow: 0 4px 20px 0 rgba(37, 180, 254, 0.13), 0 7px 10px -5px rgba(39, 179, 254, 0);
     border-bottom: 2px solid #27b3fe;
   }
 }

@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Field, reduxForm } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import cookie from 'react-cookies';
 import Loader from 'react-loader-advanced';
 
-import { login } from '../../actions';
 import './login.scss';
-
+import { spinner } from '../../const'
+import FormField from '../../const/form-field';
+import { validator } from '../../const/form-field/validator';
+import API_CALL from '../../services';
 
 class Login extends Component {
     constructor() {
         super();
         this.state = {
             loginError: false,
-            spinner: <div className="lds-ripple"><div></div><div></div></div>,
-            loaderVisible: false
+            loader: false
         };
     }
 
@@ -40,41 +41,37 @@ class Login extends Component {
         )
     }
 
-    loginOnSubmit = values => {
-        const { login, loginCredentials } = this.props;
+    loginOnsubmit = values => {
 
-        this.setState({ loaderVisible: true })
-        login(values, (response) => {
-            if (response.data.code === 'EMS_001') {
-                this.setState({ loaderVisible: false, loginError: false })
-                cookie.save('session', response.data.data, { path: '/' });
-                // cookie.save('session', true, {path: '/'});                
+        values.grant_type = 'password';
+        this.setState({ loader: true, loginError: false })
+
+        // using API_CALL callback because no further use of this login request.
+        API_CALL('post', 'login', values, 'LOGIN_REQUEST', response => {
+            const { data, code } = response.data;
+            if (code === 'EMS_001') {
+                this.setState({ loader: false, loginError: false })
+                cookie.save('session', data, { path: '/' });
                 window.location.reload();
-            } else this.setState({ loginError: true, loaderVisible: false })
-        }, error => error ? this.setState({ loginError: true, loaderVisible: false }) : null);
+            } else this.setState({ loginError: true, loader: false })
+        })
+        //  error => error ? this.setState({ loginError: true, loader: false }) : null);
     }
 
-    renderLoginError() {
+    renderLoginError = () => {
         const { loginError } = this.state;
 
-        if (loginError) {
-            return (
-                <p className="alert alert-danger">
-                    Invalid Email ID or Password
-                <i className="m-1 fa fa-times-circle float-right"
-                        onClick={() => this.setState({ loginError: false })} />
-                </p >
-            )
-        }
+        if (loginError) return <p className="alert alert-danger"> Invalid Email ID or Password <i className="m-1 fa fa-times-circle float-right" onClick={() => this.setState({ loginError: false })} /> </p >
     }
 
     render() {
         const { handleSubmit } = this.props;
-        const { loaderVisible, spinner } = this.state;
+        const { loader } = this.state;
+        const { required, email } = validator;
 
         return (
             <section className="login">
-                <Loader show={loaderVisible} message={spinner} />
+                <Loader show={loader} message={spinner} />
                 <div className='container-fluid'>
                     <div className="row image-wrap"></div>
                     <div className="row">
@@ -88,18 +85,20 @@ class Login extends Component {
                                     <div>
                                         {this.renderLoginError()}
                                     </div>
-                                    <form onSubmit={handleSubmit(this.loginOnSubmit.bind(this))}>
-                                        <Field
+                                    <form onSubmit={handleSubmit(this.loginOnsubmit)}>
+                                        <FormField
                                             placeholder="Email ID"
                                             name="user_name"
                                             type="text"
-                                            component={this.generateInput}
+                                            validate={[email]}
+                                            login={true}
                                         />
-                                        <Field
+                                        <FormField
                                             placeholder="Password"
                                             name="password"
                                             type="password"
-                                            component={this.generateInput}
+                                            validate={[required]}
+                                            login={true}
                                         />
                                         <Link to='/forgot_password' className='customLink align-middle'>forgot password?</Link>
                                         <button type="submit" className="btn btn-sm btn-ems-primary float-right">Log In</button>
@@ -114,21 +113,6 @@ class Login extends Component {
     }
 }
 
-function validate(values) {
-    const errors = {};
-    if (values.user_name) {
-        if (/^\w+([\.-]?\ w+)*@\w+([\.-]?\ w+)*(\.\w{2,3})+$/.test(values.user_name)) {
-        } else errors.user_name = "Enter valid Email ID";
-    }
-
-    if (!values.user_name) errors.user_name = "Enter Email ID";
-
-    if (!values.password) errors.password = "Enter Password";
-
-    return errors;
-}
-
 export default reduxForm({
-    validate,
     form: 'logInForm'
-})(connect(null, { login })(Login));
+})(connect(null, {})(Login));
