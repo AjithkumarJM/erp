@@ -5,11 +5,12 @@ import { reduxForm } from 'redux-form';
 import cookie from 'react-cookies';
 import Loader from 'react-loader-advanced';
 
-import './login.scss';
 import { spinner } from '../../const'
 import FormField from '../../const/form-field';
 import { validator } from '../../const/form-field/validator';
 import API_CALL from '../../services';
+
+import './login.scss';
 
 class Login extends Component {
     constructor() {
@@ -18,27 +19,6 @@ class Login extends Component {
             loginError: false,
             loader: false
         };
-    }
-
-    generateInput = field => {
-        const { meta: { touched, error } } = field;
-        const className = `form-control form-control-sm ${touched && error ? 'is-invalid' : ''}`
-
-        return (
-            <div>
-                <div className="form-group">
-                    <input
-                        className={className}
-                        type={field.type}
-                        placeholder={field.placeholder}
-                        {...field.input}
-                    />
-                    <div >
-                        {touched && error ? <div className='text-danger'>{error} <i className='fa fa-exclamation-circle' /></div> : ''}
-                    </div>
-                </div>
-            </div>
-        )
     }
 
     loginOnsubmit = values => {

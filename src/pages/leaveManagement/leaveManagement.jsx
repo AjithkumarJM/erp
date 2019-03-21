@@ -44,7 +44,7 @@ class LeaveManagement extends Component {
         })
     }
 
-    renderDates = date => moment(date).format('YYYY/MM/DD')
+    renderDates = date => `${moment(date).format('dddd')}, ${moment(date).format('ll')}`
 
     holidayListtable = () => {
         const { upcomingHolidayList } = this.state;
@@ -65,10 +65,9 @@ class LeaveManagement extends Component {
         };
 
         return (
-            <BootstrapTable data={upcomingHolidayList}  options={options} version='4' trClassName={this.rowClassNameFormat}>
+            <BootstrapTable data={upcomingHolidayList} options={options} version='4' trClassName={this.rowClassNameFormat}>
                 <TableHeaderColumn isKey dataField='holiday_name' dataAlign="center">Holiday Name</TableHeaderColumn>
                 <TableHeaderColumn dataField='holiday_date' dataFormat={this.renderDates} dataAlign="center">Date</TableHeaderColumn>
-                <TableHeaderColumn dataField='day' dataAlign="center">Day</TableHeaderColumn>
             </BootstrapTable>
         )
     }
@@ -170,7 +169,7 @@ class LeaveManagement extends Component {
                             </div>
 
                             <br />
-                            <div className='mt-3 pt-3' style={{ borderTop:'1px solid rgba(228, 231, 234, 0.56)'}}>
+                            <div className='mt-3 pt-3' style={{ borderTop: '1px solid rgba(228, 231, 234, 0.56)' }}>
                                 <LeaveBalance leaveBalance={leaveBalance} color='#3e98c7' />
                             </div>
                         </Col>

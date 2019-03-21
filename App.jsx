@@ -14,6 +14,7 @@ import routes from './src/./routes';
 import DefaultHeader from './src/components/headers/DefaultHeader';
 import SideNav from './src/components/sideBar/sidenav';
 import { spinner, userInfo } from './src/const';
+import { getUserDetails } from './src/services/userDetails';
 
 import 'jquery';
 import 'bootstrap';
@@ -28,9 +29,14 @@ import 'assets/scss/timeline_min.scss';
 import 'assets/scss/reactTabs.scss';
 import 'react-circular-progressbar/dist/styles.css';
 
-export default class App extends Component {
+class App extends Component {
 
-    componentWillMount = () => this.setState({ isSession: userInfo });
+    componentWillMount = () => {
+        const { getUserDetails}=this.props;
+
+        getUserDetails();
+        this.setState({ isSession: userInfo });
+    }
 
     ForgotPasswordroute = () => {
         const { isSession } = this.state;
@@ -47,8 +53,10 @@ export default class App extends Component {
 
     render() {
         const { isSession } = this.state;
+        const { userInformation: { requesting, response } } = this.props;
 
-        if (isSession) {
+        if (requesting) return <Loader show={true} message={spinner} />
+        if (isSession && response.data) {
             return (
                 <BrowserRouter>
                     <div className="app">
@@ -90,3 +98,10 @@ export default class App extends Component {
         }
     }
 }
+
+const mapStateToProps = ({ userInformation }) => {
+
+    return { userInformation }
+}
+
+export default connect(mapStateToProps, { getUserDetails })(App)

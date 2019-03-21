@@ -6,7 +6,6 @@ import moment from 'moment';
 import Loader from 'react-loader-advanced';
 
 import { getDashboardDetails, getMonthlyNotifications } from '../../services/dashboard';
-import { getUserDetails } from '../../services/userDetails';
 import { spinner, userInfo } from '../../const/index';
 import './style.scss';
 
@@ -25,14 +24,11 @@ class Dashboard extends Component {
         const { getDashboardDetails, getMonthlyNotifications } = this.props;
         const { employee_id } = userInfo;
 
-        getUserDetails();
         getDashboardDetails(employee_id);
         getMonthlyNotifications();
     }
 
-    componentWillReceiveProps = ({ dashboardData, monthlyNotifications, userInformation }) => {
-
-        this.setState({ userInformation: userInformation.response.data })
+    componentWillReceiveProps = ({ dashboardData, monthlyNotifications }) => {
         if (!_.isEmpty(dashboardData.response)) {
 
             const { reporties_Pending_Leave, available_CL_EL, pending_Leave_Application } = dashboardData.response.data;
@@ -45,25 +41,7 @@ class Dashboard extends Component {
         }
     }
 
-    renderReporteesLeave = () => {
-        const { reporties_Pending_Leave, userInformation: { role_id } } = this.state;
-
-        // 3 HR
-        // 9 and 8 TL & Manager
-        if (role_id === 3 || role_id === 9 || role_id === 8) {
-            return (
-                <div className='col-sm-4 col-xs-12 col-md-4 text-center'>
-                    <div className="tile-header"><i className="fa fa-users" aria-hidden="true"></i> Reportees Leave Request</div>
-                    <div className="tile-css text-warning">
-                        <div>{reporties_Pending_Leave === null ? "0" : reporties_Pending_Leave}<span className='leave-analytics'><small> leave(s)</small></span></div>
-                    </div>
-                </div>
-            )
-        }
-    }
-
     renderBirthdayDate = date => {
-        ;
         let split = date.split('');
 
         let month = [];
@@ -86,6 +64,24 @@ class Dashboard extends Component {
         )
     }
 
+    renderReporteesLeave = () => {
+        const { reporties_Pending_Leave } = this.state;
+        const { role_id } = userInfo;
+
+        // 3 HR
+        // 9 and 8 TL & Manager
+        if (role_id === 3 || role_id === 9 || role_id === 8) {
+            return (
+                <div className='col-sm-4 col-xs-12 col-md-4 text-center'>
+                    <div className="tile-header"><i className="fa fa-users" aria-hidden="true"></i> Reportees Leave Request</div>
+                    <div className="tile-css text-warning">
+                        <div>{reporties_Pending_Leave === null ? "0" : reporties_Pending_Leave}<span className='leave-analytics'><small> leave(s)</small></span></div>
+                    </div>
+                </div>
+            )
+        }
+    }
+
     renderEventList = events => {
         let list;
 
@@ -104,7 +100,8 @@ class Dashboard extends Component {
     }
 
     renderMonthlyNotifications = () => {
-        const { birthday, anniversary, userInformation: { role_id } } = this.state;
+        const { birthday, anniversary } = this.state;
+        const { role_id } = userInfo;
 
         if (role_id === 3) {
             return (
@@ -129,12 +126,12 @@ class Dashboard extends Component {
     }
 
     render() {
-        const { available_CL_EL, pending_Leave_Application, userInformation } = this.state;
-        const { dashboardData: { requesting } } = this.props;
+        const { available_CL_EL, pending_Leave_Application } = this.state;
+        const { dashboardData: { requesting }, userInformation } = this.props;
 
         if (requesting) return <Loader show={true} message={spinner} />
         else {
-            const { first_name, designation, reportingto_name, last_name } = userInformation;
+            const { first_name, designation, reportingto_name, last_name } = userInformation.response.data;
 
             return (
                 <div>

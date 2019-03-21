@@ -3,7 +3,7 @@ import Dashboard from '../src/pages/dashboard/dashboard';
 import EmployeeTrackerHome from '../src/pages/employeeManagement';
 import LeaveManagementHome from '../src/pages/leaveManagement/index';
 import Employee from '../src/pages/employeeManagement/createEmployee';
-import HolidayList from '../src/pages/holidayList/holidayList';
+import HolidayList from '../src/pages/holidayList';
 import CommonEmpDetails from '../src/pages/empEmergencyInfo/empEmergencyInfo.js';
 import AssetManagement from '../src/pages/assetManagement/index';
 import AssignForm from '../src/pages/assetManagement/assignAssetForm';
