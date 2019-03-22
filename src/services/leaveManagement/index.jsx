@@ -11,9 +11,9 @@ const getLeaveHistory = id => API_CALL('get', `leavehistory/id/${id}`, null, lea
 
 const getLeaveBalance = id => API_CALL('get', `balanceleave/${id}`, null, leaveBalanceType);
 
-const postApplyLeave = (values, callback) => API_CALL('post', 'applyleave', values, 'POST_APPLY_LEAVE', callback);
+const postApplyLeave = (values, callback) => API_CALL('post', 'applyleave', values, null, callback);
 
-const postCancelLeave = (values, callback) => API_CALL('post', 'leave/status/update/', values, 'POST_CANCEL_LEAVE', callback);
+const postCancelLeave = (values, callback) => API_CALL('post', 'leave/status/update/', values, null, callback);
 
 export {
     getLeaveTypes, postCancelLeave, getLeaveBalance,

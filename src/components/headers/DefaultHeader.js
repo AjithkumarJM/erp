@@ -7,13 +7,11 @@ import cookie from 'react-cookies';
 import { AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import Loader from 'react-loader-advanced';
 
 import logo from '../../assets/images/logo.png';
 import logoMini from '../../assets/images/icon-logo.png';
 import ChangePassword from '../forms/passwordChange';
 import { getUserDetails } from '../../services/userDetails';
-import { spinner, userInfo } from '../../const/index';
 
 class DefaultHeader extends Component {
 
@@ -59,7 +57,6 @@ class DefaultHeader extends Component {
             <DropdownMenu right style={{ right: 'auto' }}>
               <DropdownItem onClick={this.toggle}><i className="fa fa-key"></i> Change Password</DropdownItem>
               <DropdownItem onClick={this.logout}><i className="fa fa-lock"></i> Logout</DropdownItem>
-
             </DropdownMenu>
           </AppHeaderDropdown>
         </Nav>

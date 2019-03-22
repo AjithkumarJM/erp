@@ -27,7 +27,7 @@ class Login extends Component {
         this.setState({ loader: true, loginError: false })
 
         // using API_CALL callback because no further use of this login request.
-        API_CALL('post', 'login', values, 'LOGIN_REQUEST', response => {
+        API_CALL('post', 'login', values, null, response => {
             const { data, code } = response.data;
             if (code === 'EMS_001') {
                 this.setState({ loader: false, loginError: false })

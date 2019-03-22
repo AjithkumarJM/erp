@@ -16,9 +16,9 @@ const getDesignationList = () => API_CALL('get', 'employee/designation/list', nu
 
 const getPrevEmployeeId = () => API_CALL('get', 'get/last/employee/id', null, prevEmpIdType)
 
-const createEmployee = (values, callback) => API_CALL('post', 'employee/create', values, 'CREATE_EMPLOYEE', callback);
+const createEmployee = (values, callback) => API_CALL('post', 'employee/create', values, null, callback);
 
-const updateEmployee = (values, callback) => API_CALL('post', 'employee/update', values, 'UPDATE_EMPLOYEE', callback);
+const updateEmployee = (values, callback) => API_CALL('post', 'employee/update', values, null, callback);
 
 export {
     getEmployeesInfo, getEmployeeById, getSystemRole, getReportingToList,

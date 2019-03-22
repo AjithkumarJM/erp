@@ -32,16 +32,15 @@ import 'react-circular-progressbar/dist/styles.css';
 class App extends Component {
 
     componentWillMount = () => {
-        const { getUserDetails}=this.props;
 
-        getUserDetails();
-        this.setState({ isSession: userInfo });
+        const { getUserDetails } = this.props;
+
+        if (userInfo) getUserDetails();
+        else (cookie.remove('session'))
     }
 
     ForgotPasswordroute = () => {
-        const { isSession } = this.state;
-
-        if (!isSession) {
+        if (!userInfo) {
             return (
                 <span>
                     <Route exact path="/" component={Login} />
@@ -49,14 +48,13 @@ class App extends Component {
                 </span>
             )
         }
-    }
+    }    
 
     render() {
-        const { isSession } = this.state;
         const { userInformation: { requesting, response } } = this.props;
 
         if (requesting) return <Loader show={true} message={spinner} />
-        if (isSession && response.data) {
+        if (userInfo && response.data) {
             return (
                 <BrowserRouter>
                     <div className="app">
@@ -100,7 +98,6 @@ class App extends Component {
 }
 
 const mapStateToProps = ({ userInformation }) => {
-
     return { userInformation }
 }
 

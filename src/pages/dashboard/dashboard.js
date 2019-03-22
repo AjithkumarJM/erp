@@ -13,14 +13,14 @@ class Dashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            available_CL_EL: 0,
-            reporties_Pending_Leave: 0,
-            pending_Leave_Application: 0,
-            userInformation: {}
+            // available_CL_EL: 0,
+            // reporties_Pending_Leave: 0,
+            // pending_Leave_Application: 0,
+            // userInformation: {}
         }
     }
 
-    componentDidMount = () => {
+    componentWillMount = () => {
         const { getDashboardDetails, getMonthlyNotifications } = this.props;
         const { employee_id } = userInfo;
 
@@ -28,18 +28,18 @@ class Dashboard extends Component {
         getMonthlyNotifications();
     }
 
-    componentWillReceiveProps = ({ dashboardData, monthlyNotifications }) => {
-        if (!_.isEmpty(dashboardData.response)) {
+    // componentWillReceiveProps = ({ dashboardData, monthlyNotifications }) => {
+    //     if (!_.isEmpty(dashboardData.response)) {
 
-            const { reporties_Pending_Leave, available_CL_EL, pending_Leave_Application } = dashboardData.response.data;
-            this.setState({ reporties_Pending_Leave, available_CL_EL, pending_Leave_Application })
-        }
+    //         const { reporties_Pending_Leave, available_CL_EL, pending_Leave_Application } = dashboardData.response.data;
+    //         this.setState({ reporties_Pending_Leave, available_CL_EL, pending_Leave_Application })
+    //     }
 
-        if (!_.isEmpty(monthlyNotifications.response)) {
-            const { birthday, anniversary } = monthlyNotifications.response.data;
-            this.setState({ anniversary, birthday })
-        }
-    }
+    //     if (!_.isEmpty(monthlyNotifications.response)) {
+    //         const { birthday, anniversary } = monthlyNotifications.response.data;
+    //         this.setState({ anniversary, birthday })
+    //     }
+    // }
 
     renderBirthdayDate = date => {
         let split = date.split('');
@@ -64,8 +64,7 @@ class Dashboard extends Component {
         )
     }
 
-    renderReporteesLeave = () => {
-        const { reporties_Pending_Leave } = this.state;
+    renderReporteesLeave = reporties_Pending_Leave => {
         const { role_id } = userInfo;
 
         // 3 HR
@@ -85,7 +84,7 @@ class Dashboard extends Component {
     renderEventList = events => {
         let list;
 
-        if (events) {
+        if (events.length) {
             list = _.map(events, (event, index) => {
                 const { date_of_joining, first_name, last_name } = event;
                 return (
@@ -100,10 +99,11 @@ class Dashboard extends Component {
     }
 
     renderMonthlyNotifications = () => {
-        const { birthday, anniversary } = this.state;
+        const { data } = this.props.monthlyNotifications.response;
         const { role_id } = userInfo;
-
-        if (role_id === 3) {
+        // console.log(data)
+        if (role_id === 3 && data) {
+            const { birthday, anniversary } = data;
             return (
                 <div className='mt-5 ml-2 eventSection'>
                     <div className="h5"><span className='font-weight-bold'>Events</span> <span className='text-muted h6'>In {moment().format('MMMM')}</span></div>
@@ -123,14 +123,14 @@ class Dashboard extends Component {
                 </div>
             );
         }
-    }
+    }    
 
     render() {
-        const { available_CL_EL, pending_Leave_Application } = this.state;
-        const { dashboardData: { requesting }, userInformation } = this.props;
+        const { dashboardData: { requesting, response }, userInformation } = this.props;
 
         if (requesting) return <Loader show={true} message={spinner} />
-        else {
+        else if (response && response.data) {
+            const { available_CL_EL, pending_Leave_Application, reporties_Pending_Leave } = response.data;
             const { first_name, designation, reportingto_name, last_name } = userInformation.response.data;
 
             return (
@@ -155,13 +155,13 @@ class Dashboard extends Component {
                                     <div>{pending_Leave_Application === null ? "0" : pending_Leave_Application}<span className='leave-analytics'><small> leave(s)</small></span></div>
                                 </div>
                             </div>
-                            {this.renderReporteesLeave()}
+                            {this.renderReporteesLeave(reporties_Pending_Leave)}
                         </div>
                     </div>
                     {this.renderMonthlyNotifications()}
                 </div>
             )
-        }
+        } else return <Loader show={true} message={spinner} />
     }
 }
 
