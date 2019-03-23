@@ -9,7 +9,7 @@ import AlertContainer from 'react-alert'
 import Loader from 'react-loader-advanced';
 
 import { getDesignationList, getReportingToList, getSystemRole, getEmployeeById, updateEmployee } from '../../services/employeeTracker'
-import { spinner, alertOptions, genderList } from '../../const';
+import { spinner, alertOptions, genderList, employeeTypeList } from '../../const';
 import FormField from '../../const/form-field';
 import { validator } from '../../const/form-field/validator';
 
@@ -17,7 +17,7 @@ class UpdateEmployee extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { loader: false, genderList };
+        this.state = { loader: false };
     }
 
     componentDidMount = () => {
@@ -124,6 +124,17 @@ class UpdateEmployee extends Component {
                                         placeholder="Enter Employee ID"
                                         validate={[required]}
                                         disable={true}
+                                    />
+
+                                    <FormField
+                                        label="Employee Type"
+                                        name="isActive"
+                                        fieldRequire={true}
+                                        type="select"
+                                        list={employeeTypeList}
+                                        keyword="value"
+                                        option="name"
+                                        validate={[required]}
                                     />
 
                                     <FormField
@@ -308,6 +319,7 @@ const mapTostateProps = ({ systemRoles, reportingToList, designationList, employ
 
         initialValues.date_of_birth = moment(date_of_birth).format('YYYY/MM/DD');
         initialValues.date_of_joining = moment(date_of_joining).format('YYYY/MM/DD');
+        initialValues.isActive = 'Active'
     }
 
     return { systemRoles, reportingToList, designationList, initialValues, employeeById }

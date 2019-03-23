@@ -4,24 +4,34 @@ body {
   font-size: 13px;
   margin: 0px;
   // background: hsla(0, 0%, 94.1%, 0.5215686274509804) !important;
-  background: #ffffff;
+  background: #f4f7f9;
   padding: 0px !important;
   font-family: "Roboto", sans-serif;
   color: #4f5663;
-
 }
 
 .secondary-text {
   color: #4f5663;
 }
 
+// thead {
+//   background-color: #24b3fe17;
+//   color: #006ebb !important;
+//   text-align: center;
+// }
+
 thead {
-  background-color: #24b3fe17;
-  color: #006ebb !important;
+  background-color: #eef1f5;
+  color: #808b95 !important;
   text-align: center;
+  border-bottom: 3px solid #fff !important;
 }
 
 td {
   background-color: white;
-  color: #4f5663
+  color: #4f5663;
+}
+
+.dropdown-menu-right {
+  top: 12px !important;
 }

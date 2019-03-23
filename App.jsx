@@ -28,6 +28,7 @@ import 'assets/scss/react-timeline.scss';
 import 'assets/scss/timeline_min.scss';
 import 'assets/scss/reactTabs.scss';
 import 'react-circular-progressbar/dist/styles.css';
+import "react-tabs/style/react-tabs.css";
 
 class App extends Component {
 

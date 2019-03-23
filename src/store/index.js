@@ -2,11 +2,16 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { reducer as formReducer } from 'redux-form';
 
-import { allEmployeeInfo, employeeById, systemRoles, reportingToList, designationList, previousEmpId } from '../services/employeeTracker/reducers'
 import userInformation from "./../services/userDetails/reducers";
-import { leaveTypes, holidayList, leaveBalance, upcomingHolidayList, leaveHistory } from './../services/leaveManagement/reducers';
-
+import { allEmployeeInfo, employeeById, systemRoles, reportingToList, designationList, previousEmpId } from '../services/employeeTracker/reducers'
+import {
+    leaveTypes, holidayList, leaveBalance, upcomingHolidayList,
+    leaveHistory, reporteesLeaveHistory, allLeaveHistory,pendingLeaveHistory
+} from './../services/leaveManagement/reducers';
+import { commonEmployeesInfo } from './../services/commonEmployees/reducers';
 import { dashboardData, monthlyNotifications } from '../services/dashboard/reducers';
+import { assetsList} from '../services/assetManagement/reducers';
+
 /**
  * combineReducers is simply a utility function to simplify the most common use case when writing Redux reducers.
  * It takes an object full of slice reducer functions, and returns a new reducer function
@@ -29,6 +34,13 @@ const rootReducer = combineReducers({
     holidayList,
     upcomingHolidayList,
     leaveHistory,
+    reporteesLeaveHistory,
+    allLeaveHistory,
+    pendingLeaveHistory,
+
+    commonEmployeesInfo,
+
+    assetsList,
 
     form: formReducer,
 });

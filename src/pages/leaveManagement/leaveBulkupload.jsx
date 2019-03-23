@@ -1,32 +1,34 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
-import { LeaveBulkUpload, leaveBalance } from '../../actions';
-import { Field, reduxForm } from 'redux-form';
-import cookie from 'react-cookies';
+import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
-import AlertContainer from 'react-alert'
 import Loader from 'react-loader-advanced';
+import _ from 'lodash';
+
+import { spinner } from '../../const';
+import { postLeaveBulkUpload } from '../../services/leaveManagement';
 
 class Bulkupload extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: cookie.load('session'),
-            loader: {
-                visible: false,
-            },
-            spinner: <div className="lds-ripple"><div></div><div></div></div>,
-            alertOptions: {
-                offset: 14,
-                position: 'bottom right',
-                theme: 'dark',
-                time: 5000,
-                transition: 'scale'
-            }
+            loader: false, enableErrorMessage: false
         }
     }
 
-    generateInputField(field) {
+    onSubmitBulkUpload = values => {
+        const { postLeaveBulkUpload } = this.props;
+
+        this.setState({ loader: true })
+        postLeaveBulkUpload(values, data => {
+            const { code, message } = data.data;
+            if (code === 'EMS_306') {
+                this.setState({ loader: false })
+                $("#file-upload").val("")
+            } else this.setState({ loader: false, errorMessage: message, enableErrorMessage: true })
+        })
+    }
+
+    renderField = field => {
         const { meta: { touched, error } } = field;
         const childClassName = `form-control form-control-sm ${touched && error ? 'is-invalid' : ''}`
         delete field.input.value;
@@ -53,54 +55,35 @@ class Bulkupload extends Component {
         )
     }
 
-    bulkUpload(values) {
-        this.setState({ loader: { visible: true } })
-        this.props.LeaveBulkUpload(values, (data) => {
-            if (data.data.code == 'EMS_306') {
-                this.setState({ loader: { visible: false } })
-                this.msg.show(data.data.message, {
-                    position: 'bottom right',
-                    type: 'success',
-                    theme: 'dark',
-                    time: 5000
-                })
-                $("#file-upload").val("")
-                this.props.leaveBalance(this.state.data.employee_id, (data) => {
-                    this.setState({ leavebalance: data.data.data })
-                })
-            } else {
-                this.msg.show(data.data.message, {
-                    position: 'bottom right',
-                    type: 'error',
-                    theme: 'dark',
-                    time: 5000
-                })
-                this.setState({ loader: { visible: false } })
-            }
-        })
+    renderErrorMessage = () => {
+        const { errorMessage, enableErrorMessage } = this.state;
+
+        if (enableErrorMessage === true) return <div className='alert alert-danger mt-3 ml-4 mr-4'>{errorMessage} <i className='float-right fa fa-times-circle' onClick={() => this.setState({ enableErrorMessage: false })} /></div>
     }
 
     render() {
         const { handleSubmit } = this.props;
+        const { loader } = this.state;
+
         return (
             <div>
-                <Loader show={this.state.loader.visible} message={this.state.spinner} />
-                <AlertContainer ref={a => this.msg = a} {...this.state.alertOptions} />
+                <Loader show={loader} message={spinner} />
                 <div className="d-flex justify-content-center">
-                    <form onSubmit={handleSubmit(this.bulkUpload.bind(this))} style={{ display: 'inline-flex' }}>
+                    <form onSubmit={handleSubmit(this.onSubmitBulkUpload)} style={{ display: 'inline-flex' }}>
                         <Field
                             label='File Upload'
                             required
                             placeholder="Select the file to upload"
                             name="file"
                             type="file"
-                            component={this.generateInputField}
+                            component={this.renderField}
                         />
                         <div>
-                            <button type='submit' className="btn btn-sm btn-ems-primary" style={{ marginLeft: '10px', marginTop: '3px' }}>Upload</button>
+                            <button type='submit' className="btn btn-sm btn-ems-primary mt-1 ml-2">Upload</button>
                         </div>
                     </form>
                 </div>
+                {this.renderErrorMessage()}
             </div>
         )
     }
@@ -108,7 +91,7 @@ class Bulkupload extends Component {
 
 function validate(values) {
     const errors = {};
-    if (!values.file) { errors.file = "Select the file" }
+    if (!values.file) return errors.file = "Select the file"
     if (values.file) {
         if (values.file.length == 0) { errors.file = "Select the file" }
     }
@@ -119,6 +102,4 @@ function validate(values) {
 export default reduxForm({
     validate,
     form: 'bulkuploadForm',
-})(connect(null, {
-    LeaveBulkUpload, leaveBalance
-})(Bulkupload));
+})(connect(null, { postLeaveBulkUpload })(Bulkupload));

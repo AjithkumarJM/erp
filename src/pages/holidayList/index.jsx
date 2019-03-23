@@ -5,37 +5,19 @@ import Loader from 'react-loader-advanced';
 import { Col, Row } from 'reactstrap';
 
 import { getHolidayList } from '../../services/leaveManagement';
-import { spinner } from '../../const';
+import { spinner, tableOptions } from '../../const';
 
 class HolidayList extends Component {
 
-    componentWillMount() {
-        const { getHolidayList } = this.props;
-
-        getHolidayList();
-    }
+    componentWillMount = () => this.props.getHolidayList();
 
     renderDates = date => `${moment(date).format('dddd')}, ${moment(date).format('ll')}`
 
     renderHolidayList = () => {
         const { data } = this.props.holidayList.response;
 
-        const options = {
-            sizePerPage: 10,  // which size per page you want to locate as default            
-            sizePerPageList: [{
-                text: '10', value: 10
-            }, {
-                text: '25', value: 25
-            }, {
-                text: '50', value: 50
-            }, {
-                text: '100', value: 100
-            }],
-            paginationSize: 3,  // the pagination bar size  
-        };
-
         return (
-            <BootstrapTable data={data} version='4' options={options} ignoreSinglePage pagination>
+            <BootstrapTable data={data} version='4' options={tableOptions} ignoreSinglePage pagination>
                 <TableHeaderColumn isKey dataField='holiday_name' dataAlign="center">Holiday Name</TableHeaderColumn>
                 <TableHeaderColumn dataField='holiday_date' dataFormat={this.renderDates} dataAlign="center" dataSort>Date</TableHeaderColumn>
             </BootstrapTable>

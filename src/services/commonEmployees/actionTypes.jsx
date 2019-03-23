@@ -1,0 +1,5 @@
+export const commonEmployeesType = {
+    REQ:'GET_COMMON_EMPLOYEES_RES',
+    RES:'GET_COMMON_EMPLOYEES_REQ',
+    FAIL:'GET_COMMON_EMPLOYEES_FAIL'
+}

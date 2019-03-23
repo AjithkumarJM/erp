@@ -8,7 +8,7 @@ import { AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler } from '@coreui/re
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import logo from '../../assets/images/logo.png';
+import logo from '../../assets/images/cloudix&jaishu.png';
 import logoMini from '../../assets/images/icon-logo.png';
 import ChangePassword from '../forms/passwordChange';
 import { getUserDetails } from '../../services/userDetails';
@@ -45,7 +45,7 @@ class DefaultHeader extends Component {
         <AppSidebarToggler className="d-md-down-none" display="lg" />
 
         <Nav className="d-md-down-none" navbar>
-          <NavItem className="px-3">
+          <NavItem className="px-3 mt-1 secondary-text">
             <h5>EMS</h5>
           </NavItem>
         </Nav>

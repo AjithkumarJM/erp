@@ -322,7 +322,7 @@ class AssetManagement extends Component {
     renderupdate(row, cell) {
         return (
             <div>
-                <button className="btn ems-btn-ternary" onClick={this.update.bind(this, cell)}>Update</button>
+                <button className="btn btn-ems-ternary" onClick={this.update.bind(this, cell)}>Update</button>
             </div>
         )
     }
@@ -382,7 +382,7 @@ class AssetManagement extends Component {
 
     viewDetailsRendering(row, cell) {
         return (
-            <button className='btn ems-btn-ternary' data-toggle="modal" data-target=".bd-example-modal-lg" onClick={this.getAssetDetails.bind(this, cell)}>View</button>
+            <button className='btn btn-ems-ternary' data-toggle="modal" data-target=".bd-example-modal-lg" onClick={this.getAssetDetails.bind(this, cell)}>View</button>
         )
     }
 
@@ -592,8 +592,8 @@ class AssetManagement extends Component {
                 <div>
                     <nav className="navbar navbar-expand-lg navbar-light justify-content-between custom-background-color">
                         <div className="">
-                            <button type="button" className="btn leftMargin ems-btn-ternary float-right btn-spacing" onClick={this.assignAsset.bind(this, 'ASSIGNinAVAILABLE')}><i className="fa fa-check-square-o" aria-hidden="true"></i>  Assign</button>
-                            <button type="button" className="btn ems-btn-ternary float-right" onClick={this.scrapPrompt.bind(this, 'SCRAPinAVAILABLE')}><i className="fa fa-trash-o" aria-hidden="true"></i>  Scrap</button>
+                            <button type="button" className="btn leftMargin btn-ems-ternary float-right btn-spacing" onClick={this.assignAsset.bind(this, 'ASSIGNinAVAILABLE')}><i className="fa fa-check-square-o" aria-hidden="true"></i>  Assign</button>
+                            <button type="button" className="btn btn-ems-ternary float-right" onClick={this.scrapPrompt.bind(this, 'SCRAPinAVAILABLE')}><i className="fa fa-trash-o" aria-hidden="true"></i>  Scrap</button>
                         </div>
                     </nav>
                     {this.assetAvailableTable()}
@@ -608,8 +608,8 @@ class AssetManagement extends Component {
                 <div>
                     <nav className="navbar navbar-expand-lg navbar-light justify-content-between custom-background-color">
                         <div className="">
-                            <button type="button" className="btn leftMargin ems-btn-ternary float-right btn-spacing" onClick={this.assignAsset.bind(this, 'MoveToAvailable')}><i className="fa fa-chevron-circle-right" aria-hidden="true"></i>  Move to Available</button>
-                            <button type="button" className="btn ems-btn-ternary float-right" onClick={this.scrapPrompt.bind(this, 'SCRAPinASSIGN')}><i className="fa fa-trash-o" aria-hidden="true"></i>  Scrap</button>
+                            <button type="button" className="btn leftMargin btn-ems-ternary float-right btn-spacing" onClick={this.assignAsset.bind(this, 'MoveToAvailable')}><i className="fa fa-chevron-circle-right" aria-hidden="true"></i>  Move to Available</button>
+                            <button type="button" className="btn btn-ems-ternary float-right" onClick={this.scrapPrompt.bind(this, 'SCRAPinASSIGN')}><i className="fa fa-trash-o" aria-hidden="true"></i>  Scrap</button>
                         </div>
                     </nav>
                     {this.assetAssignedTable()}
@@ -629,7 +629,7 @@ class AssetManagement extends Component {
                             {(() => {
                                 if (this.state.data.role_id == 3) {
                                     return (
-                                        <Link to='/create_asset' className='btn float-right ems-btn-ternary'><i className="fa fa-plus" aria-hidden="true"></i> Add Asset</Link>
+                                        <Link to='/create_asset' className='btn float-right btn-ems-ternary'><i className="fa fa-plus" aria-hidden="true"></i> Add Asset</Link>
                                     )
                                 }
                             })()}
@@ -740,7 +740,7 @@ class AssetManagement extends Component {
                 <div className='row'>
                     <div className="col-12 page-header">
                         <h2>Assign</h2>
-                        <button onClick={this.reRoute.bind(this)} className='btn float-right ems-btn-ternary'><i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+                        <button onClick={this.reRoute.bind(this)} className='btn float-right btn-ems-ternary'><i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
                     </div>
                     <div className='col-md-12'>
                         <AssignForm callback={this.reRoute.bind(this)} assetId={this.state.rowId} initialValues={this.state.assignedOnDate} />
@@ -752,7 +752,7 @@ class AssetManagement extends Component {
                 <div className='row'>
                     <div className="col-12 page-header">
                         <h2>Update Asset</h2>
-                        <button onClick={this.updateReroute.bind(this)} className='btn float-right ems-btn-ternary'><i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+                        <button onClick={this.updateReroute.bind(this)} className='btn float-right btn-ems-ternary'><i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
                     </div>
                     <div className='col-md-12'>
                         <UpdateAsset initialValues={this.state.updateAssetData} callback={this.updateReroute.bind(this)} />

@@ -10,15 +10,6 @@ import { spinner, userInfo } from '../../const/index';
 import './style.scss';
 
 class Dashboard extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            // available_CL_EL: 0,
-            // reporties_Pending_Leave: 0,
-            // pending_Leave_Application: 0,
-            // userInformation: {}
-        }
-    }
 
     componentWillMount = () => {
         const { getDashboardDetails, getMonthlyNotifications } = this.props;
@@ -27,19 +18,6 @@ class Dashboard extends Component {
         getDashboardDetails(employee_id);
         getMonthlyNotifications();
     }
-
-    // componentWillReceiveProps = ({ dashboardData, monthlyNotifications }) => {
-    //     if (!_.isEmpty(dashboardData.response)) {
-
-    //         const { reporties_Pending_Leave, available_CL_EL, pending_Leave_Application } = dashboardData.response.data;
-    //         this.setState({ reporties_Pending_Leave, available_CL_EL, pending_Leave_Application })
-    //     }
-
-    //     if (!_.isEmpty(monthlyNotifications.response)) {
-    //         const { birthday, anniversary } = monthlyNotifications.response.data;
-    //         this.setState({ anniversary, birthday })
-    //     }
-    // }
 
     renderBirthdayDate = date => {
         let split = date.split('');
@@ -64,6 +42,21 @@ class Dashboard extends Component {
         )
     }
 
+    generateSuffix = suffix => {
+        var j = suffix % 10,
+            k = suffix % 100;
+        if (j == 1 && k != 11) {
+            return suffix + "st";
+        }
+        if (j == 2 && k != 12) {
+            return suffix + "nd";
+        }
+        if (j == 3 && k != 13) {
+            return suffix + "rd";
+        }
+        return suffix + "th";
+    }
+
     renderReporteesLeave = reporties_Pending_Leave => {
         const { role_id } = userInfo;
 
@@ -81,19 +74,23 @@ class Dashboard extends Component {
         }
     }
 
-    renderEventList = events => {
+    renderEventList = (events, type) => {
         let list;
 
-        if (events.length) {
+        if (events && events.length !== 0) {
             list = _.map(events, (event, index) => {
                 const { date_of_joining, first_name, last_name } = event;
+                let anniversary = moment().diff(moment(date_of_joining).format('DD/MM/YYYY'), 'years');
+                let suffixAppendDate = this.generateSuffix(anniversary);
+
                 return (
                     <ListGroupItem className='d-inline-block' key={index} style={{ borderLeft: '3px solid #2baffe' }}>
-                        {this.renderBirthdayDate(moment(date_of_joining).format('ddd MMM DD YYYY'))} Work anniversary of <span className='font-weight-bold'>{first_name} {last_name}</span>
+                        {this.renderBirthdayDate(moment(date_of_joining).format('ddd MMM DD YYYY'))} - <span className='font-weight-bold'>{first_name} {last_name}</span>'s {type === 'anniversary' ?
+                            `${suffixAppendDate} year work anniversary` : 'birthday'}
                     </ListGroupItem>
                 )
             })
-        } else return list = <ListGroupItem> No work anniversary events in this month</ListGroupItem >
+        } else return list = <ListGroupItem> No {type === 'anniversary' ? 'Work anniversary' : 'birthday'} events in this month</ListGroupItem >
 
         return <ListGroup>{list}</ListGroup>
     }
@@ -101,7 +98,7 @@ class Dashboard extends Component {
     renderMonthlyNotifications = () => {
         const { data } = this.props.monthlyNotifications.response;
         const { role_id } = userInfo;
-        // console.log(data)
+
         if (role_id === 3 && data) {
             const { birthday, anniversary } = data;
             return (
@@ -111,19 +108,19 @@ class Dashboard extends Component {
                         <Row>
                             <Col md={6} sm={12}>
                                 <div className="h6 font-weight-bold">Anniversary</div>
-                                {this.renderEventList(anniversary)}
+                                {this.renderEventList(anniversary, 'anniversary')}
                             </Col>
 
                             <Col md={6} sm={12}>
                                 <div className="h6 font-weight-bold">Birthday</div>
-                                {this.renderEventList(birthday)}
+                                {this.renderEventList(birthday, 'birthday')}
                             </Col>
                         </Row>
                     </div>
                 </div>
             );
         }
-    }    
+    }
 
     render() {
         const { dashboardData: { requesting, response }, userInformation } = this.props;

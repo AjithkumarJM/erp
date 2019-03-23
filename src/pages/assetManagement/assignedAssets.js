@@ -4,7 +4,7 @@ import { getAvailableAssets, viewAssetAction } from './../../actions'
 import moment from 'moment';
 import AlertContainer from 'react-alert'
 
-class AssignedAssetsTable extends Component {
+class AssignedAssets extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -110,8 +110,8 @@ class AssignedAssetsTable extends Component {
                 <AlertContainer ref={a => this.msg = a} {...this.state.alertOptions} />
                 <nav className="navbar navbar-expand-lg navbar-light justify-content-between custom-background-color">
                     <div className="">
-                        <button type="button" className="btn leftMargin ems-btn-ternary btn-spacing float-right" onClick={this.assignAsset.bind(this, 'ASSIGN')}><i className="fa fa-plus" aria-hidden="true"></i>  Move To Available</button>
-                        <button type="button" className="btn ems-btn-ternary float-right" onClick={this.assignAsset.bind(this, 'SCRAP')}><i className="fa fa-trash-o" aria-hidden="true"></i>  Scrap</button>
+                        <button type="button" className="btn leftMargin btn-ems-ternary btn-spacing float-right" onClick={this.assignAsset.bind(this, 'ASSIGN')}><i className="fa fa-plus" aria-hidden="true"></i>  Move To Available</button>
+                        <button type="button" className="btn btn-ems-ternary float-right" onClick={this.assignAsset.bind(this, 'SCRAP')}><i className="fa fa-trash-o" aria-hidden="true"></i>  Scrap</button>
                     </div>
                 </nav>
                 {this.assignedTable()}
@@ -127,4 +127,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default (connect(mapStateToProps, { getAvailableAssets, viewAssetAction }))(AssignedAssetsTable);
+export default (connect(mapStateToProps, { getAvailableAssets, viewAssetAction }))(AssignedAssets);

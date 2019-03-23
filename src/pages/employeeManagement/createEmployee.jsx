@@ -17,8 +17,7 @@ class CreateEmployee extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loader: false,
-            genderList
+            loader: false
         };
     }
 

@@ -2,10 +2,9 @@
 import Dashboard from '../src/pages/dashboard/dashboard';
 import EmployeeTrackerHome from '../src/pages/employeeManagement';
 import LeaveManagementHome from '../src/pages/leaveManagement/index';
-import Employee from '../src/pages/employeeManagement/createEmployee';
 import HolidayList from '../src/pages/holidayList';
-import CommonEmpDetails from '../src/pages/empEmergencyInfo/empEmergencyInfo.js';
-import AssetManagement from '../src/pages/assetManagement/index';
+import commonEmployees from '../src/pages/commonEmployees';
+import AssetManagementHome from '../src/pages/assetManagement';
 import AssignForm from '../src/pages/assetManagement/assignAssetForm';
 import addAsset from '../src/pages/assetManagement/addAsset';
 import Update from '../src/pages/employeeManagement/updateEmployee';
@@ -18,9 +17,9 @@ const routes = [
   { path: '/employee_tracker', name: 'employee_tracker', component: EmployeeTrackerHome },
   { path: '/leave_management', name: 'leave_management', component: LeaveManagementHome },
   { path: '/holiday_list', name: 'holiday_list', component: HolidayList },
-  { path: '/jaishuIans', name: 'JaishuIans', component: CommonEmpDetails },
+  { path: '/common_employees_info', name: 'common_employees_info', component: commonEmployees },
 
-  // { path: '/asset_management', name: 'asset_management', component: AssetManagement },
+  { path: '/asset_management', name: 'asset_management', component: AssetManagementHome },
   // { path: '/udpate_details/:id', name: 'udpate_details', component: Update },
   // { path: '/asset_management/assign', name: 'asset_management_assign', component: AssignForm },
   // { path: '/create_asset', name: 'create_asset', component: addAsset },

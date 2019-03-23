@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { FormGroup, Row, Col } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { reduxForm, change, formValueSelector } from 'redux-form';
 import AlertContainer from 'react-alert'
@@ -9,10 +9,12 @@ import Loader from 'react-loader-advanced';
 import _ from 'lodash';
 
 import { getLeaveTypes, getLeaveBalance, alertOptions, postApplyLeave, getUpcomingHolidayList } from '../../services/leaveManagement';
-import { userInfo, spinner } from '../../const';
+import { userInfo, spinner, tableOptions } from '../../const';
 import { validator } from '../../const/form-field/validator';
 import FormField from '../../const/form-field';
 import LeaveBalance from '../../const/leaveBalance';
+
+import './style.scss';
 
 class LeaveManagement extends Component {
 
@@ -32,42 +34,15 @@ class LeaveManagement extends Component {
         getUpcomingHolidayList()
     }
 
-    componentWillReceiveProps = ({ leaveTypes, leaveBalance, upcomingHolidayList }) => {
-        const { gender } = userInfo;
-        let filteredLeaveType = _.filter(leaveTypes.response.data, type => type.leavetype_id !== 3);
-        let filteredLeavebalance = _.filter(leaveBalance.response.data, type => type.leavetype_id !== 3);
-
-        this.setState({
-            upcomingHolidayList: upcomingHolidayList.response.data,
-            leaveTypes: gender !== 'Female' ? filteredLeaveType : leaveTypes.response.data,
-            leaveBalance: gender !== 'Female' ? filteredLeavebalance : leaveBalance.response.data,
-        })
-    }
-
     renderDates = date => `${moment(date).format('dddd')}, ${moment(date).format('ll')}`
 
     holidayListtable = () => {
-        const { upcomingHolidayList } = this.state;
-
-        const options = {
-            sizePerPage: 10,  // which size per page you want to locate as default
-            sizePerPageList: [{
-                text: '10', value: 10
-            }, {
-                text: '25', value: 25
-            }, {
-                text: '50', value: 50
-            }, {
-                text: '100', value: 100
-            }],
-            paginationSize: 3,  // the pagination bar size.
-            paginationShowsTotal: this.renderShowsTotal,  // Accept bool or function
-        };
+        const { data } = this.props.upcomingHolidayList.response;
 
         return (
-            <BootstrapTable data={upcomingHolidayList} options={options} version='4' trClassName={this.rowClassNameFormat}>
-                <TableHeaderColumn isKey dataField='holiday_name' dataAlign="center">Holiday Name</TableHeaderColumn>
-                <TableHeaderColumn dataField='holiday_date' dataFormat={this.renderDates} dataAlign="center">Date</TableHeaderColumn>
+            <BootstrapTable data={data} maxHeight='500' options={tableOptions} version='4' trClassName={this.rowClassNameFormat}>
+                <TableHeaderColumn isKey dataField='holiday_name' dataAlign="center">HOLIDAY NAME</TableHeaderColumn>
+                <TableHeaderColumn dataField='holiday_date' dataFormat={this.renderDates} dataAlign="center">DATE</TableHeaderColumn>
             </BootstrapTable>
         )
     }
@@ -106,11 +81,12 @@ class LeaveManagement extends Component {
     }
 
     render() {
-        const { handleSubmit, pristine, reset, submitting, leaveTypes: { requesting } } = this.props;
-        const { loader, leaveTypes, upcomingHolidayList, leaveBalance } = this.state;
+        const { handleSubmit, pristine, reset, submitting, leaveBalance,
+            upcomingHolidayList: { requesting, response }, leaveTypes } = this.props;
+        const { loader } = this.state;
         const { required } = validator;
 
-        if (requesting === true) return <Loader show={true} message={spinner} />
+        if (requesting) return <Loader show={true} message={spinner} />
         else {
             return (
                 < div >
@@ -118,59 +94,61 @@ class LeaveManagement extends Component {
                     <Loader show={loader} message={spinner} />
                     <Row className='p-2 pt-3'>
                         <Col md={6} sm={12}>
-                            <FormGroup>
-                                <FormField
-                                    placeholder="Leave type"
-                                    name="leavetype_id"
-                                    type="select"
-                                    list={leaveTypes}
-                                    keyword="leavetype_id"
-                                    option="type_name"
-                                    validate={[required]}
-                                />
+                            <div className='p-3 bg-white shadow'>
+                                <div className='badge p-3 tex-white w-100 font-weight-normal manageLeavestyling'>Manage Leaves</div>
+                                <div className='mt-3'>
+                                    <FormField
+                                        placeholder="Leave type"
+                                        name="leavetype_id"
+                                        type="select"
+                                        list={leaveTypes}
+                                        keyword="leavetype_id"
+                                        option="type_name"
+                                        validate={[required]}
+                                    />
 
-                                <FormField
-                                    label="From Date"
-                                    name="from_date"
-                                    placeholder="YYYY/MM/DD"
-                                    inApplyLeave={true}
-                                    excludeDatesList={upcomingHolidayList}
-                                    onChange={this.handlechangeFromDate}
-                                    disable={pristine}
-                                    type="date"
-                                    validate={[required]}
-                                />
+                                    <FormField
+                                        label="From Date"
+                                        name="from_date"
+                                        placeholder="YYYY/MM/DD"
+                                        inApplyLeave={true}
+                                        excludeDatesList={response.data}
+                                        onChange={this.handlechangeFromDate}
+                                        disable={pristine}
+                                        type="date"
+                                        validate={[required]}
+                                    />
 
-                                <FormField
-                                    label="To Date"
-                                    name="to_date"
-                                    placeholder="YYYY/MM/DD"
-                                    inApplyLeave={true}
-                                    excludeDatesList={upcomingHolidayList}
-                                    onChange={this.handlechangeFromDate}
-                                    disable={pristine}
-                                    type="date"
-                                    validate={[required]}
-                                />
+                                    <FormField
+                                        label="To Date"
+                                        name="to_date"
+                                        placeholder="YYYY/MM/DD"
+                                        inApplyLeave={true}
+                                        excludeDatesList={response.data}
+                                        onChange={this.handlechangeFromDate}
+                                        disable={pristine}
+                                        type="date"
+                                        validate={[required]}
+                                    />
 
-                                <FormField
-                                    placeholder='Reason for leave'
-                                    type='textarea'
-                                    name='Leave_Reason'
-                                    disable={pristine}
-                                    label='Reason'
-                                    validate={[required]}
-                                />
-                            </FormGroup>
+                                    <FormField
+                                        placeholder='Reason for leave'
+                                        type='textarea'
+                                        name='Leave_Reason'
+                                        disable={pristine}
+                                        label='Reason'
+                                        validate={[required]}
+                                    />
 
-                            <div className='float-right'>
-                                <button type='submit' className=" btn btn-sm btn-ems-primary btn-spacing" onClick={handleSubmit(this.applyLeave.bind(this))} disabled={pristine || submitting}>Apply</button>
-                                <button type='reset' className="btn btn-sm btn-ems-clear" onClick={reset} disabled={pristine || submitting}>Clear</button>
-                            </div>
-
-                            <br />
-                            <div className='mt-3 pt-3' style={{ borderTop: '1px solid rgba(228, 231, 234, 0.56)' }}>
-                                <LeaveBalance leaveBalance={leaveBalance} color='#3e98c7' />
+                                    <div className='float-right'>
+                                        <button type='submit' className=" btn btn-sm btn-ems-primary btn-spacing" onClick={handleSubmit(this.applyLeave.bind(this))} disabled={pristine || submitting}>Apply</button>
+                                        <button type='reset' className="btn btn-sm btn-ems-clear" onClick={reset} disabled={pristine || submitting}>Clear</button>
+                                    </div>
+                                    <br />
+                                    <div className='mt-3 pt-3' style={{ borderTop: '1px solid rgba(228, 231, 234, 0.56)' }}>
+                                        <LeaveBalance leaveBalance={leaveBalance} color='#3e98c7' />
+                                    </div>
+                                </div>
                             </div>
                         </Col>
                         <Col md={6} sm={12}>
@@ -187,15 +165,21 @@ const selector = formValueSelector('leaveManagementForm')
 
 const mapStateToProps = state => {
     let { leaveBalance, leaveTypes, upcomingHolidayList } = state;
+    const { gender } = userInfo;
+    let filteredLeaveType = _.filter(leaveTypes.response.data, type => type.leavetype_id !== 3);
+    let filteredLeavebalance = _.filter(leaveBalance.response.data, type => type.leavetype_id !== 3);
 
-    // to set date automatically in TO DATE FIELD.
+    // to set date automatically in TO DATE FIELD when selecting ML.
     let formValues = selector(state, 'leavetype_id')
-    return { leaveBalance, leaveTypes, formValues, upcomingHolidayList }
+    return {
+        leaveBalance: gender === 'Male' ? filteredLeavebalance : leaveBalance.response.data,
+        leaveTypes: gender === 'Male' ? filteredLeaveType : leaveTypes.response.data,
+        formValues,
+        upcomingHolidayList
+    }
 }
 
-LeaveManagement = reduxForm({
-    form: 'leaveManagementForm'
-})(LeaveManagement)
+LeaveManagement = reduxForm({ form: 'leaveManagementForm' })(LeaveManagement);
 
 export default connect(mapStateToProps, {
     getLeaveTypes,

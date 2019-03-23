@@ -70,7 +70,7 @@ class Login extends Component {
                                             placeholder="Email ID"
                                             name="user_name"
                                             type="text"
-                                            validate={[email]}
+                                            validate={[email, required]}
                                             login={true}
                                         />
                                         <FormField

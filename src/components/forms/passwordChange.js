@@ -1,36 +1,35 @@
 import React, { Component } from 'react';
-import { changePassword } from '../../actions';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import Loader from 'react-loader-advanced';
 import AlertContainer from 'react-alert'
+
+import { spinner, alertOptions, userInfo } from '../../const';
+import API_CALL from '../../services';
 
 class ChangePassword extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loginError: false,
-            loader: {
-                visible: false,
-            },
-            spinner: <div className="lds-ripple"><div></div><div></div></div>,
+            loader: false
         }
     }
 
-    renderField(field) {
-        const { meta: { touched, error } } = field;
+    renderField = field => {
+        const { meta: { touched, error }, usage, input, placeholder } = field;
         const childClassName = `form-control form-control-sm ${touched && error ? 'is-invalid' : ''}`
 
         return (
-            < div className='form-group row' >
+            < div className='form-group row'>
                 <label className=" col-sm-5 col-form-label col-form-label-sm">{field.label}</label>
                 <div className='col-sm-7'>
                     <input
-                        disabled={field.usage}
+                        disabled={usage}
                         className={childClassName}
                         type="password"
-                        placeholder={field.placeholder}
-                        {...field.input}
+                        placeholder={placeholder}
+                        {...input}
                     />
                     <div className="text-help">
                         {touched && error ? <div className='text-danger'>{error} <span ><i className='fa fa-exclamation-circle' /></span></div> : ''}
@@ -40,12 +39,14 @@ class ChangePassword extends Component {
         );
     }
 
-    renderLoginError() {
-        if (this.state.loginError) {
+    renderLoginError = () => {
+        const { loginError, message } = this.state;
+
+        if (loginError) {
             return (
                 <div className='alert-wrap'>
                     <div className="alert alert-danger text-center" role="alert">
-                        {this.state.message}
+                        {message}
                         <i className="fa fa-times-circle-o float-right" onClick={() => { this.setState({ loginError: false }); }}></i>
                     </div>
                 </div>
@@ -53,50 +54,40 @@ class ChangePassword extends Component {
         }
     }
 
-    passwordSubmit(values) {
-        this.setState({ loader: { visible: true } })
-        values.employee_id = this.props.userDetails.id;
-        this.props.changePassword(values, values.employee_id, (data) => {
-            if (data.data.code == 'EMS_001') {
-                this.setState({ loader: { visible: false }, loginError: false });
-                setTimeout(() => {
-                    this.props.reset();                    
-                    this.msg.show(data.data.message, {
-                        type: 'success',
-                        theme: 'dark',
-                        time: 3000
-                    })
-                }, 100)
-            } else {
-                this.setState({
-                    loginError: true,
-                    message: data.data.message,
-                    loader: { visible: false }
-                });
-            }
-        }, (error) => {
-            if (error) {
-                this.setState({ loginError: true });
-            }
-        });
+    notify = (message, type) => this.msg.show(message, { type });
+
+    onPasswordSubmit = values => {
+        const { id } = userInfo;
+        const { reset } = this.props;
+
+        this.setState({ loader: true })
+        values.employee_id = id;
+        API_CALL('post', 'changepassword', values, data => {
+            const { code, message } = data.data;
+            if (code == 'EMS_001') {
+                this.setState({ loader: false, loginError: false });
+                reset();
+                this.notify(message, 'success');
+            } else this.setState({ loginError: true, message: message, loader: false });
+        }, error => error ? this.setState({ loginError: true }) : null);
     }
 
     render() {
-        const { handleSubmit, pristine, submitting } = this.props;
-        const { loader, spinner } = this.state;
+        const { handleSubmit, pristine, submitting, reset } = this.props;
+        const { loader, modal } = this.state;
 
         return (
             <div>
-                <Loader show={loader.visible} message={spinner} />
-                <AlertContainer ref={a => this.msg = a} />
+                <Loader show={loader} message={spinner} />
+                <AlertContainer ref={a => this.msg = a} {...alertOptions} />
                 <form className="row">
                     <div className="col-md-12">
                         <Field
                             label='Current Password'
                             type="password"
                             name="oldpassword"
-                            component={this.renderField}
                             placeholder="Enter Current Password"
+                            component={this.renderField}
                         />
                     </div>
 
@@ -105,8 +96,8 @@ class ChangePassword extends Component {
                             label='New Password'
                             type="password"
                             name="new_password"
-                            component={this.renderField}
                             placeholder="Enter New Password"
+                            component={this.renderField}
                         />
                     </div>
 
@@ -115,16 +106,16 @@ class ChangePassword extends Component {
                             label='Confirm Password'
                             type="password"
                             name="confirm_password"
-                            component={this.renderField}
                             placeholder="Confirm Password"
+                            component={this.renderField}
                         />
                     </div>
                 </form >
                 {this.renderLoginError()}
                 <div className='float-right'>
-                    <button type='submit' disabled={pristine || submitting} onClick={handleSubmit(this.passwordSubmit.bind(this))} className="btn btn-spacing btn-sm btn-ems-primary" data-dismiss={this.state.modal}>Submit</button>
+                    <button type='submit' disabled={pristine || submitting} onClick={handleSubmit(this.onPasswordSubmit.bind(this))} className="btn btn-spacing btn-sm btn-ems-primary" data-dismiss={modal}>Submit</button>
                     <button type="button" disabled={pristine || submitting} className="btn btn-sm btn-ems-clear" onClick={() => {
-                        this.props.reset();
+                        reset();
                         this.setState({ loginError: false });
                     }} >Clear</button></div>
             </div>
@@ -164,15 +155,7 @@ function validate(values) {
     return errors;
 }
 
-function mapStateToProps(state) {
-    return {
-        userDetails: state.userData
-    };
-}
-
 export default reduxForm({
     validate,
     form: 'ChangePwdForm',
-})(connect(mapStateToProps, {
-    changePassword
-})(ChangePassword));
+})(connect(null, {})(ChangePassword));

@@ -6,7 +6,7 @@ import AlertContainer from 'react-alert';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Modal, ModalBody, ModalFooter } from 'reactstrap';
 
-import { userInfo, spinner, alertOptions } from '../../const';
+import { userInfo, spinner, alertOptions, tableOptions, femaleLeaveType, maleLeaveType, leaveFormat } from '../../const';
 import { getLeaveHistory, postCancelLeave } from '../../services/leaveManagement';
 
 class LeaveHistory extends Component {
@@ -24,8 +24,6 @@ class LeaveHistory extends Component {
         getLeaveHistory(employeeId);
     }
 
-    componentWillReceiveProps = ({ leaveHistory }) => this.setState({ leaveHistory: leaveHistory.response.data })
-
     toggle = () => this.setState({ modal: !this.state.modal })
 
     statusFormat = (cell, row) => {
@@ -39,9 +37,10 @@ class LeaveHistory extends Component {
 
     renderCancelAction = (cell, row) => {
         const { leave_status, from_date } = row;
+
         if (leave_status == 'Pending' || leave_status == 'Approved') {
             if (this.formatDate(from_date) > moment().format('YYYY/MM/DD')) {
-                return <button className='btn ems-btn-ternary btn-sm' onClick={() => this.setState({ rowData: row, modal: !this.state.modal })} data-toggle="modal" data-target="#emp_cancel">Cancel Leave</button>
+                return <button className='btn btn-ems-ternary btn-sm' onClick={() => this.setState({ rowData: row, modal: !this.state.modal })} data-toggle="modal" data-target="#emp_cancel">Cancel Leave</button>
             }
         }
     }
@@ -49,59 +48,21 @@ class LeaveHistory extends Component {
     formatDate = date => moment((date.split('T'))[0]).format('YYYY/MM/DD');
 
     renderLeaveHistory = () => {
-        const { leaveHistory } = this.state;
+        const { data } = this.props.leaveHistory.response;
         const { gender } = userInfo;
 
-        const typeOfLeaveML = {
-            'CL': 'CL',
-            'EL': 'EL',
-            'ML': 'ML',
-            'LOP': 'LOP',
-            'WFH': 'WFH'
-        }
-        const typeOfLeave = {
-            'CL': 'CL',
-            'EL': 'EL',
-            'LOP': 'LOP',
-            'WFH': 'WFH'
-        }
-        const LeaveType = {
-            'Approved': 'Approved',
-            'Rejected': 'Rejected',
-            'Pending': 'Pending',
-            'Cancelled': 'Cancelled'
-        };
-
-        const options = {
-            sortName: this.state.sortName,
-            sortOrder: this.state.sortOrder,
-            onSortChange: this.onSortChange,
-            sizePerPage: 10,  // which size per page you want to locate as default
-            sizePerPageList: [{
-                text: '10', value: 10
-            }, {
-                text: '25', value: 25
-            }, {
-                text: '50', value: 50
-            }, {
-                text: '100', value: 100
-            }],
-            paginationSize: 3,  // the pagination bar size.
-            paginationShowsTotal: this.renderShowsTotal,  // Accept bool or function
-        };
-
         return (
-            <BootstrapTable data={leaveHistory}
-                maxHeight='500' version='4' options={options} ignoreSinglePage pagination>
+            <BootstrapTable data={data}
+                maxHeight='500' version='4' options={tableOptions} ignoreSinglePage pagination>
                 <TableHeaderColumn isKey dataField='type_name' dataAlign="center" filterFormatted
-                    formatExtraData={gender === 'Female' ? typeOfLeaveML : typeOfLeave} filter={{ type: 'SelectFilter', options: gender === 'Female' ? typeOfLeaveML : typeOfLeave, defaultValue: 2 }}>Leave Type</TableHeaderColumn>
-                <TableHeaderColumn dataField='from_date' dataFormat={this.formatDate} dataAlign="center" dataSort>From Date</TableHeaderColumn>
-                <TableHeaderColumn dataField='to_date' dataFormat={this.formatDate} dataAlign="center" dataSort>To Date</TableHeaderColumn>
-                <TableHeaderColumn dataField='no_of_days' dataAlign="center" dataSort>Duration (days)</TableHeaderColumn>
+                    formatExtraData={gender === 'Female' ? femaleLeaveType : maleLeaveType} filter={{ type: 'SelectFilter', options: gender === 'Female' ? femaleLeaveType : maleLeaveType, defaultValue: 2 }}>LEAVE TYPE</TableHeaderColumn>
+                <TableHeaderColumn dataField='from_date' dataFormat={this.formatDate} dataAlign="center" dataSort>FROM DATE</TableHeaderColumn>
+                <TableHeaderColumn dataField='to_date' dataFormat={this.formatDate} dataAlign="center" dataSort>TO DATE</TableHeaderColumn>
+                <TableHeaderColumn dataField='no_of_days' dataAlign="center" dataSort>DURATION (days)</TableHeaderColumn>
                 <TableHeaderColumn dataAlign="center" dataField='leave_status'
                     filterFormatted
-                    formatExtraData={LeaveType} filter={{ type: 'SelectFilter', options: LeaveType, defaultValue: 2 }} dataFormat={this.statusFormat}>Status</TableHeaderColumn>
-                <TableHeaderColumn dataFormat={this.renderCancelAction} dataAlign="center">Action</TableHeaderColumn>
+                    formatExtraData={leaveFormat} filter={{ type: 'SelectFilter', options: leaveFormat, defaultValue: 2 }} dataFormat={this.statusFormat}>STATUS</TableHeaderColumn>
+                <TableHeaderColumn dataFormat={this.renderCancelAction} dataAlign="center">ACTION</TableHeaderColumn>
             </BootstrapTable>
         )
     }
@@ -148,8 +109,8 @@ class LeaveHistory extends Component {
                             </h4>
                     </ModalBody>
                     <ModalFooter>
-                        <button type="button" className="btn btn-sm btn-ems-primary" onClick={this.onSubmitCancelLeave} data-dismiss="modal">Yes</button>
-                        <button type="button" className="btn btn-sm btn-ems-secondary" onClick={() => this.toggle}>No</button>
+                        <button type="button" className="btn btn-sm btn-ems-primary" onClick={this.onSubmitCancelLeave} >Yes</button>
+                        <button type="button" className="btn btn-sm btn-ems-secondary" onClick={this.toggle}>No</button>
                     </ModalFooter>
                 </Modal>
             </div>

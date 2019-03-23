@@ -28,4 +28,25 @@ const leaveHistoryType = {
     FAIL: 'LEAVE_HISTORY_TYPE_FAIL'
 }
 
-export { leaveTypesActionType, leaveBalanceType, holidayListType, upcomingHolidayListType, leaveHistoryType }
+const reporteesLeaveListType = {
+    REQ: 'REPORTEES_LEAVE_HISTORY_REQ',
+    RES: 'REPORTEES_LEAVE_HISTORY_RES',
+    FAIL: 'REPORTEES_LEAVE_HISTORY_FAIL'
+}
+
+const allLeaveHistoryType = {
+    REQ: 'ALL_LEAVE_HISTORY_REQ',
+    RES: 'ALL_LEAVE_HISTORY_RES',
+    FAIL: 'ALL_LEAVE_HISTORY_FAIL'
+}
+
+const pendingLeaveHistoryType = {
+    REQ: 'PENDING_LEAVE_HISTORY_REQ',
+    RES: 'PENDING_LEAVE_HISTORY_RES',
+    FAIL: 'PENDING_LEAVE_HISTORY_FAIL'
+}
+
+export {
+    leaveTypesActionType, leaveBalanceType, holidayListType, allLeaveHistoryType,
+    upcomingHolidayListType, leaveHistoryType, reporteesLeaveListType, pendingLeaveHistoryType
+}

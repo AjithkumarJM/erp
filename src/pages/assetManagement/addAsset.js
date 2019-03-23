@@ -11,7 +11,7 @@ export default class addAsset extends Component {
                 <div className='row'>
                     <div className="col-12 page-header">
                         <h2>Create Asset</h2>
-                        <Link to='/asset_management' className='btn float-right ems-btn-ternary'><i className="fa fa-arrow-left" aria-hidden="true"></i> Back</Link>
+                        <Link to='/asset_management' className='btn float-right btn-ems-ternary'><i className="fa fa-arrow-left" aria-hidden="true"></i> Back</Link>
                     </div>
                     <div className='col-md-12'>
                         <div>

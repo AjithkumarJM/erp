@@ -7,7 +7,7 @@ import EmployeeTracker from './employeeTracker';
 import UpdateEmployee from './updateEmployee';
 import EmployeeDetails from './employeeDetails';
 
-class EmployeeTrackerHome extends Component {
+export default class EmployeeTrackerHome extends Component {
 
     render() {
         return (
@@ -24,5 +24,3 @@ class EmployeeTrackerHome extends Component {
         );
     }
 }
-
-export default connect(null, {})(EmployeeTrackerHome)

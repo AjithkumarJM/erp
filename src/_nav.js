@@ -22,7 +22,7 @@ export default {
       icon: 'fa fa-list',
     }, {
       name: "JAISHUians",
-      url: '/common_emp_details',
+      url: '/common_employees_info',
       icon: 'fa fa-users',
     }, {
       name: 'Project Management',

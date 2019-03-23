@@ -47,6 +47,7 @@
     "react-router-config": "^4.4.0-beta.6",
     "react-router-dom": "^4.2.2",
     "react-router-tabs": "^1.2.0",
+    "react-tabs": "^3.0.0",
     "react-toastify": "^2.1.0",
     "react-vertical-timeline": "^0.1.2",
     "react-widgets": "^4.0.2",

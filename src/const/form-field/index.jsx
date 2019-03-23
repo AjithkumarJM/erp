@@ -18,9 +18,9 @@ class FormField extends Component {
             meta: { error, touched }, inApplyLeave, fieldRequire, excludeDatesList, login
         } = field;
 
-        const childFormClassName = `form-control form-control-sm ${touched && error ? 'input-error' : ''}`;
+        const childFormClassName = `form-control form-control-sm ${touched && error ? 'is-invalid' : ''}`;
         const labelText = fieldRequire === true ? <div><span className='text-danger'>*</span> {label ? label : placeholder}</div> : label ? label : placeholder
-        const errorSection = error && touched ? <span className="text-danger"><i className='fa fa-info-circle' /> {error}</span> : ''
+        const errorSection = error && touched ? <span className="text-danger">{error} <i className='fa fa-info-circle' /> </span> : ''
 
         const excludeDates = _.map(excludeDatesList, ({ holiday_date }) => holiday_date);
 
@@ -51,7 +51,7 @@ class FormField extends Component {
 
                     <Col md={7}>
                         <DatePicker
-                            className={childFormClassName} {...input}
+                            className={childFormClassName}
                             dateFormat='YYYY/MM/DD'
                             placeholderText='YYYY/MM/DD'
                             excludeDates={inApplyLeave === true ? excludeDates : null}
@@ -63,14 +63,16 @@ class FormField extends Component {
                             tabIndex={1}
                             dropdownMode="select"
                             selected={input.value ? moment(input.value, 'YYYY/MM/DD') : null}
-                            disabled={disable} />
+                            disabled={disable}
+                            {...field}
+                        />
                         {errorSection}
                     </Col>
                 </Row>
             )
         } else {
             return (
-                <Row className={'form-group'}>
+                <Row className='form-group'>
                     {login !== true ?
                         <Col md={5} >
                             <Label >{labelText}</Label>
