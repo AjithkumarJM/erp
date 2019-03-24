@@ -3,7 +3,6 @@
 body {
   font-size: 13px;
   margin: 0px;
-  // background: hsla(0, 0%, 94.1%, 0.5215686274509804) !important;
   background: #f4f7f9;
   padding: 0px !important;
   font-family: "Roboto", sans-serif;
@@ -13,12 +12,6 @@ body {
 .secondary-text {
   color: #4f5663;
 }
-
-// thead {
-//   background-color: #24b3fe17;
-//   color: #006ebb !important;
-//   text-align: center;
-// }
 
 thead {
   background-color: #eef1f5;
@@ -34,4 +27,24 @@ td {
 
 .dropdown-menu-right {
   top: 12px !important;
+}
+
+.btn-ems-navigate {
+  background: #73818fd6;
+  color: white;
+  &:hover {
+    color: #fff;
+  }
+}
+
+.btn-ems-ternary {
+  background-color: #76797d !important;
+  color: white !important;
+  &:focus {
+    box-shadow: none !important;
+  }
+  &:hover {
+    color: white;
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
 }

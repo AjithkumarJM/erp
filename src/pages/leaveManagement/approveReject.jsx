@@ -28,7 +28,7 @@ class ApproveReject extends Component {
         getPendingLeaveHistoryById(employee_id);
     }
 
-    formatDate = date => moment((date.split('T'))[0]).format('YYYY/MM/DD');
+    formatDate = date => moment((date.split('T'))[0]).format('ddd, MMM Do YY');
 
     generateName = (row, cell) => cell.first_name + " " + cell.last_name;
 
@@ -36,7 +36,7 @@ class ApproveReject extends Component {
 
     getDetails = row => this.setState({ leaveid: row.leave_id, currentLeaveDetail: [row] })
 
-    actionFormat = (cell, row) => <button className="btn btn-ems-ternary" onClick={() => {
+    actionFormat = (cell, row) => <button className="btn btn-ems-ternary btn-sm" onClick={() => {
         this.getDetails(row)
         this.toggle()
     }}>Approve / Reject</button>
@@ -54,7 +54,7 @@ class ApproveReject extends Component {
         )
     }
 
-    pendingapprovalTable() {
+    pendingapprovalTable = () => {
         const { data } = this.props.pendingLeaveHistory.response;
 
         return (

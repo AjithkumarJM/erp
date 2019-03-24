@@ -34,7 +34,7 @@ class LeaveManagement extends Component {
         getUpcomingHolidayList()
     }
 
-    renderDates = date => `${moment(date).format('dddd')}, ${moment(date).format('ll')}`
+    renderDates = date => `${moment(date).format('ddd, MMM Do YY')}`
 
     holidayListtable = () => {
         const { data } = this.props.upcomingHolidayList.response;

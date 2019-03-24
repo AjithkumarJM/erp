@@ -6,11 +6,11 @@ import userInformation from "./../services/userDetails/reducers";
 import { allEmployeeInfo, employeeById, systemRoles, reportingToList, designationList, previousEmpId } from '../services/employeeTracker/reducers'
 import {
     leaveTypes, holidayList, leaveBalance, upcomingHolidayList,
-    leaveHistory, reporteesLeaveHistory, allLeaveHistory,pendingLeaveHistory
+    leaveHistory, reporteesLeaveHistory, allLeaveHistory, pendingLeaveHistory
 } from './../services/leaveManagement/reducers';
 import { commonEmployeesInfo } from './../services/commonEmployees/reducers';
 import { dashboardData, monthlyNotifications } from '../services/dashboard/reducers';
-import { assetsList} from '../services/assetManagement/reducers';
+import { assetsList, assetTypes } from '../services/assetManagement/reducers';
 
 /**
  * combineReducers is simply a utility function to simplify the most common use case when writing Redux reducers.
@@ -41,6 +41,7 @@ const rootReducer = combineReducers({
     commonEmployeesInfo,
 
     assetsList,
+    assetTypes,
 
     form: formReducer,
 });

@@ -220,7 +220,7 @@ class CreateAsset extends Component {
                         </div>
                     </div>
                 </form >
-                <div className="row justify-content-md-center bulkupload-wrap">
+                <div className="row justify-content-md-center ">
                     <div >
                         <button type='submit' onClick={handleSubmit(this.submit.bind(this))} className="btn-spacing btn btn-sm btn-ems-primary" disabled={pristine || submitting}>Add</button>
                     </div>

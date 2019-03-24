@@ -22,13 +22,13 @@ const getReporteesLeaveListById = id => API_CALL('get', `leave/fullhistoryby/${i
 
 const getAllLeaveHistory = () => API_CALL('get', 'entire/leave/history', null, allLeaveHistoryType);
 
-const getPendingLeaveHistoryById = id => API_CALL('get', `leave/pending/${id}`, null, pendingLeaveHistoryType)
+const getPendingLeaveHistoryById = id => API_CALL('get', `leave/pending/${id}`, null, pendingLeaveHistoryType);
 
-const postLeaveBulkUpload = ({ file }) => {
+const postLeaveBulkUpload = ({ file }, callback) => {
     let values = new FormData();
     values.append('file', file[0]);
 
-    return API_CALL('post', 'asset/bulkupload', values, null, callback)
+    return API_CALL('post', 'bulkupload', values, null, callback)
 }
 
 export {

@@ -1,41 +1,44 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
-import { AssetbulkUpload } from './../../actions'
-import { Field, reduxForm } from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
-import AlertContainer from 'react-alert'
 import Loader from 'react-loader-advanced';
+import _ from 'lodash';
+
+import { spinner } from '../../const';
+import { postAssetBulkUpload } from '../../services/assetManagement';
 
 class AssetBulkupload extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            spinner: <div className="lds-ripple"><div></div><div></div></div>,
-            loader: {
-                visible: false,
-            },
-            alertOptions: {
-                offset: 14,
-                position: 'bottom right',
-                theme: 'dark',
-                time: 5000,
-                transition: 'scale'
-            }
+            loader: false, enableErrorMessage: false
         }
     }
 
-    generateInputField(field) {
-        const { meta: { touched, error } } = field;
-        const parentClassName = `form-group row`
-        const childClassName = `form-control form-control-sm ${touched && error ? 'is-invalid' : ''}`
+    onSubmitBulkUpload = values => {
+        const { postLeaveBulkUpload } = this.props;
 
+        this.setState({ loader: true })
+        postLeaveBulkUpload(values, data => {
+            const { code, message } = data.data;
+            if (code === 'EMS_306') {
+                this.setState({ loader: false })
+                $("#file-upload").val("")
+            } else this.setState({ loader: false, errorMessage: message, enableErrorMessage: true })
+        })
+    }
+
+    renderField = field => {
+        const { meta: { touched, error } } = field;
+        const childClassName = `form-control form-control-sm ${touched && error ? 'is-invalid' : ''}`
         delete field.input.value;
+
         return (
-            < div className={parentClassName} >
-                <label className="col-sm-3 col-form-label col-form-label-sm">{field.label}</label>
+
+            < div className='row' >
+                <label className="col-sm-3 col-form-label col-form-label-sm ">{field.label}</label>
                 <div className='col-sm-9'>
                     <input
-                        {...field.input}
                         disabled={field.usage}
                         className={childClassName}
                         id='file-upload'
@@ -43,7 +46,7 @@ class AssetBulkupload extends Component {
                         type={field.type}
                         placeholder={field.placeholder}
                         value={field.input.value}
-                    />
+                        {...field.input} />
                     <div className="text-help">
                         {touched && error ? <div className='text-danger'>{error} <span ><i className='fa fa-exclamation-circle' /></span></div> : ''}
                     </div>
@@ -52,75 +55,45 @@ class AssetBulkupload extends Component {
         )
     }
 
+    renderErrorMessage = () => {
+        const { errorMessage, enableErrorMessage } = this.state;
 
-    bulkUpload(values) {
-        this.setState({ loader: { visible: true } })
-        this.props.AssetbulkUpload(values, (data) => {
-            if (data.data.code == 'EMS_306') {
-                this.setState({ loader: { visible: false } })
-                this.msg.show(data.data.message, {
-                    position: 'bottom right',
-                    type: 'success',
-                    theme: 'dark',
-                    time: 3000
-                })
-                $("#file-upload").val("")
-                setTimeout(() => {
-                    window.location.href = '/asset_management';
-                    // <Link to='/asset_management'></Link>
-                }, 3000);
-            } else {
-                this.msg.show(data.data.message, {
-                    position: 'bottom right',
-                    type: 'error',
-                    theme: 'dark',
-                    time: 5000
-                })
-                this.setState({ loader: { visible: false } })
-            }
-        })
+        if (enableErrorMessage === true) return <div className='alert alert-danger mt-3 ml-4 mr-4'>{errorMessage} <i className='float-right fa fa-times-circle' onClick={() => this.setState({ enableErrorMessage: false })} /></div>
     }
-
 
     render() {
         const { handleSubmit } = this.props;
-        const { loader, spinner, alertOptions } = this.state;
+        const { loader } = this.state;
 
         return (
             <div>
-                <Loader show={loader.visible} message={spinner} />
-                <AlertContainer ref={a => this.msg = a} {...alertOptions} />
-                <div>
-                    <br></br>
-                    <form className="row justify-content-md-center" onSubmit={handleSubmit(this.bulkUpload.bind(this))}>
+                <Loader show={loader} message={spinner} />
+                <div className="d-flex justify-content-center">
+                    <form onSubmit={handleSubmit(this.onSubmitBulkUpload)} style={{ display: 'inline-flex' }}>
                         <Field
                             label='File Upload'
                             required
                             placeholder="Select the file to upload"
                             name="file"
                             type="file"
-                            component={this.generateInputField}
+                            component={this.renderField}
                         />
-                        <div className='col-md-2'>
-                            <button type='submit' className="btn btn-sm btn-ems-primary">Upload</button>
+                        <div>
+                            <button type='submit' className="btn btn-sm btn-ems-primary mt-1 ml-2">Upload</button>
                         </div>
                     </form>
                 </div>
-                <br></br>
-            </div >
+                {this.renderErrorMessage()}
+            </div>
         )
     }
 }
 
 function validate(values) {
     const errors = {};
-    if (!values.file) {
-        errors.file = "Select the file"
-    }
+    if (!values.file) return errors.file = "Select the file"
     if (values.file) {
-        if (values.file.length == 0) {
-            errors.file = "Select the file"
-        }
+        if (values.file.length == 0) { errors.file = "Select the file" }
     }
 
     return errors;
@@ -128,8 +101,5 @@ function validate(values) {
 
 export default reduxForm({
     validate,
-    form: 'AssetBulkupload',
-})(connect(null, {
-    AssetbulkUpload
-})(AssetBulkupload));
-
+    form: 'bulkuploadForm',
+})(connect(null, { postAssetBulkUpload })(AssetBulkupload));

@@ -38,7 +38,7 @@ export default class LeaveManagementHome extends Component {
                     <h2>Leave Management</h2>
                 </div>
                 <NavTab to="/leave_management/apply_leave">Apply Leave</NavTab>
-                <NavTab to={`/leave_management/leave_history/${employee_id}`}>Leave History</NavTab>
+                <NavTab to={`/leave_management/leave_history/${employee_id}`}>My Leave History</NavTab>
                 {role_id === 3 || role_id === 8 || role_id === 9 ?
                     <span>
                         <NavTab to="/leave_management/reportees_leaveHistory" >Reportees Leave History</NavTab>
@@ -46,7 +46,7 @@ export default class LeaveManagementHome extends Component {
                     </span>
                     : null
                 }
-                {role_id === 3 ? < button className='btn btn-ems-ternary float-right' onClick={this.toggle}>Bulk Upload <i className="ml-2 fa fa-upload"></i></button> : null}
+                {role_id === 3 ? < button className='btn btn-ems-ternary btn-sm float-right' onClick={this.toggle}>Bulk Upload <i className="ml-2 fa fa-upload"></i></button> : null}
 
                 <Switch>
                     <Route exact path='/leave_management/apply_leave' render={props => <ApplyLeave {...props} />} />

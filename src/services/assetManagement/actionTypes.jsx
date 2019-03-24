@@ -4,4 +4,10 @@ const assetListType = {
     FAIL: 'ASSET_LIST_FAIL'
 }
 
-export { assetListType }
+const assetTypesActionType = {
+    REQ: 'ASSET_TYPES_REQ',
+    RES: 'ASSET_TYPES_RES',
+    FAIL: 'ASSET_TYPES_FAIL'
+}
+
+export { assetListType, assetTypesActionType }

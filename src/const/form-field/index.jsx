@@ -64,7 +64,7 @@ class FormField extends Component {
                             dropdownMode="select"
                             selected={input.value ? moment(input.value, 'YYYY/MM/DD') : null}
                             disabled={disable}
-                            {...field}
+                            {...input}
                         />
                         {errorSection}
                     </Col>

@@ -11,7 +11,7 @@ class HolidayList extends Component {
 
     componentWillMount = () => this.props.getHolidayList();
 
-    renderDates = date => `${moment(date).format('dddd')}, ${moment(date).format('ll')}`
+    renderDates = date => `${moment(date).format('dddd')} ${moment(date).format('ll')}`
 
     renderHolidayList = () => {
         const { data } = this.props.holidayList.response;

@@ -40,12 +40,12 @@ class LeaveHistory extends Component {
 
         if (leave_status == 'Pending' || leave_status == 'Approved') {
             if (this.formatDate(from_date) > moment().format('YYYY/MM/DD')) {
-                return <button className='btn btn-ems-ternary btn-sm' onClick={() => this.setState({ rowData: row, modal: !this.state.modal })} data-toggle="modal" data-target="#emp_cancel">Cancel Leave</button>
+                return <button className='btn btn-ems-ternary btn-sm' onClick={() => this.setState({ rowData: row, modal: !this.state.modal })} >Cancel Leave</button>
             }
         }
     }
 
-    formatDate = date => moment((date.split('T'))[0]).format('YYYY/MM/DD');
+    formatDate = date => moment((date.split('T'))[0]).format('ddd, MMM Do YY');
 
     renderLeaveHistory = () => {
         const { data } = this.props.leaveHistory.response;
@@ -54,14 +54,11 @@ class LeaveHistory extends Component {
         return (
             <BootstrapTable data={data}
                 maxHeight='500' version='4' options={tableOptions} ignoreSinglePage pagination>
-                <TableHeaderColumn isKey dataField='type_name' dataAlign="center" filterFormatted
-                    formatExtraData={gender === 'Female' ? femaleLeaveType : maleLeaveType} filter={{ type: 'SelectFilter', options: gender === 'Female' ? femaleLeaveType : maleLeaveType, defaultValue: 2 }}>LEAVE TYPE</TableHeaderColumn>
+                <TableHeaderColumn isKey dataField='type_name' dataAlign="center" filterFormatted formatExtraData={gender === 'Female' ? femaleLeaveType : maleLeaveType} filter={{ type: 'SelectFilter', options: gender === 'Female' ? femaleLeaveType : maleLeaveType, defaultValue: 2 }}>LEAVE TYPE</TableHeaderColumn>
                 <TableHeaderColumn dataField='from_date' dataFormat={this.formatDate} dataAlign="center" dataSort>FROM DATE</TableHeaderColumn>
                 <TableHeaderColumn dataField='to_date' dataFormat={this.formatDate} dataAlign="center" dataSort>TO DATE</TableHeaderColumn>
                 <TableHeaderColumn dataField='no_of_days' dataAlign="center" dataSort>DURATION (days)</TableHeaderColumn>
-                <TableHeaderColumn dataAlign="center" dataField='leave_status'
-                    filterFormatted
-                    formatExtraData={leaveFormat} filter={{ type: 'SelectFilter', options: leaveFormat, defaultValue: 2 }} dataFormat={this.statusFormat}>STATUS</TableHeaderColumn>
+                <TableHeaderColumn dataAlign="center" dataField='leave_status' filterFormatted formatExtraData={leaveFormat} filter={{ type: 'SelectFilter', options: leaveFormat, defaultValue: 2 }} dataFormat={this.statusFormat}>STATUS</TableHeaderColumn>
                 <TableHeaderColumn dataFormat={this.renderCancelAction} dataAlign="center">ACTION</TableHeaderColumn>
             </BootstrapTable>
         )
@@ -104,13 +101,13 @@ class LeaveHistory extends Component {
 
                 <Modal isOpen={modal} toggle={this.toggle} className={className}>
                     <ModalBody>
-                        <h4 className="text-center">
+                        <h4 className="text-center font-weight-thin">
                             Are you sure, you want to cancel the leave ?
                             </h4>
                     </ModalBody>
                     <ModalFooter>
                         <button type="button" className="btn btn-sm btn-ems-primary" onClick={this.onSubmitCancelLeave} >Yes</button>
-                        <button type="button" className="btn btn-sm btn-ems-secondary" onClick={this.toggle}>No</button>
+                        <button type="button" className="btn btn-sm btn-ems-clear" onClick={this.toggle}>No</button>
                     </ModalFooter>
                 </Modal>
             </div>

@@ -90,7 +90,7 @@ class UpdateEmployee extends Component {
                     <Row>
                         <Col md={12} className="page-header">
                             <h2>Update Employee</h2>
-                            <Link to='/employee_tracker' className='btn btn-sm float-right modalBtn'><i className="fa fa-arrow-left" aria-hidden="true"></i> Back</Link>
+                            <Link to='/employee_tracker' className='btn btn-sm btn-ems-navigate float-right'><i className="fa fa-arrow-left" aria-hidden="true"></i> Back</Link>
                         </Col>
                     </Row>
 

@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Col } from 'reactstrap';
 import moment from 'moment';
 import Loader from 'react-loader-advanced';
-import { Col } from 'reactstrap';
 import _ from 'lodash';
 
 import { getEmployeesInfo } from '../../services/employeeTracker';
 import { userInfo, spinner, tableOptions } from '../../const'
 
-class EmployeeTracker extends Component {
+class ActiveEmployees extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            empDetails: {}
+            empDetails: {},
+            modal: false
         }
     }
 
@@ -29,6 +30,8 @@ class EmployeeTracker extends Component {
     renderupdate = (row, cell) => <Link to={`/employee_tracker/update_employee/${cell.id}`} className="btn btn-ems-ternary btn-sm mr-1">Update</Link>
 
     generateName = (row, cell) => <Link to={`/employee_tracker/info/${cell.id}`}>{`${cell.first_name} ${cell.last_name}`}</Link>
+
+    toggle = () => this.setState({ modal: !this.state.modal });
 
     renderTable = () => {
         const { data } = this.props.allEmployeeInfo.response;
@@ -55,10 +58,7 @@ class EmployeeTracker extends Component {
         else {
             return (
                 <div>
-                    <Col md={12} className="page-header mb-3">
-                        <h2>Employee Tracker</h2>
-                    </Col>
-                    <div className="p-1">
+                    <div className="p-1 pt-3">
                         {this.renderTable()}
                     </div>
                 </div >
@@ -67,8 +67,8 @@ class EmployeeTracker extends Component {
     }
 }
 
-const mapStateToProps = ({ userInformation, allEmployeeInfo }) => {
-    return { userInformation, allEmployeeInfo };
+function mapStateToProps({ allEmployeeInfo }) {
+    return { allEmployeeInfo };
 }
 
-export default connect(mapStateToProps, { getEmployeesInfo })(EmployeeTracker);
+export default connect(mapStateToProps, { getEmployeesInfo })(ActiveEmployees);

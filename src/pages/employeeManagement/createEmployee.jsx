@@ -67,7 +67,7 @@ class CreateEmployee extends Component {
             }
         })
     }
-    
+
     normalizePhone = value => {
         if (!value) return value;
         const onlyNums = value.replace(/[^\d]/g, '')
@@ -79,7 +79,7 @@ class CreateEmployee extends Component {
 
     render() {
         const { handleSubmit, reset, pristine, submitting, previousEmpId } = this.props;
-        const { loader, designationList, systemroles, reportingToList, genderList } = this.state;
+        const { loader, designationList, systemroles, reportingToList } = this.state;
         let { required, email, mobile_number } = validator;
 
         if (previousEmpId.requesting === true) return <Loader show={true} message={spinner} />
@@ -91,7 +91,7 @@ class CreateEmployee extends Component {
                     <div className='row'>
                         <div className="col-12 page-header">
                             <h2>Add Employee</h2>
-                            <Link to='/employee_tracker' className='btn btn-sm float-right modalBtn'><i className="fa fa-arrow-left" aria-hidden="true"></i> Back</Link>
+                            <Link to='/employee_tracker' className='btn btn-sm btn-ems-navigate float-right'><i className="fa fa-arrow-left" aria-hidden="true"></i> Back</Link>
                         </div>
                     </div>
                     <div>

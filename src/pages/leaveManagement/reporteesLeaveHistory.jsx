@@ -26,7 +26,7 @@ class ReporteesLeaveHistory extends Component {
         else if (leave_status === 'Approved') return <div className='badge p-2 rounded bg-approved secondary-text'>{leave_status}</div>
     }
 
-    formatDate = date => moment((date.split('T'))[0]).format('YYYY/MM/DD');
+    formatDate = date => moment((date.split('T'))[0]).format('ddd, MMM Do YY');
 
     generateName = (row, cell) => cell.first_name + " " + cell.last_name;
 
