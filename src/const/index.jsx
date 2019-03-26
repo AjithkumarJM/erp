@@ -21,7 +21,7 @@ const genderList = [
 ]
 
 const employeeTypeList = [
-    { name: 'Active', value: 'Active' }, { name: 'inActive', value: 'inActive' }
+    { name: 'Active', value: 1 }, { name: 'inActive', value: 0 }
 ]
 
 const tableOptions = {

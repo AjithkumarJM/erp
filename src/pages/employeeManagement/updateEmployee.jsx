@@ -118,7 +118,7 @@ class UpdateEmployee extends Component {
 
                                     <FormField
                                         label="Employee Type"
-                                        name="isActive"
+                                        name="is_active"
                                         fieldRequire={true}
                                         type="select"
                                         list={employeeTypeList}
