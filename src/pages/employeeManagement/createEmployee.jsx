@@ -30,17 +30,6 @@ class CreateEmployee extends Component {
         getPrevEmployeeId();
     }
 
-    componentWillReceiveProps = ({ systemRoles, reportingToList, designationList }) => {
-
-        if (designationList.response) {
-            this.setState({
-                // systemRoles: systemRoles.response.data,
-                reportingToList: reportingToList.response.data,
-                designationList: designationList.response.data,
-            })
-        }
-    }
-
     notify = (message, type) => this.msg.show(message, { type });
 
     submitForm = values => {
@@ -78,12 +67,15 @@ class CreateEmployee extends Component {
     }
 
     render() {
-        const { handleSubmit, reset, pristine, submitting, previousEmpId } = this.props;
-        const { loader, designationList, systemroles, reportingToList } = this.state;
+        const {
+            handleSubmit, reset, pristine, submitting, previousEmpId,
+            designationList, systemRoles, reportingToList, systemRoles: { response }
+        } = this.props;
+        const { loader } = this.state;
         let { required, email, mobile_number } = validator;
 
         if (previousEmpId.requesting === true) return <Loader show={true} message={spinner} />
-        else {
+        else if (response && response.data) {
             return (
                 <div className='p-2'>
                     <Loader show={loader} message={spinner} />
@@ -178,7 +170,7 @@ class CreateEmployee extends Component {
                                         name="designation_id"
                                         fieldRequire={true}
                                         type="select"
-                                        list={designationList}
+                                        list={designationList.response.data}
                                         keyword="id"
                                         option="name"
                                         validate={[required]}
@@ -189,7 +181,7 @@ class CreateEmployee extends Component {
                                         name="role_id"
                                         fieldRequire={true}
                                         type="select"
-                                        list={systemroles}
+                                        list={systemRoles.response.data}
                                         keyword="id"
                                         option="role_name"
                                         validate={[required]}
@@ -206,7 +198,7 @@ class CreateEmployee extends Component {
                                         fieldRequire={true}
                                         type="select"
                                         validate={[required]}
-                                        list={reportingToList}
+                                        list={reportingToList.response.data}
                                         keyword='emp_id'
                                         option='emp_name'
                                     />
@@ -293,7 +285,7 @@ class CreateEmployee extends Component {
                     </div >
                 </div >
             );
-        }
+        } else return <Loader show={true} message={spinner} />
     }
 }
 

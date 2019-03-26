@@ -3,7 +3,10 @@ import thunk from 'redux-thunk';
 import { reducer as formReducer } from 'redux-form';
 
 import userInformation from "./../services/userDetails/reducers";
-import { allEmployeeInfo, employeeById, systemRoles, reportingToList, designationList, previousEmpId } from '../services/employeeTracker/reducers'
+import {
+    allEmployeeInfo, employeeById, systemRoles, reportingToList,
+    designationList, previousEmpId, inActiveEmployees
+} from '../services/employeeTracker/reducers'
 import {
     leaveTypes, holidayList, leaveBalance, upcomingHolidayList,
     leaveHistory, reporteesLeaveHistory, allLeaveHistory, pendingLeaveHistory
@@ -24,6 +27,7 @@ const rootReducer = combineReducers({
     designationList,
     systemRoles,
     employeeById,
+    inActiveEmployees,
 
     dashboardData,
     monthlyNotifications,

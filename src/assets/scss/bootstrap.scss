@@ -4797,10 +4797,10 @@ html {
       border-top-right-radius: 0.25rem;
     }
     &.active .page-link {
-      z-index: 2;
-      color: #fff;
-      background-color: #0275d8;
-      border-color: #0275d8;
+      z-index: 1;
+      color: #26252694 !important;
+      background-color: #eef1f5 !important;
+      border-color: #ccc !important;
     }
     &.disabled .page-link {
       color: #636c72;
@@ -4817,11 +4817,11 @@ html {
     padding: .5rem .75rem;
     margin-left: -1px;
     line-height: 1.25;
-    color: #0275d8;
+    color: #0000009c !important;
     background-color: #fff;
     border: 1px solid #ddd;
     &:focus, &:hover {
-      color: #014c8c;
+      color: #0000009c !important;
       text-decoration: none;
       background-color: #eceeef;
       border-color: #ddd;

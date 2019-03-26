@@ -1,17 +1,22 @@
 import axios from 'axios';
 import { ROOT_URL, userInfo } from '../const';
+import cookie from 'react-cookies';
 
 function API_CALL(method, url, data, type, callback, file) {
     console.log("Calling API for the method of " + method + " : " + ROOT_URL + url);
-    axios.interceptors.response.use(undefined, function (err) {
-        // Handling the errors (e.g: 401 Unauthorized)
-        console.log(err);
+
+    // Add a response interceptor
+    axios.interceptors.response.use(null, error => {
+        // Do something with response error
+        cookie.remove('session');
+        // window.location.reload();
+        return Promise.reject(error);
     });
 
     let headers = {};
     if (userInfo) {
         const { token } = userInfo;
-        headers['Authorization'] = token;
+        headers['access-token'] = token;
     }
 
     if (callback) {

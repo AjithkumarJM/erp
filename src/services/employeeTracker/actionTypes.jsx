@@ -35,4 +35,13 @@ const prevEmpIdType = {
     FAIL: 'PREV_EMP_ID_FAIL'
 }
 
-export { allEmployeeInfoType, employeeByIdType, systemRoleType, reportingToListType, designationListType, prevEmpIdType }
+const inActiveEmployeesType = {
+    REQ: 'INACTIVE_EMPLOYEES_REQ',
+    RES: 'INACTIVE_EMPLOYEES_RES',
+    FAIL: 'INACTIVE_EMPLOYEES_FAIL'
+}
+
+export {
+    allEmployeeInfoType, employeeByIdType, systemRoleType,
+    inActiveEmployeesType, reportingToListType, designationListType, prevEmpIdType
+}

@@ -1,7 +1,7 @@
 import API_CALL from "../index";
 import {
     allEmployeeInfoType, employeeByIdType, systemRoleType,
-    reportingToListType, designationListType, prevEmpIdType
+    reportingToListType, designationListType, prevEmpIdType, inActiveEmployeesType
 } from "./actionTypes";
 
 const getEmployeesInfo = () => API_CALL('get', `employee/list`, null, allEmployeeInfoType);
@@ -20,7 +20,9 @@ const createEmployee = (values, callback) => API_CALL('post', 'employee/create',
 
 const updateEmployee = (values, callback) => API_CALL('post', 'employee/update', values, null, callback);
 
+const getInactiveEmployees = () => API_CALL('get', 'get/common/list/inactive/employee/details', null, inActiveEmployeesType)
+
 export {
-    getEmployeesInfo, getEmployeeById, getSystemRole, getReportingToList,
+    getEmployeesInfo, getEmployeeById, getSystemRole, getReportingToList, getInactiveEmployees,
     getDesignationList, getPrevEmployeeId, createEmployee, updateEmployee
 }

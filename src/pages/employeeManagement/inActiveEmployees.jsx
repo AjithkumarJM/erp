@@ -6,7 +6,7 @@ import { Col } from 'reactstrap';
 import Loader from 'react-loader-advanced';
 import _ from 'lodash';
 
-import { getEmployeesInfo } from '../../services/employeeTracker';
+import { getInactiveEmployees } from '../../services/employeeTracker';
 import { userInfo, spinner, tableOptions } from '../../const'
 
 class EmployeeTracker extends Component {
@@ -20,9 +20,9 @@ class EmployeeTracker extends Component {
 
     componentWillMount = () => {
         const { role_id } = userInfo;
-        const { getEmployeesInfo } = this.props;
+        const { getInactiveEmployees } = this.props;
 
-        if (role_id === 3) getEmployeesInfo();
+        if (role_id === 3) getInactiveEmployees();
     }
 
     formatDate = date => typeof (date == 'string') ? moment(date).format('YYYY/MM/DD') : date
@@ -32,7 +32,7 @@ class EmployeeTracker extends Component {
     generateName = (row, cell) => <Link to={`/employee_tracker/info/${cell.id}`}>{`${cell.first_name} ${cell.last_name}`}</Link>
 
     renderInactiveEmployees = () => {
-        const { data } = this.props.allEmployeeInfo.response;
+        const { data } = this.props.inActiveEmployees.response;
 
         return (
             <BootstrapTable data={data} maxHeight='500' version='4' options={tableOptions} ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
@@ -47,7 +47,7 @@ class EmployeeTracker extends Component {
     }
 
     render() {
-        const { allEmployeeInfo: { requesting } } = this.props;
+        const { inActiveEmployees: { requesting } } = this.props;
 
         if (requesting) return <Loader show={true} message={spinner} />
         else {
@@ -62,8 +62,8 @@ class EmployeeTracker extends Component {
     }
 }
 
-const mapStateToProps = ({ allEmployeeInfo }) => {
-    return { allEmployeeInfo };
+const mapStateToProps = ({ inActiveEmployees }) => {
+    return { inActiveEmployees };
 }
 
-export default connect(mapStateToProps, { getEmployeesInfo })(EmployeeTracker);
+export default connect(mapStateToProps, { getInactiveEmployees })(EmployeeTracker);
