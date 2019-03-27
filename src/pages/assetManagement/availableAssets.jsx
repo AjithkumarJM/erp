@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import Loader from 'react-loader-advanced';
 import AlertContainer from 'react-alert'
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import { spinner, alertOptions, userInfo, tableOptions } from '../../const';
 import { getAssets, postAssetStatus } from '../../services/assetManagement';
+import AssignAsset from './assignAssetForm';
 
 class AvailableAssets extends Component {
     constructor(props) {
@@ -14,7 +16,9 @@ class AvailableAssets extends Component {
         this.state = {
             outputValues: [],
             toggleButton: false,
-            loader: false
+            loader: false,
+            modal: false,
+            modalAssign: false
         }
     }
 
@@ -48,9 +52,13 @@ class AvailableAssets extends Component {
         }
     }
 
+    toggle = () => this.setState({ modal: !this.state.modal })
+
+    toggleAssignModal = () => this.setState({ modalAssign: !this.state.modalAssign })
+
     formatDate = date => typeof (date == 'string') ? moment(date).format('YYYY/MM/DD') : date
 
-    renderupdate = (row, { id }) => <Link to={`/asset_management/update_asset/${id}`} className="btn btn-ems-ternary btn-sm mr-1">Update</Link>    
+    renderupdate = (row, { id }) => <Link to={`/asset_management/update_asset/${id}`} className="btn btn-ems-ternary btn-sm mr-1">Update</Link>
 
     renderAssetLink = (row, { asset_serial_no, id }) => <Link to={`/asset_management/info/${id}`}>{asset_serial_no}</Link>
 
@@ -74,13 +82,13 @@ class AvailableAssets extends Component {
                 pagination
             >
                 <TableHeaderColumn isKey dataField='id' hidden dataAlign="center"  >id</TableHeaderColumn>
-                <TableHeaderColumn dataField='asset_serial_no' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }} dataFormat={this.renderAssetLink}>Serial #</TableHeaderColumn>
-                <TableHeaderColumn dataField='make' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>Make</TableHeaderColumn>
-                <TableHeaderColumn dataField='type_name' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>Type</TableHeaderColumn>
-                <TableHeaderColumn dataField='model' dataAlign="center" >Model</TableHeaderColumn>
-                <TableHeaderColumn dataField='warranty_expiry_date' dataAlign="center" dataSort dataFormat={this.formatDate}>Warranty Expires On</TableHeaderColumn>
-                <TableHeaderColumn dataField='scrap_date' dataAlign="center" dataFormat={this.formatDate} >Scrap Date</TableHeaderColumn>
-                <TableHeaderColumn dataField='' dataAlign="center" dataFormat={this.renderupdate}>Action</TableHeaderColumn>
+                <TableHeaderColumn dataField='asset_serial_no' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }} dataFormat={this.renderAssetLink}>SERIAL #</TableHeaderColumn>
+                <TableHeaderColumn dataField='make' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>MAKE</TableHeaderColumn>
+                <TableHeaderColumn dataField='type_name' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>TYPE</TableHeaderColumn>
+                <TableHeaderColumn dataField='model' dataAlign="center" >MODEL</TableHeaderColumn>
+                <TableHeaderColumn dataField='warranty_expiry_date' dataAlign="center" dataSort dataFormat={this.formatDate}>WARRANTY EXPIRES ON</TableHeaderColumn>
+                <TableHeaderColumn dataField='scrap_date' dataAlign="center" dataFormat={this.formatDate} >SCRAP DATE</TableHeaderColumn>
+                <TableHeaderColumn dataField='' dataAlign="center" dataFormat={this.renderupdate}>ACTION</TableHeaderColumn>
             </BootstrapTable>
         )
     }
@@ -117,10 +125,10 @@ class AvailableAssets extends Component {
 
             return (
                 <div className='actionBtnStyling'>
-                    <button className='btn btn-secondary float-right btn-ems-ternary btn-sm' onClick={() => this.onSubmitAsset('ASSIGN')}>Assign Asset
+                    <button className='btn btn-secondary float-right btn-ems-ternary btn-sm' onClick={this.toggleAssignModal}>Assign Asset
                 <i className='fa fa-tasks ml-2' /></button>
 
-                    <button className='btn btn-secondary float-right btn-ems-ternary btn-sm mr-1' onClick={() => this.onSubmitAsset('SCRAP')}>Scrap Asset
+                    <button className='btn btn-secondary float-right btn-ems-ternary btn-sm mr-1' onClick={this.toggle}>Scrap Asset
                 <i className='fa fa-trash ml-2' /></button>
                 </div>
             );
@@ -128,8 +136,8 @@ class AvailableAssets extends Component {
     }
 
     render() {
-        const { assetsList: { requesting } } = this.props;
-        const { loader } = this.state;
+        const { assetsList: { requesting }, className } = this.props;
+        const { loader, modal, modalAssign, outputValues } = this.state;
 
         if (requesting) return <Loader show={true} message={spinner} />
         else {
@@ -139,6 +147,23 @@ class AvailableAssets extends Component {
                     <AlertContainer ref={a => this.msg = a} {...alertOptions} />
                     {this.renderAssetTable()}
                     {this.renderActionButtons()}
+
+                    <Modal isOpen={modal} toggle={this.toggle} className={className}>
+                        <ModalBody>
+                            <h4 className="text-center">Are you sure, you want to scrap the Asset(s) ?</h4>
+                        </ModalBody>
+                        <ModalFooter>
+                            <button className='btn btn-sm btn-ems-primary' onClick={() => this.onSubmitAsset()}>Yes</button>
+                            <button className='btn btn-sm btn-ems-clear' onClick={this.toggle}>No</button>
+                        </ModalFooter>
+                    </Modal>
+
+                    <Modal isOpen={modalAssign} toggle={this.toggleAssignModal} className={className}>
+                        <ModalHeader toggle={this.toggleAssignModal}>Assign Asset</ModalHeader>
+                        <ModalBody>
+                            <AssignAsset assetIdList={outputValues} />
+                        </ModalBody>
+                    </Modal>
                 </div>
             );
         }

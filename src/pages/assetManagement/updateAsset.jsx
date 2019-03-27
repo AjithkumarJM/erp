@@ -2,17 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col } from 'reactstrap';
 import { reduxForm } from 'redux-form';
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import Loader from 'react-loader-advanced';
+import moment from 'moment';
 import AlertContainer from 'react-alert'
 
-import AssetBulkupload from './assetBulkupload';
 import FormField from '../../const/form-field';
 import { validator } from '../../const/form-field/validator';
 import { spinner, alertOptions } from '../../const';
 import { getAssetTypes, postUpdateAsset, getAssetDetails } from '../../services/assetManagement';
 
-class CreateAsset extends Component {
+class UpdateAsset extends Component {
 
     constructor(props) {
         super(props);
@@ -24,9 +23,9 @@ class CreateAsset extends Component {
 
     componentWillMount = () => {
         const { getAssetTypes, getAssetDetails, } = this.props;
-        const { id } = this.props.match.params;
+        const { assetId } = this.props.match.params;
 
-        getAssetDetails(id)
+        getAssetDetails(assetId)
         getAssetTypes();
 
     }
@@ -36,16 +35,16 @@ class CreateAsset extends Component {
     notify = (message, type) => this.msg.show(message, { type });
 
     onSubmitAddasset = values => {
-        const { reset, postCreateAsset, history } = this.props;
+        const { reset, postUpdateAsset, history } = this.props;
         const { purchase_date } = values;
 
         if (purchase_date._isValid) values.purchase_date = moment(purchase_date._d).format('YYYY/MM/DD')
-
-        Object.keys(values).map(key => values[key] = values[key].trim())
+        
+        Object.keys(values).map(k => values[k] = values[k].toString().trim());
 
         this.setState({ loader: true })
 
-        postCreateAsset(values, data => {
+        postUpdateAsset(values, data => {
             const { code, message } = data.data;
 
             if (code === 'EMS_001') {
@@ -166,7 +165,7 @@ class CreateAsset extends Component {
                             </div>
                         </form >
                         <div className="text-center">
-                            <button type='submit' onClick={handleSubmit(this.onSubmitAddasset)} className="btn-spacing btn btn-sm btn-ems-primary" disabled={pristine || submitting}>Add</button>
+                            <button type='submit' onClick={handleSubmit(this.onSubmitAddasset)} className="btn-spacing btn btn-sm btn-ems-primary" disabled={pristine || submitting}>Update</button>
                             <button type='reset' onClick={reset} disabled={pristine || submitting} className="btn btn-sm btn-ems-clear">Clear</button>
                         </div >
                     </Col>
@@ -176,10 +175,18 @@ class CreateAsset extends Component {
     }
 }
 
-const mapStateToProps = ({ assetTypes }) => {
-    return { assetTypes }
+const mapStateToProps = ({ assetTypes, assetInfo }) => {
+    let initialValues;
+    assetInfo.response.data ? initialValues = assetInfo.response.data.asset_details : null;
+
+    if (initialValues) initialValues.purchase_date = moment(initialValues.purchase_date).format('YYYY/MM/DD');
+
+    return { assetTypes, initialValues }
 }
 
-export default reduxForm({
-    form: 'createAssetForm'
-})(connect(mapStateToProps, { getAssetTypes, postUpdateAsset, getAssetDetails })(CreateAsset));
+UpdateAsset = reduxForm({
+    enableReinitialize: true,
+    form: 'updateAssetForm',
+})(UpdateAsset)
+
+export default connect(mapStateToProps, { getAssetTypes, postUpdateAsset, getAssetDetails })(UpdateAsset);

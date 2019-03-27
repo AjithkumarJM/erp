@@ -7,6 +7,8 @@ const getAssetTypes = () => API_CALL('get', 'asset/type/list', null, assetTypesA
 
 const postCreateAsset = (values, callback) => API_CALL('post', 'create/asset', values, null, callback);
 
+const postUpdateAsset = (values, callback) => API_CALL('post', 'update/asset', values, null, callback);
+
 const postAssetStatus = (values, callback) => API_CALL('post', 'update/asset/status', values, null, callback);
 
 const getAssetDetails = id => API_CALL('get', `get/asset/details/${id}`, null, assetDetailsType);
@@ -18,4 +20,7 @@ const postAssetBulkUpload = ({ file }, callback) => {
     return API_CALL('post', 'asset/bulkupload', values, null, callback)
 }
 
-export { getAssets, getAssetTypes, postCreateAsset, postAssetBulkUpload, postAssetStatus, getAssetDetails }
+export {
+    getAssets, getAssetTypes, postCreateAsset, postUpdateAsset,
+    postAssetBulkUpload, postAssetStatus, getAssetDetails
+}

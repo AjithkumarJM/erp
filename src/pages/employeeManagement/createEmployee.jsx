@@ -40,12 +40,12 @@ class CreateEmployee extends Component {
         if (date_of_birth._isValid) return values.date_of_birth = moment(date_of_birth._d).format('YYYY/MM/DD')
         if (date_of_joining._isValid) return values.date_of_joining = moment(date_of_joining._d).format('YYYY/MM/DD')
 
-        Object.keys(values).map(key => key = key.trim());
+        Object.keys(values).map(k => values[k] = values[k].toString().trim());
 
         this.setState({ loader: true })
         createEmployee(values, data => {
             const { code, message } = data.data;
-            if (code == 'EMS_001') {
+            if (code === 'EMS_001') {
                 this.setState({ loader: false })
                 reset();
                 this.notify(message, 'success')
@@ -87,7 +87,7 @@ class CreateEmployee extends Component {
                         </div>
                     </div>
                     <div>
-                        <Form onSubmit={handleSubmit(this.submitForm)} className='row'>
+                        <Form className='row'>
                             <div className='col-md-6'>
                                 <FormGroup>
                                     <FormField
@@ -279,7 +279,7 @@ class CreateEmployee extends Component {
                             </div>
                         </Form >
                         <div className="row justify-content-md-center">
-                            <button type='submit' onClick={handleSubmit(this.submitForm.bind(this))} className="btn-spacing btn btn-sm btn-ems-primary" disabled={pristine || submitting}>Add</button>
+                            <button type='submit' onClick={handleSubmit(this.submitForm)} className="btn-spacing btn btn-sm btn-ems-primary" disabled={pristine || submitting}>Add</button>
                             <button type='reset' onClick={reset} disabled={pristine || submitting} className="btn btn-sm btn-ems-clear">Clear</button>
                         </div >
                     </div >

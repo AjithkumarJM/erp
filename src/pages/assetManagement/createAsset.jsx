@@ -34,7 +34,7 @@ class CreateAsset extends Component {
 
         if (purchase_date._isValid) values.purchase_date = moment(purchase_date._d).format('YYYY/MM/DD')
 
-        Object.keys(values).map(key => values[key] = values[key].trim())
+        Object.keys(values).map(k => values[k] = values[k].toString().trim());        
 
         this.setState({ loader: true })
 

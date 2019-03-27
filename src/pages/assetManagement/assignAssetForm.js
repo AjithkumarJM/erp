@@ -1,229 +1,138 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getStatusList, getTypeList, assetStatus, getAvailableAssets, getAllEmpList } from './../../actions'
-import { Field, reduxForm } from 'redux-form';
-import DatePicker from 'react-datepicker';
+import { reduxForm } from 'redux-form';
 import moment from 'moment';
 import Loader from 'react-loader-advanced';
-import { Typeahead } from 'react-bootstrap-typeahead'
 import AlertContainer from 'react-alert'
+import { Typeahead } from 'react-bootstrap-typeahead'
+
+import { getStatusList, getTypeList, assetStatus, getAvailableAssets, getAllEmpList } from './../../actions'
+import { spinner, alertOptions } from '../../const';
+import { postAssetStatus, getAssets } from '../../services/assetManagement';
+import { getEmployeesInfo } from '../../services/employeeTracker';
+import { validator } from '../../const/form-field/validator';
+import FormField from '../../const/form-field';
 
 class AssignForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loader: {
-                visible: false,
-            },
-            spinner: <div className="lds-ripple"><div></div><div></div></div>,
-            alertOptions: {
-                offset: 14,
-                position: 'bottom right',
-                theme: 'dark',
-                time: 5000,
-                transition: 'scale'
-            },
-            empId: []
+            loader: false,
+            enableErrorMessage: false
         };
     }
 
     componentDidMount() {
-        const { getStatusList, getTypeList, getAllEmpList } = this.props;
+        const { getEmployeesInfo } = this.props;
 
-        getStatusList(data => this.setState({ assetStatus: data.data.data }))
-        getTypeList(data => this.setState({ assetType: data.data.data }))
-        getAllEmpList(data => this.setState({ empId: data.data.data }))
+        getEmployeesInfo();
     }
 
-    submit(values) {
+    notify = (message, type) => this.msg.show(message, { type })
+
+    onSubmit = values => {
         const { selected } = this.state;
+        const { reset, postAssetStatus, getAssets, assetIdList } = this.props;
+        const { assigned_on } = values;
 
-        if (values.assigned_on._isValid) {
-            values.assigned_on = moment(values.assigned_on._d).format('YYYY/MM/DD')
+        if (assigned_on._isValid) values.assigned_on = moment(assigned_on._d).format('YYYY/MM/DD')
+
+        let submitValues = {
+            "asset_id_list": assetIdList,
+            "status_name": "ASSIGNED",
+            "employee_id": selected,
+            "assigned_on": assigned_on
         }
-
-        let typeAheadId;
-        const instance = this._typeahead.getInstance();
-        values.status_name = 'ASSIGNED',
-            values.asset_id_list = this.props.assetId,
-            selected ? selected.map((data, index) => { return typeAheadId = data.id }) : null
-        values.employee_id = typeAheadId
-        values.employee_id == null || values.employee_id.length == 0 ? instance.focus() : null
-
-        if (values.employee_id != null) {
-            this.setState({ loader: { visible: true } })
-            this.props.assetStatus(values, (data) => {
-                this.props.getAvailableAssets('AVAILABLE')
-                if (data.data.code == 'EMS_001') {
-                    this.setState({ loader: { visible: false } })
-                    this._typeahead.getInstance().clear()
-                    this.props.reset();
-                    this.msg.show(data.data.message, {
-                        position: 'bottom right',
-                        type: 'success',
-                        theme: 'dark',
-                        time: 5000
-                    })
-                    setTimeout(() => {
-                        this.props.callback();
-                        // window.location.href = '/asset_management';
-                    }, 2000);
-                } else {
-                    this.setState({ loader: { visible: false } })
-                    this.msg.show(data.data.message, {
-                        position: 'bottom right',
-                        type: 'error',
-                        theme: 'dark',
-                        time: 5000
-                    })
-                }
-            })
-        }
+        console.log(submitValues)
+        this.setState({ loader: true })
+        postAssetStatus(submitValues, data => {
+            const { code, message } = data.data;
+            if (code == 'EMS_001') {
+                getAssets('AVAILABLE');
+                reset();
+                this._typeahead.getInstance().clear()
+                this.setState({ loader: false, enableErrorMessage: true, errorMessage: message })
+            } else this.setState({ loader: false, enableErrorMessage: true, errorMessage: message })
+        })
     }
 
-    goback = () => {
-        const { reset, callback } = this.props;
+    renderErrorMessage = () => {
+        const { errorMessage, enableErrorMessage } = this.state;
 
-        reset();
-        callback();
-    }
-
-    renderField(field) {
-        const { meta: { touched, error } } = field;
-        const className = `form-group row ${touched && error ? 'is-invalid' : ''}`
-
-        if (field.type == 'dropDown') {
-            let optionList = _.map(field.list, data => {
-                return <option value={data[field.id]}>{data[field.displayName]}</option>;
-            })
-            return (
-                <div className={className}>
-                    <label className="col-sm-5 col-form-label col-form-label-sm">{field.label}</label>
-                    <div className='col-sm-7'>
-                        <select className="form-control form-control-sm" {...field.input}>
-                            <option value="">Select</option>
-                            {optionList}
-                        </select>
-                        <div className="text-help">
-                            {touched && error ? <div className='text-danger'>{error} <span ><i className='fa fa-exclamation-circle' /></span></div> : ''}
-                        </div>
-                    </div>
-                </div>
-            )
-        } else if (field.type == 'datePicker') {
-            return (
-                <div className={className}>
-                    <label className="col-sm-5 col-form-label col-form-label-sm">{field.label}</label>
-                    <div className='col-sm-7'>
-                        <DatePicker
-                            className="form-control form-control-sm" {...field.input}
-                            dateFormat='YYYY/MM/DD'
-                            placeholderText='YYYY/MM/DD'
-                            withPortal
-                            showMonthDropdown
-                            showYearDropdown
-                            tabIndex={1}
-                            dropdownMode="select"
-                            selected={field.input.value ? moment(field.input.value, 'YYYY/MM/DD') : null}
-                            disabled={field.usage} />
-                        <div className="text-help">
-                            {touched && error ? <div className='text-danger'>{error} <span ><i className='fa fa-exclamation-circle' /></span></div> : ''}
-                        </div>
-                    </div>
-                </div>
-            )
-        } return (
-            < div className={className} >
-                <label className="col-sm-5 col-form-label col-form-label-sm">{field.label}</label>
-                <div className='col-sm-7'>
-                    <input
-                        disabled={field.usage}
-                        className="form-control form-control-sm"
-                        type="text"
-                        placeholder={field.placeholder}
-                        {...field.input} />
-                    <div className="text-help">
-                        {touched && error ? <div className='text-danger'>{error} <span ><i className='fa fa-exclamation-circle' /></span></div> : ''}
-                    </div>
-                </div >
-            </div>
-        );
+        if (enableErrorMessage === true) return <div className='alert alert-danger mt-3 ml-4 mr-4'>{errorMessage} <i className='float-right fa fa-times-circle m-1' onClick={() => this.setState({ enableErrorMessage: false })} /></div>
     }
 
     render() {
-        const { handleSubmit, reset } = this.props;
-        const { loader, empId, spinner, selected, alertOptions } = this.state;
+        const { handleSubmit, reset, allEmployeeInfo: { requesting, response } } = this.props;
+        const { loader, selected } = this.state;
+        const { required } = validator;
 
-        return (
-            <div>
-                <form>
-                    <Loader show={loader.visible} message={spinner} />
-                    <AlertContainer ref={a => this.msg = a} {...alertOptions} />
-                    <div className='TypeaheadWrap'>
-                        <div className='offset-md-2 col-md-8 offset-md-2'>
-                            <div className='row'>
+        if (requesting) return <Loader show={true} message={spinner} />
+        else if (response.data) {
+            return (
+                <div>
+                    <form >
+                        <Loader show={loader} message={spinner} />
+                        <AlertContainer ref={a => this.msg = a} {...alertOptions} />
+                        <div>
+                            <div className='row mb-2'>
                                 <div className='col-md-5'>
                                     <div><span className='text-danger'>*</span>  Assign to Employee</div>
                                 </div>
                                 <div className='col-md-7'>
                                     <Typeahead
                                         bsSize='small'
-                                        onChange={(selected) => {
-                                            this.setState({ selected });
-                                        }}
+                                        onChange={selected => this.setState({ selected: selected[0].id })}
                                         placeholder='Enter Employee'
-                                        options={empId}
-                                        selected={selected}
+                                        options={response.data}
+                                        id='typeAhead'
+                                        // selected={selected}
                                         labelKey={options => `${options.first_name} ${options.last_name} (${options.id})`}
                                         ref={(ref) => this._typeahead = ref}
                                     />
                                 </div>
                             </div>
+
+
+                            <div>
+                                <FormField
+                                    label='Assigned On'
+                                    fieldRequire={true}
+                                    type='date'
+                                    disable={false}
+                                    name="assigned_on"
+                                    placeholder="YYYY/MM/DD"
+                                    validate={[required]}
+                                    withPortal={false}
+                                />
+                            </div>
                         </div>
-                        <div className='offset-md-2 col-md-8 offset-md-2'>
-                            <Field
-                                label={<div><span className='text-danger'>*</span>  Assigned On</div>}
-                                type='datePicker'
-                                usage={false}
-                                name="assigned_on"
-                                component={this.renderField}
-                                placeholder="YYYY/MM/DD"
-                            />
-                        </div>
-                    </div>
-                </form >
-                <div className="row justify-content-md-center ">
-                    <div >
-                        <button type='submit' onClick={handleSubmit(this.submit.bind(this))} className="btn-spacing btn btn-sm btn-ems-primary" >Assign</button>
-                    </div>
-                    <div >
-                        <button type='reset' onClick={() => {
-                            reset()
-                            this._typeahead.getInstance().clear()
-                        }} className="btn btn-sm btn-ems-clear">Clear</button>
-                    </div>
+                        {this.renderErrorMessage()}
+                        <div className='text-right'>
+                            <button type='submit' onClick={handleSubmit(this.onSubmit)} className="mr-2 btn btn-sm btn-ems-primary" >Assign</button>
+                            <button type='reset' onClick={() => {
+                                this._typeahead.getInstance().clear()
+                                reset()
+                            }
+                            } className="btn btn-sm btn-ems-clear">Clear</button>
+                        </div >
+                    </form >
                 </div >
-            </div >
-        )
+            )
+        } else return <Loader show={true} message={spinner} />
     }
 }
 
-function validate(values) {
-    const errors = {};
-
-    if (!values.employee_id) {
-        errors.employee_id = "Enter Employee Id"
-    }
-
-    if (!values.assigned_on) {
-        errors.assigned_on = "Enter Assigned On"
-    }
-
-    return errors;
+const mapStateToProps = ({ allEmployeeInfo }) => {
+    return { allEmployeeInfo }
 }
 
 export default reduxForm({
-    validate,
     enableReinitialize: true,
     form: 'assetStatusForm',
-})(connect(null, { getStatusList, getTypeList, assetStatus, getAvailableAssets, getAllEmpList })(AssignForm));
+})(connect(mapStateToProps, {
+    getEmployeesInfo,
+    postAssetStatus, getAssets,
+
+    getStatusList, getTypeList, assetStatus, getAvailableAssets, getAllEmpList
+})(AssignForm));

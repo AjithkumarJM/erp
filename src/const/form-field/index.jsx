@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
-import {
-    Input, Row, Col, Label
-} from 'reactstrap';
+import _ from 'lodash';
+import { Input, Row, Col, Label } from 'reactstrap';
 import DatePicker from 'react-datepicker';
 import moment from "moment";
-import _ from 'lodash';
+import { Typeahead } from 'react-bootstrap-typeahead'
 
 import "./style.scss";
 
@@ -14,8 +13,11 @@ class FormField extends Component {
     isWeekday = date => date.day() !== 0 && date.day() !== 6
 
     generateComponent = field => {
-        const { type, input, placeholder, keyword, list, label, option, disable,
-            meta: { error, touched }, inApplyLeave, fieldRequire, excludeDatesList, login
+        const {
+            type, input, placeholder, keyword,
+            list, label, option, disable, meta: { error, touched },
+            inApplyLeave, fieldRequire, excludeDatesList, login,
+            options, selected, labelKey, onChange, withPortal
         } = field;
 
         const childFormClassName = `form-control form-control-sm ${touched && error ? 'is-invalid' : ''}`;
@@ -57,13 +59,34 @@ class FormField extends Component {
                             excludeDates={inApplyLeave === true ? excludeDates : null}
                             filterDate={inApplyLeave === true ? this.isWeekday : null}
                             minDate={inApplyLeave === true ? moment().subtract(30, "days") : null}
-                            withPortal
+                            withPortal={withPortal === false ? false : true}
                             showMonthDropdown
                             showYearDropdown
                             tabIndex={1}
                             dropdownMode="select"
                             selected={input.value ? moment(input.value, 'YYYY/MM/DD') : null}
                             disabled={disable}
+                            {...input}
+                        />
+                        {errorSection}
+                    </Col>
+                </Row>
+            )
+        } else if (type === 'typeAhead') {
+            return (
+                <Row className='form-group'>
+                    <Col md={5} >
+                        <Label >{labelText}</Label>
+                    </Col>
+
+                    <Col md={7}>
+                        <Typeahead
+                            bsSize='small'
+                            placeholder={placeholder}
+                            options={options}
+                            onChange={onChange}
+                            selected={selected}
+                            labelKey={labelKey}
                             {...input}
                         />
                         {errorSection}

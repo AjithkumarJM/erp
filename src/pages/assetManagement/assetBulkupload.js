@@ -58,7 +58,7 @@ class AssetBulkupload extends Component {
     renderErrorMessage = () => {
         const { errorMessage, enableErrorMessage } = this.state;
 
-        if (enableErrorMessage === true) return <div className='alert alert-danger mt-3 ml-4 mr-4'>{errorMessage} <i className='float-right fa fa-times-circle' onClick={() => this.setState({ enableErrorMessage: false })} /></div>
+        if (enableErrorMessage === true) return <div className='alert alert-danger mt-3 ml-4 mr-4'>{errorMessage} <i className='float-right fa fa-times-circle m-1' onClick={() => this.setState({ enableErrorMessage: false })} /></div>
     }
 
     render() {
