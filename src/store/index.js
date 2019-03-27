@@ -13,7 +13,7 @@ import {
 } from './../services/leaveManagement/reducers';
 import { commonEmployeesInfo } from './../services/commonEmployees/reducers';
 import { dashboardData, monthlyNotifications } from '../services/dashboard/reducers';
-import { assetsList, assetTypes } from '../services/assetManagement/reducers';
+import { assetsList, assetTypes, assetInfo } from '../services/assetManagement/reducers';
 
 /**
  * combineReducers is simply a utility function to simplify the most common use case when writing Redux reducers.
@@ -46,6 +46,7 @@ const rootReducer = combineReducers({
 
     assetsList,
     assetTypes,
+    assetInfo,
 
     form: formReducer,
 });

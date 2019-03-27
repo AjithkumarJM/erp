@@ -3,15 +3,18 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import Loader from 'react-loader-advanced';
+import AlertContainer from 'react-alert'
 
 import { spinner, alertOptions, userInfo, tableOptions } from '../../const';
-import { getAssets } from '../../services/assetManagement';
+import { getAssets, postAssetStatus } from '../../services/assetManagement';
 
 class AvailableAssets extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            outputValues: []
+            outputValues: [],
+            toggleButton: false,
+            loader: false
         }
     }
 
@@ -24,21 +27,30 @@ class AvailableAssets extends Component {
         const { outputValues } = this.state;
         let index = outputValues.indexOf(id)
 
-        isSelected === true ? outputValues.push(id) : outputValues.splice(index, 1)
+        if (isSelected === true) {
+            outputValues.push(id)
+            this.setState({ toggleButton: true })
+        } else {
+            outputValues.splice(index, 1)
+            outputValues.length === 0 ? this.setState({ toggleButton: false }) : null
+        }
     }
 
     handleOnSelectAll = (isSelected, row) => {
         const { outputValues } = this.state;
-        // console.log(row, isSelected);
-        if (isSelected === true) _.map(row, ({ id }) => outputValues.push(id))
-        else this.setState({ outputValues: [] })
-        
-        console.log(outputValues)
+
+        if (isSelected === true) {
+            _.map(row, ({ id }) => outputValues.push(id))
+            this.setState({ toggleButton: true })
+        } else {
+            this.state.outputValues.splice(0, outputValues.length)
+            outputValues.length === 0 ? this.setState({ toggleButton: false }) : null
+        }
     }
 
     formatDate = date => typeof (date == 'string') ? moment(date).format('YYYY/MM/DD') : date
 
-    renderupdate = (row, cell) => <Link to={`/asset_management/update_asset/`} className="btn btn-ems-ternary btn-sm mr-1">Update</Link>
+    renderupdate = (row, { id }) => <Link to={`/asset_management/update_asset/${id}`} className="btn btn-ems-ternary btn-sm mr-1">Update</Link>    
 
     renderAssetLink = (row, { asset_serial_no, id }) => <Link to={`/asset_management/info/${id}`}>{asset_serial_no}</Link>
 
@@ -73,21 +85,60 @@ class AvailableAssets extends Component {
         )
     }
 
+    notify = (message, type) => this.msg.show(message, { type })
+
+    onSubmitAsset = type => {
+        const { outputValues } = this.state;
+        const { postAssetStatus, getAssets } = this.props;
+
+        let values = {
+            "asset_id_list": outputValues,
+            "status_name": type
+        }
+
+        this.setState({ loader: true })
+        postAssetStatus(values, response => {
+            const { code, message } = response.data;
+            if (code === 'EMS_001') {
+                this.setState({ loader: false })
+                getAssets('AVAILABLE');
+                this.notify(message, 'success')
+            } else {
+                this.notify(message, 'error')
+                this.setState({ loader: false })
+            }
+        })
+    }
+
+    renderActionButtons = () => {
+        const { outputValues: { length }, toggleButton } = this.state;
+
+        if (toggleButton && length !== 0) {
+
+            return (
+                <div className='actionBtnStyling'>
+                    <button className='btn btn-secondary float-right btn-ems-ternary btn-sm' onClick={() => this.onSubmitAsset('ASSIGN')}>Assign Asset
+                <i className='fa fa-tasks ml-2' /></button>
+
+                    <button className='btn btn-secondary float-right btn-ems-ternary btn-sm mr-1' onClick={() => this.onSubmitAsset('SCRAP')}>Scrap Asset
+                <i className='fa fa-trash ml-2' /></button>
+                </div>
+            );
+        }
+    }
+
     render() {
         const { assetsList: { requesting } } = this.props;
+        const { loader } = this.state;
 
         if (requesting) return <Loader show={true} message={spinner} />
         else {
             return (
                 <div className='p-2 pt-3'>
+                    <Loader show={loader} message={spinner} />
+                    <AlertContainer ref={a => this.msg = a} {...alertOptions} />
                     {this.renderAssetTable()}
-                    <div className='actionBtnStyling'>
-                        <button className='btn btn-secondary float-right btn-ems-ternary btn-sm'>Assign Asset
-                        <i className='fa fa-tasks ml-2' /></button>
-
-                        <button className='btn btn-secondary float-right btn-ems-ternary btn-sm mr-1'>Scrap Asset
-                        <i className='fa fa-trash ml-2' /></button>
-                    </div>
+                    {this.renderActionButtons()}
                 </div>
             );
         }
@@ -99,5 +150,5 @@ const mapStateToProps = ({ assetsList }) => {
 }
 
 export default connect(
-    mapStateToProps, { getAssets }
+    mapStateToProps, { getAssets, postAssetStatus }
 )(AvailableAssets);

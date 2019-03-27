@@ -1,4 +1,4 @@
-import { assetListType, assetTypesActionType } from './actionTypes';
+import { assetListType, assetTypesActionType, assetDetailsType } from './actionTypes';
 
 const initialState = {
     response: {},
@@ -24,4 +24,6 @@ const assetsList = (state = initialState, action) => reducer(state, action, asse
 
 const assetTypes = (state = initialState, action) => reducer(state, action, assetTypesActionType);
 
-export { assetsList, assetTypes }
+const assetInfo = (state = initialState, action) => reducer(state, action, assetDetailsType);
+
+export { assetsList, assetTypes, assetInfo }

@@ -10,4 +10,10 @@ const assetTypesActionType = {
     FAIL: 'ASSET_TYPES_FAIL'
 }
 
-export { assetListType, assetTypesActionType }
+const assetDetailsType = {
+    REQ: 'ASSET_INFO_REQ',
+    RES: 'ASSET_INFO_RES',
+    FAIL: 'ASSET_INFO_FAIL'
+}
+
+export { assetListType, assetTypesActionType, assetDetailsType }

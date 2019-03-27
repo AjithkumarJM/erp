@@ -10,7 +10,7 @@ import AssetBulkupload from './assetBulkupload';
 import FormField from '../../const/form-field';
 import { validator } from '../../const/form-field/validator';
 import { spinner, alertOptions } from '../../const';
-import { getAssetTypes, postUpdateAsset, getAssetDetails } from '../../services/assetManagement';
+import { getAssetTypes, postCreateAsset } from '../../services/assetManagement';
 
 class CreateAsset extends Component {
 
@@ -22,14 +22,7 @@ class CreateAsset extends Component {
         };
     }
 
-    componentWillMount = () => {
-        const { getAssetTypes, getAssetDetails, } = this.props;
-        const { id } = this.props.match.params;
-
-        getAssetDetails(id)
-        getAssetTypes();
-
-    }
+    componentWillMount = () => this.props.getAssetTypes();
 
     toggle = () => this.setState({ modal: !this.state.modal });
 
@@ -73,8 +66,9 @@ class CreateAsset extends Component {
                     <Loader show={loader} message={spinner} />
                     <AlertContainer ref={a => this.msg = a} {...alertOptions} />
                     <Col md={12} sm={12} className="page-header">
-                        <h2>Update Asset</h2>
+                        <h2>Create Asset</h2>
                         <button onClick={() => history.push(`/asset_management/`)} className='btn float-right btn-ems-navigate btn-sm'> Back <i className="ml-1 fa fa-arrow-left" /></button>
+                        <button className='btn float-right btn-ems-ternary btn-sm mr-1' onClick={this.toggle}>Bulk Upload <i className="ml-1 fa fa-upload" /></button>
                     </Col>
 
                     <Col md={12} sm={12} >
@@ -170,6 +164,13 @@ class CreateAsset extends Component {
                             <button type='reset' onClick={reset} disabled={pristine || submitting} className="btn btn-sm btn-ems-clear">Clear</button>
                         </div >
                     </Col>
+
+                    <Modal isOpen={modal} toggle={this.toggle} className={className}>
+                        <ModalHeader toggle={this.toggle}>Asset Bulk Upload</ModalHeader>
+                        <ModalBody className='mb-3'>
+                            <AssetBulkupload />
+                        </ModalBody>
+                    </Modal>
                 </Row>
             )
         }
@@ -182,4 +183,4 @@ const mapStateToProps = ({ assetTypes }) => {
 
 export default reduxForm({
     form: 'createAssetForm'
-})(connect(mapStateToProps, { getAssetTypes, postUpdateAsset, getAssetDetails })(CreateAsset));
+})(connect(mapStateToProps, { getAssetTypes, postCreateAsset })(CreateAsset));

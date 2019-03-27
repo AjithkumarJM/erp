@@ -5,11 +5,6 @@ import LeaveManagementHome from '../src/pages/leaveManagement/index';
 import HolidayList from '../src/pages/holidayList';
 import commonEmployees from '../src/pages/commonEmployees';
 import AssetManagementHome from '../src/pages/assetManagement';
-import AssignForm from '../src/pages/assetManagement/assignAssetForm';
-import addAsset from '../src/pages/assetManagement/addAsset';
-import Update from '../src/pages/employeeManagement/updateEmployee';
-import Projects from '../src/pages/ProjectManagement/projects/projects';
-import Client from '../src/pages/ProjectManagement/client/client';
 
 const routes = [
   { path: '/dashboard', exact: true, name: 'dashboard', component: Dashboard },

@@ -11,7 +11,7 @@ import ScrapAssets from './scrapAssets';
 import AssignedAssets from './assignedAssets';
 import AssetInformation from './assetInformation';
 import UpdateAsset from './updateAsset';
-import AddAsset from './addAsset';
+import CreateAsset from './createAsset';
 import AssetInfo from './assetInfo';
 
 import './style.scss';
@@ -75,7 +75,8 @@ export default class AssetManagementHome extends Component {
                     <Route path='/asset_management/about_asset/:assetId' render={props => <AssetInformation {...props} />} />
                     <Route path='/asset_management/available_assets' render={props => <AvailableAssets {...props} />} />
                     <Route path='/asset_management/scrap_assets' render={props => <ScrapAssets {...props} />} />
-                    <Route path='/asset_management/create_asset' render={props => <AddAsset {...props} />} />
+                    <Route path='/asset_management/create_asset' render={props => <CreateAsset {...props} />} />
+                    <Route path='/asset_management/update_asset/:assetId' render={props => <UpdateAsset {...props} />} />
                     <Route path='/asset_management/update_asset/:assetId' render={props => <UpdateAsset {...props} />} />
                     <Route path='/asset_management/assigned_assets' render={props => <AssignedAssets {...props} />} />
                     <Route path='/asset_management/info/:assetId' render={props => <AssetInfo {...props} />} />

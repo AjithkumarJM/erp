@@ -1,130 +1,154 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getAvailableAssets, viewAssetAction } from './../../actions'
+import { Link } from 'react-router-dom';
 import moment from 'moment';
+import Loader from 'react-loader-advanced';
 import AlertContainer from 'react-alert'
+
+import { spinner, alertOptions, userInfo, tableOptions } from '../../const';
+import { getAssets, postAssetStatus } from '../../services/assetManagement';
 
 class AssignedAssets extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedIds: [],
-            alertOptions: {
-                offset: 14,
-                position: 'bottom right',
-                theme: 'dark',
-                time: 5000,
-                transition: 'scale'
-            }
-        };
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.setState({ assignedList: nextProps.assets })
-    }
-
-    onRowSelect(row, isSelected, e) {
-        isSelected == true ? this.state.selectedIds.push(row.id) : this.state.selectedIds = []
-    }
-
-    onSelectAll(isSelected, rows) {
-        isSelected == true ? this.state.selectedIds.push(rows.id) : this.state.selectedIds = []
-    }
-
-    rowClassNameFormat(row, rowIdx) {
-        return rowIdx % 2 === 0 ? 'td-column-function-even-example' : 'td-column-function-odd-example';
-    }
-
-    renderWarrantyDate(date) {
-        if (typeof (date) == 'string') {
-            return moment((date.split('T'))[0]).format('YYYY/MM/DD');
-        } else {
-            return date;
+            outputValues: [],
+            toggleButton: false,
+            loader: false
         }
     }
 
-    assignAsset(status) {
-        if (this.state.selectedIds.length != 0) {
-            status == 'ASSIGN' ? this.setState({ toggleAssign: true, selectedIds: [] }) : null;
+    componentWillMount() {
+        const { getAssets } = this.props;
+        getAssets('ASSIGNED');
+    }
+
+    handleOnRowSelect = ({ id }, isSelected) => {
+        const { outputValues } = this.state;
+        let index = outputValues.indexOf(id)
+
+        if (isSelected === true) {
+            outputValues.push(id)
+            this.setState({ toggleButton: true })
         } else {
-            this.msg.show("please select an Asset", {
-                position: 'bottom right',
-                type: 'info',
-                theme: 'dark',
-                time: 5000
-            })
+            outputValues.splice(index, 1)
+            outputValues.length === 0 ? this.setState({ toggleButton: false }) : null
         }
     }
 
-    assignedTable() {
-        const selectRowProp = {
-            mode: 'checkbox',
+    handleOnSelectAll = (isSelected, row) => {
+        const { outputValues } = this.state;
+
+        if (isSelected === true) {
+            _.map(row, ({ id }) => outputValues.push(id))
+            this.setState({ toggleButton: true })
+        } else {
+            this.state.outputValues.splice(0, outputValues.length)
+            outputValues.length === 0 ? this.setState({ toggleButton: false }) : null
+        }
+    }
+
+    formatDate = date => typeof (date == 'string') ? moment(date).format('YYYY/MM/DD') : date
+
+    renderupdate = (row, { id }) => <Link to={`/asset_management/update_asset/${id}`} className="btn btn-ems-ternary btn-sm mr-1">Update</Link>
+
+    renderAssetLink = (row, { asset_serial_no, id }) => <Link to={`/asset_management/info/${id}`}>{asset_serial_no}</Link>
+
+    renderAssetTable = () => {
+        const { data } = this.props.assetsList.response;
+
+        const selectRowOptions = {
+            mode: "checkbox",
             clickToSelect: false,
-            onSelect: this.onRowSelect.bind(this),
-            onSelectAll: this.onSelectAll.bind(this)
-            // unselectable: nextProps.unselectable
-        };
-
-        const options = {
-            sizePerPage: 10,  // which size per page you want to locate as default            
-            sizePerPageList: [{
-                text: '10', value: 10
-            }, {
-                text: '25', value: 25
-            }, {
-                text: '50', value: 50
-            }, {
-                text: '100', value: 100
-            }],
-            paginationSize: 3,  // the pagination bar size.                        
-            paginationShowsTotal: this.renderPaginationShowsTotal,
-            sizePerPageDropDown: this.renderSizePerPageDropDown,
-            nextPage: 'Next',
-            prePage: 'Previous',
-            noDataText: 'No Results Found',
-            // onRowClick: this.handleRowSelect.bind(this)
+            onSelect: this.handleOnRowSelect,
+            onSelectAll: this.handleOnSelectAll
         };
 
         return (
             < BootstrapTable
-                selectRow={selectRowProp}
-                data={this.state.assignedList}
-                maxHeight='500' version='4' options={options}
-                ignoreSinglePage pagination
-                hover={true} tableStyle={{ cursor: "pointer" }} trClassName={this.rowClassNameFormat} >
-                <TableHeaderColumn isKey dataField='asset_serial_no' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>Serial #</TableHeaderColumn>
+                selectRow={selectRowOptions}
+                data={data}
+                version='4'
+                options={tableOptions}
+                ignoreSinglePage
+                pagination
+            >
+                <TableHeaderColumn isKey dataField='id' hidden dataAlign="center"  >id</TableHeaderColumn>
+                <TableHeaderColumn dataField='asset_serial_no' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }} dataFormat={this.renderAssetLink}>Serial #</TableHeaderColumn>
                 <TableHeaderColumn dataField='make' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>Make</TableHeaderColumn>
-                <TableHeaderColumn dataField='model' dataAlign="center">Model</TableHeaderColumn>
-                <TableHeaderColumn dataField='type_name' dataAlign="center">Type</TableHeaderColumn>
-                <TableHeaderColumn dataField='warranty_expiry_date' dataAlign="center" dataSort dataFormat={this.renderWarrantyDate}>warranty Expires On</TableHeaderColumn>
-                {/* <TableHeaderColumn dataField='' dataAlign="center" dataFormat={this.viewDetailsRendering.bind(this)}>Details</TableHeaderColumn> */}
-                <TableHeaderColumn dataField='employee_name' dataAlign="center" >Assigned To</TableHeaderColumn>
-                <TableHeaderColumn dataField='assigned_on' dataAlign="center" dataFormat={this.renderWarrantyDate}>Assigned Date</TableHeaderColumn>
+                <TableHeaderColumn dataField='type_name' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>Type</TableHeaderColumn>
+                <TableHeaderColumn dataField='model' dataAlign="center" >Model</TableHeaderColumn>
+                <TableHeaderColumn dataField='warranty_expiry_date' dataAlign="center" dataSort dataFormat={this.formatDate}>Warranty Expires On</TableHeaderColumn>
+                <TableHeaderColumn dataField='scrap_date' dataAlign="center" dataFormat={this.formatDate} >Scrap Date</TableHeaderColumn>
+                <TableHeaderColumn dataField='' dataAlign="center" dataFormat={this.renderupdate}>Action</TableHeaderColumn>
             </BootstrapTable>
         )
     }
 
+    notify = (message, type) => this.msg.show(message, { type })
+
+    onSubmitAsset = type => {
+        const { outputValues } = this.state;
+        const { postAssetStatus, getAssets } = this.props;
+
+        let values = {
+            "asset_id_list": outputValues,
+            "status_name": type
+        }
+
+        this.setState({ loader: true })
+        postAssetStatus(values, response => {
+            const { code, message } = response.data;
+            if (code === 'EMS_001') {
+                getAssets('ASSIGNED');
+                this.setState({ loader: false })
+                this.notify(message, 'success')
+            } else {
+                this.notify(message, 'error')
+                this.setState({ loader: false })
+            }
+        })
+    }
+
+    renderActionButtons = () => {
+        const { outputValues: { length }, toggleButton } = this.state;
+
+        if (toggleButton && length !== 0) {
+
+            return (
+                <div className='actionBtnStyling'>
+                    <button className='btn btn-secondary float-right btn-ems-ternary btn-sm' onClick={() => this.onSubmitAsset('AVAILABLE')}>Move To Available
+                <i className='fa fa-tasks ml-2' /></button>
+
+                    <button className='btn btn-secondary float-right btn-ems-ternary btn-sm mr-1' onClick={() => this.onSubmitAsset('SCRAP')}>Scrap Asset
+                <i className='fa fa-trash ml-2' /></button>
+                </div>
+            );
+        }
+    }
+
     render() {
-        return (
-            <div>
-                <AlertContainer ref={a => this.msg = a} {...this.state.alertOptions} />
-                <nav className="navbar navbar-expand-lg navbar-light justify-content-between custom-background-color">
-                    <div className="">
-                        <button type="button" className="btn leftMargin btn-ems-ternary btn-spacing float-right" onClick={this.assignAsset.bind(this, 'ASSIGN')}><i className="fa fa-plus" aria-hidden="true"></i>  Move To Available</button>
-                        <button type="button" className="btn btn-ems-ternary float-right" onClick={this.assignAsset.bind(this, 'SCRAP')}><i className="fa fa-trash-o" aria-hidden="true"></i>  Scrap</button>
-                    </div>
-                </nav>
-                {this.assignedTable()}
-            </div>
-        )
+        const { assetsList: { requesting } } = this.props;
+        const { loader } = this.state;
+
+        if (requesting) return <Loader show={true} message={spinner} />
+        else {
+            return (
+                <div className='p-2 pt-3'>
+                    <Loader show={loader} message={spinner} />
+                    <AlertContainer ref={a => this.msg = a} {...alertOptions} />
+                    {this.renderAssetTable()}
+                    {this.renderActionButtons()}
+                </div>
+            );
+        }
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        userDetails: state.userInformation,
-        assets: state.availableAssets,
-    };
+const mapStateToProps = ({ assetsList }) => {
+    return { assetsList }
 }
 
-export default (connect(mapStateToProps, { getAvailableAssets, viewAssetAction }))(AssignedAssets);
+export default connect(
+    mapStateToProps, { getAssets, postAssetStatus }
+)(AssignedAssets);
