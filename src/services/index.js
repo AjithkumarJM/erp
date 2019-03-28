@@ -5,8 +5,8 @@ import cookie from 'react-cookies';
 const interceptor = error => {
     if (error.response.status === 400) {
         console.log('comes here');
-        cookie.remove('session', { path: '/' });
-        window.location.href = '/';
+        // cookie.remove('session', { path: '/' });
+        // window.location.href = '/';
     }
 }
 function API_CALL(method, url, data, type, callback, file) {

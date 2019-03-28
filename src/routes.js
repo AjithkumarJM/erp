@@ -1,5 +1,5 @@
 
-import Dashboard from '../src/pages/dashboard/dashboard';
+import Dashboard from '../src/pages/dashboard';
 import EmployeeTrackerHome from '../src/pages/employeeManagement';
 import LeaveManagementHome from '../src/pages/leaveManagement/index';
 import HolidayList from '../src/pages/holidayList';

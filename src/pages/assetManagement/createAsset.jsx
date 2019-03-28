@@ -93,7 +93,7 @@ class CreateAsset extends Component {
                                 <FormField
                                     fieldRequire={true}
                                     label='Purchased Date'
-                                    type='datePicker'
+                                    type='date'
                                     usage={false}
                                     name="purchase_date"
                                     placeholder="YYYY/MM/DD"

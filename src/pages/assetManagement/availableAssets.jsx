@@ -87,7 +87,6 @@ class AvailableAssets extends Component {
                 <TableHeaderColumn dataField='type_name' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>TYPE</TableHeaderColumn>
                 <TableHeaderColumn dataField='model' dataAlign="center" >MODEL</TableHeaderColumn>
                 <TableHeaderColumn dataField='warranty_expiry_date' dataAlign="center" dataSort dataFormat={this.formatDate}>WARRANTY EXPIRES ON</TableHeaderColumn>
-                <TableHeaderColumn dataField='scrap_date' dataAlign="center" dataFormat={this.formatDate} >SCRAP DATE</TableHeaderColumn>
                 <TableHeaderColumn dataField='' dataAlign="center" dataFormat={this.renderupdate}>ACTION</TableHeaderColumn>
             </BootstrapTable>
         )
@@ -153,13 +152,18 @@ class AvailableAssets extends Component {
                             <h4 className="text-center">Are you sure, you want to scrap the Asset(s) ?</h4>
                         </ModalBody>
                         <ModalFooter>
-                            <button className='btn btn-sm btn-ems-primary' onClick={() => this.onSubmitAsset()}>Yes</button>
+                            <button className='btn btn-sm btn-ems-primary' onClick={() => this.onSubmitAsset('SCRAP')}>Yes</button>
                             <button className='btn btn-sm btn-ems-clear' onClick={this.toggle}>No</button>
                         </ModalFooter>
                     </Modal>
 
-                    <Modal isOpen={modalAssign} toggle={this.toggleAssignModal} className={className}>
-                        <ModalHeader toggle={this.toggleAssignModal}>Assign Asset</ModalHeader>
+                    <Modal isOpen={modalAssign} toggle={this.toggleAssignModal} className={className} backdrop='static'>
+                        <ModalHeader toggle={() => {
+                            const { getAssets } = this.props;
+
+                            this.toggleAssignModal()
+                            getAssets('AVAILABLE')
+                        }}>Assign Asset</ModalHeader>
                         <ModalBody>
                             <AssignAsset assetIdList={outputValues} />
                         </ModalBody>

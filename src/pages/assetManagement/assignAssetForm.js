@@ -43,23 +43,23 @@ class AssignForm extends Component {
             "employee_id": selected,
             "assigned_on": assigned_on
         }
-        console.log(submitValues)
+
         this.setState({ loader: true })
         postAssetStatus(submitValues, data => {
+            
             const { code, message } = data.data;
             if (code == 'EMS_001') {
-                getAssets('AVAILABLE');
                 reset();
                 this._typeahead.getInstance().clear()
-                this.setState({ loader: false, enableErrorMessage: true, errorMessage: message })
-            } else this.setState({ loader: false, enableErrorMessage: true, errorMessage: message })
+                this.setState({ loader: false, enableErrorMessage: true, errorMessage: message, messageType: 'success' })
+            } else this.setState({ loader: false, enableErrorMessage: true, errorMessage: message, messageType: 'danger' })
         })
     }
 
     renderErrorMessage = () => {
-        const { errorMessage, enableErrorMessage } = this.state;
+        const { errorMessage, enableErrorMessage, messageType } = this.state;
 
-        if (enableErrorMessage === true) return <div className='alert alert-danger mt-3 ml-4 mr-4'>{errorMessage} <i className='float-right fa fa-times-circle m-1' onClick={() => this.setState({ enableErrorMessage: false })} /></div>
+        if (enableErrorMessage === true) return <div className={`alert alert-${messageType} mt-3 ml-4 mr-4`}>{errorMessage} <i className='float-right fa fa-times-circle m-1' onClick={() => this.setState({ enableErrorMessage: false })} /></div>
     }
 
     render() {

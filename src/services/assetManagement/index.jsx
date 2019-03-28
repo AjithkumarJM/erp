@@ -1,5 +1,5 @@
 import API_CALL from "../index";
-import { assetListType, assetTypesActionType, assetDetailsType } from "./actionTypes";
+import { assetListType, assetTypesActionType, assetDetailsType, assetByIdType } from "./actionTypes";
 
 const getAssets = type => API_CALL('get', `asset/list/${type}`, null, assetListType);
 
@@ -13,6 +13,8 @@ const postAssetStatus = (values, callback) => API_CALL('post', 'update/asset/sta
 
 const getAssetDetails = id => API_CALL('get', `get/asset/details/${id}`, null, assetDetailsType);
 
+const getAssetById = id => API_CALL('get', `get/asset/${id}`, null, assetByIdType)
+
 const postAssetBulkUpload = ({ file }, callback) => {
     let values = new FormData();
     values.append('file', file[0]);
@@ -21,6 +23,6 @@ const postAssetBulkUpload = ({ file }, callback) => {
 }
 
 export {
-    getAssets, getAssetTypes, postCreateAsset, postUpdateAsset,
+    getAssets, getAssetTypes, postCreateAsset, postUpdateAsset, getAssetById,
     postAssetBulkUpload, postAssetStatus, getAssetDetails
 }

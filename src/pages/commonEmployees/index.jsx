@@ -19,11 +19,11 @@ class commonEmployees extends Component {
 
         return (
             <BootstrapTable data={data} options={tableOptions} ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
-                <TableHeaderColumn dataAlign="center" dataField='first_name' isKey searchable={false} filter={{ type: 'TextFilter', delay: 1000 }} dataFormat={this.generateName}>Employee Name</TableHeaderColumn>
-                <TableHeaderColumn dataAlign="center" dataField='blood_group' searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>Blood Group</TableHeaderColumn>
-                <TableHeaderColumn dataAlign="center" dataField='medical_insurance_no'>Medical Insurance</TableHeaderColumn>
-                <TableHeaderColumn dataAlign="center" dataField='emergency_contact_no'>Emergency Contact #</TableHeaderColumn>
-                <TableHeaderColumn dataAlign="center" dataField='emergency_contact_person' >Emergency Contact Person</TableHeaderColumn>
+                <TableHeaderColumn dataAlign="center" dataField='first_name' isKey searchable={false} filter={{ type: 'TextFilter', delay: 1000 }} dataFormat={this.generateName}>EMPLOYEE NAME</TableHeaderColumn>
+                <TableHeaderColumn dataAlign="center" dataField='blood_group' searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>BLOOD GROUP</TableHeaderColumn>
+                <TableHeaderColumn dataAlign="center" dataField='medical_insurance_no'>MEDICAL INSURANCE</TableHeaderColumn>
+                <TableHeaderColumn dataAlign="center" dataField='emergency_contact_no'>EMERGENCY CONTACT #</TableHeaderColumn>
+                <TableHeaderColumn dataAlign="center" dataField='emergency_contact_person' >EMERGENCY CONTACT PERSON</TableHeaderColumn>
             </BootstrapTable>
         )
 

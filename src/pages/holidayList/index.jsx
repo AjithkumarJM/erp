@@ -18,8 +18,8 @@ class HolidayList extends Component {
 
         return (
             <BootstrapTable data={data} version='4' options={tableOptions} ignoreSinglePage pagination>
-                <TableHeaderColumn isKey dataField='holiday_name' dataAlign="center">Holiday Name</TableHeaderColumn>
-                <TableHeaderColumn dataField='holiday_date' dataFormat={this.renderDates} dataAlign="center" dataSort>Date</TableHeaderColumn>
+                <TableHeaderColumn isKey dataField='holiday_name' dataAlign="center">HOLIDAY NAME</TableHeaderColumn>
+                <TableHeaderColumn dataField='holiday_date' dataFormat={this.renderDates} dataAlign="center" dataSort>DATE</TableHeaderColumn>
             </BootstrapTable>
         )
     }
