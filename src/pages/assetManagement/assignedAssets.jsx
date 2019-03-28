@@ -81,7 +81,7 @@ class AssignedAssets extends Component {
                 <TableHeaderColumn dataField='type_name' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>TYPE</TableHeaderColumn>
                 <TableHeaderColumn dataField='model' dataAlign="center" >Model</TableHeaderColumn>
                 <TableHeaderColumn dataField='employee_name' dataAlign="center" filter={{ type: 'TextFilter', delay: 1000 }}>ASSIGNED TO</TableHeaderColumn>
-                <TableHeaderColumn dataField='assigned_on' dataAlign="center" dataSort dataFormat={this.formatDate}>ASSIGNED ON</TableHeaderColumn>                
+                <TableHeaderColumn dataField='assigned_on' dataAlign="center" dataSort dataFormat={this.formatDate}>ASSIGNED ON</TableHeaderColumn>
                 <TableHeaderColumn dataField='' dataAlign="center" dataFormat={this.renderupdate}>ACTION</TableHeaderColumn>
             </BootstrapTable>
         )
@@ -100,13 +100,14 @@ class AssignedAssets extends Component {
             "status_name": type
         }
 
-        this.setState({ loader: true })
+        this.setState({ loader: true, modal: type === 'SCRAP' ? !this.state.modal : null })
         postAssetStatus(values, response => {
             const { code, message } = response.data;
+
             if (code === 'EMS_001') {
                 this.setState({ loader: false })
-                getAssets('ASSIGNED');
-                this.notify(message, 'success')
+                getAssets('ASSIGNED')
+                setTimeout(() => this.notify(message, 'success'), 2000);
             } else {
                 this.notify(message, 'error')
                 this.setState({ loader: false })

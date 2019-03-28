@@ -81,9 +81,9 @@ class Dashboard extends Component {
             list = _.map(events, (event, index) => {
                 const { date_of_joining, first_name, last_name, date_of_birth } = event;
                 let date = type === 'birthday' ? date_of_birth : date_of_joining
-                let anniversary = moment().diff(moment(date).format('DD/MM/YYYY'), 'years');
+                let anniversary = moment().diff('10/03/2018', 'years');
                 let suffixAppendDate = this.generateSuffix(anniversary);
-                console.log(anniversary)
+                
                 return (
                     <ListGroupItem className='d-inline-block' key={index} style={{ borderLeft: '3px solid #2baffe' }}>
                         {this.renderBirthdayDate(moment(date).format('ddd MMM DD YYYY'))} - <span className='font-weight-bold'>{first_name} {last_name}</span>'s {type === 'anniversary' ?

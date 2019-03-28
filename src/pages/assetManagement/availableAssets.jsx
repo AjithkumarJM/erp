@@ -6,7 +6,7 @@ import Loader from 'react-loader-advanced';
 import AlertContainer from 'react-alert'
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-import { spinner, alertOptions, userInfo, tableOptions } from '../../const';
+import { spinner, alertOptions, tableOptions } from '../../const';
 import { getAssets, postAssetStatus } from '../../services/assetManagement';
 import AssignAsset from './assignAssetForm';
 
@@ -18,7 +18,7 @@ class AvailableAssets extends Component {
             toggleButton: false,
             loader: false,
             modal: false,
-            modalAssign: false
+            modalAssign: false,
         }
     }
 
@@ -103,13 +103,13 @@ class AvailableAssets extends Component {
             "status_name": type
         }
 
-        this.setState({ loader: true })
+        this.setState({ loader: true, modal: !this.state.modal })
         postAssetStatus(values, response => {
             const { code, message } = response.data;
             if (code === 'EMS_001') {
                 this.setState({ loader: false })
                 getAssets('AVAILABLE');
-                this.notify(message, 'success')
+                setTimeout(() => this.notify(message, 'success'), 2000);
             } else {
                 this.notify(message, 'error')
                 this.setState({ loader: false })

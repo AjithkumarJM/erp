@@ -9,7 +9,6 @@ import AvailableAssets from './availableAssets';
 import PreviousAssets from './previousAssets';
 import ScrapAssets from './scrapAssets';
 import AssignedAssets from './assignedAssets';
-import AssetInformation from './assetInformation';
 import UpdateAsset from './updateAsset';
 import CreateAsset from './createAsset';
 import AssetInfo from './assetInfo';
@@ -72,7 +71,6 @@ export default class AssetManagementHome extends Component {
                 <Switch>
                     <Route exact path='/asset_management/current_assets/:employeeId' render={props => <CurrentAssets {...props} />} />
                     <Route exact path='/asset_management/previous_assets/:employeeId' render={props => <PreviousAssets {...props} />} />
-                    <Route path='/asset_management/about_asset/:assetId' render={props => <AssetInformation {...props} />} />
                     <Route path='/asset_management/available_assets' render={props => <AvailableAssets {...props} />} />
                     <Route path='/asset_management/scrap_assets' render={props => <ScrapAssets {...props} />} />
                     <Route path='/asset_management/create_asset' render={props => <CreateAsset {...props} />} />

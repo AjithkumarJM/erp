@@ -6,7 +6,7 @@ import Loader from 'react-loader-advanced';
 import AlertContainer from 'react-alert'
 import { Typeahead } from 'react-bootstrap-typeahead'
 
-import { getStatusList, getTypeList, assetStatus, getAvailableAssets, getAllEmpList } from './../../actions'
+import { getStatusList, getTypeList, assetStatus, getAvailableAssets, getAllEmpList } from '../../actions'
 import { spinner, alertOptions } from '../../const';
 import { postAssetStatus, getAssets } from '../../services/assetManagement';
 import { getEmployeesInfo } from '../../services/employeeTracker';
@@ -18,6 +18,7 @@ class AssignForm extends Component {
         super(props);
         this.state = {
             loader: false,
+            disabled: false,
             enableErrorMessage: false
         };
     }
@@ -46,12 +47,12 @@ class AssignForm extends Component {
 
         this.setState({ loader: true })
         postAssetStatus(submitValues, data => {
-            
+
             const { code, message } = data.data;
             if (code == 'EMS_001') {
                 reset();
                 this._typeahead.getInstance().clear()
-                this.setState({ loader: false, enableErrorMessage: true, errorMessage: message, messageType: 'success' })
+                this.setState({ loader: false, enableErrorMessage: true, errorMessage: message, messageType: 'success', disabled: true })
             } else this.setState({ loader: false, enableErrorMessage: true, errorMessage: message, messageType: 'danger' })
         })
     }
@@ -59,12 +60,12 @@ class AssignForm extends Component {
     renderErrorMessage = () => {
         const { errorMessage, enableErrorMessage, messageType } = this.state;
 
-        if (enableErrorMessage === true) return <div className={`alert alert-${messageType} mt-3 ml-4 mr-4`}>{errorMessage} <i className='float-right fa fa-times-circle m-1' onClick={() => this.setState({ enableErrorMessage: false })} /></div>
+        if (enableErrorMessage === true) return <div className={`alert alert-${messageType}`}>{errorMessage} <i className='float-right fa fa-times-circle m-1' onClick={() => this.setState({ enableErrorMessage: false })} /></div>
     }
 
     render() {
-        const { handleSubmit, reset, allEmployeeInfo: { requesting, response } } = this.props;
-        const { loader, selected } = this.state;
+        const { handleSubmit, reset, allEmployeeInfo: { requesting, response }, pristine, submitting } = this.props;
+        const { loader, selected, disabled } = this.state;
         const { required } = validator;
 
         if (requesting) return <Loader show={true} message={spinner} />
@@ -85,6 +86,7 @@ class AssignForm extends Component {
                                         onChange={selected => this.setState({ selected: selected[0].id })}
                                         placeholder='Enter Employee'
                                         options={response.data}
+                                        disabled={disabled}
                                         id='typeAhead'
                                         // selected={selected}
                                         labelKey={options => `${options.first_name} ${options.last_name} (${options.id})`}
@@ -99,7 +101,7 @@ class AssignForm extends Component {
                                     label='Assigned On'
                                     fieldRequire={true}
                                     type='date'
-                                    disable={false}
+                                    disable={disabled}
                                     name="assigned_on"
                                     placeholder="YYYY/MM/DD"
                                     validate={[required]}
@@ -109,8 +111,8 @@ class AssignForm extends Component {
                         </div>
                         {this.renderErrorMessage()}
                         <div className='text-right'>
-                            <button type='submit' onClick={handleSubmit(this.onSubmit)} className="mr-2 btn btn-sm btn-ems-primary" >Assign</button>
-                            <button type='reset' onClick={() => {
+                            <button type='submit' disabled={pristine || submitting} onClick={handleSubmit(this.onSubmit)} className="mr-2 btn btn-sm btn-ems-primary" >Assign</button>
+                            <button type='reset' disabled={pristine || submitting} onClick={() => {
                                 this._typeahead.getInstance().clear()
                                 reset()
                             }
