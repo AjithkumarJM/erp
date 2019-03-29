@@ -2,7 +2,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { reducer as formReducer } from 'redux-form';
 
-import userInformation from "./../services/userDetails/reducers";
+import userInformation from "../services/userDetails/reducers";
 import {
     allEmployeeInfo, employeeById, systemRoles, reportingToList,
     designationList, previousEmpId, inActiveEmployees
@@ -10,8 +10,10 @@ import {
 import {
     leaveTypes, holidayList, leaveBalance, upcomingHolidayList,
     leaveHistory, reporteesLeaveHistory, allLeaveHistory, pendingLeaveHistory
-} from './../services/leaveManagement/reducers';
-import { commonEmployeesInfo } from './../services/commonEmployees/reducers';
+} from '../services/leaveManagement/reducers';
+
+import { clientTypeList } from '../services/clientManagement'
+import { commonEmployeesInfo } from '../services/commonEmployees/reducers';
 import { dashboardData, monthlyNotifications } from '../services/dashboard/reducers';
 import { assetsList, assetTypes, assetInfo, assetById } from '../services/assetManagement/reducers';
 
@@ -48,6 +50,8 @@ const rootReducer = combineReducers({
     assetTypes,
     assetInfo,
     assetById,
+
+    clientTypeList,
 
     form: formReducer,
 });

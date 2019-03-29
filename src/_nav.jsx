@@ -23,20 +23,20 @@ export default {
     }, {
       name: "JAISHUians",
       url: '/common_employees_info',
-      icon: 'fa fa-users',
+      icon: 'fa fa-user-friends',
     }, {
       name: 'Project Management',
       url: '/project_management',
-      icon: 'fa fa-users',
+      icon: 'fa fa-tasks',
       children: [
         {
           name: 'projects',
-          url: '/project_management/projects',
-          icon: 'fa fa-users'
+          url: '/project_management',
+          icon: 'fa fa-project-diagram'
         },
         {
-          name: 'client',
-          url: '/project_management/client',
+          name: 'Clients',
+          url: '/client_management',
           icon: 'fa fa-users'
         }
       ],
