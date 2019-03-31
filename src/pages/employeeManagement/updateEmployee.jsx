@@ -289,7 +289,7 @@ class UpdateEmployee extends Component {
                             </Col>
                         </Row >
                         <div className="row justify-content-md-center">
-                            <button type='submit' onClick={() => handleSubmit(this.submitForm)} className="mr-2 btn btn-sm btn-ems-primary" disabled={pristine || submitting}>Update</button>
+                            <button type='submit' onClick={handleSubmit(this.submitForm)} className="mr-2 btn btn-sm btn-ems-primary" disabled={pristine || submitting}>Update</button>
                             <button type='reset' onClick={reset} disabled={pristine || submitting} className="btn btn-sm btn-ems-clear">Clear</button>
                         </div >
 

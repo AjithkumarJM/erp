@@ -1,53 +1,56 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto");
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
 
 body {
-    font-size: 13px;
-    margin: 0px;
-    background: #f4f7f9;
-    padding: 0px !important;
-    font-family: "Roboto", sans-serif;
-    color: #4f5663;
+  font-size: 12px;
+  font-weight: 400;  
+  background: #f4f7f9;
+  font-family: "Lato  ", sans-serif;
+  color: #4f5663;
 }
 
 .secondary-text {
-    color: #4f5663;
+  color: #4f5663;
 }
 
 thead {
-    background-color: #eef1f5;
-    color: #808b95 !important;
-    text-align: center;
-    border-bottom: 3px solid #fff !important;
+  background-color: #eef1f5;
+  color: #808b95 !important;
+  text-align: center;
+  border-bottom: 3px solid #fff !important;
 }
 
 td {
-    background-color: white;
-    color: #4f5663;
+  background-color: white;
+  color: #4f5663;
 }
 
 .dropdown-menu-right {
-    top: 12px !important;
+  top: 12px !important;
 }
 
 .btn-ems-navigate {
-    background: #73818fd6;
-    color: white;
+  background: #73818fd6;
+  color: white;
 
-    &:hover {
-        color: #fff;
-    }
+  &:hover {
+    color: #fff;
+  }
 }
 
 .btn-ems-ternary {
-    background-color: #76797d !important;
-    color: white !important;
+  background-color: #76797d !important;
+  color: white !important;
 
-    &:focus {
-        box-shadow: none !important;
-    }
+  &:focus {
+    box-shadow: none !important;
+  }
 
-    &:hover {
-        color: white;
-        transition: cubic-bezier(0.075, 0.82, 0.165, 1);
-    }
+  &:hover {
+    color: white;
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
 }
