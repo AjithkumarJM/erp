@@ -1,4 +1,4 @@
-import { clientListType } from './actionTypes';
+import { clientListType, activeClientType, clientByIdType, allClientType } from './actionTypes';
 
 const initialState = {
     response: {},
@@ -22,4 +22,10 @@ const reducer = (state, action, methodType) => {
 
 const clientTypeList = (state = initialState, action) => reducer(state, action, clientListType);
 
-export { clientTypeList }
+const activeClients = (state = initialState, action) => reducer(state, action, activeClientType);
+
+const clientById = (state = initialState, action) => reducer(state, action, clientByIdType);
+
+const allClients = (state = initialState, action) => reducer(state, action, allClientType);
+
+export { clientTypeList, activeClients, clientById, allClients }

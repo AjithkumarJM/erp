@@ -4,21 +4,13 @@ import cookie from 'react-cookies';
 
 const interceptor = error => {
     if (error.response.status === 400) {
-        console.log('comes here');
         cookie.remove('session', { path: '/' });
         window.location.href = '/';
     }
 }
+
 function API_CALL(method, url, data, type, callback, file) {
     console.log("Calling API for the method of " + method + " : " + ROOT_URL + url);
-
-    // Add a response interceptor
-    // axios.interceptors.response.use(null, error => {
-    //     // Do something with response error
-    //     cookie.remove('session');
-    //     // window.location.reload();
-    //     return Promise.reject(error);
-    // });
 
     let headers = {};
     if (userInfo) {

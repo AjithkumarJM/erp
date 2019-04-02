@@ -21,14 +21,14 @@ import 'bootstrap';
 import 'assets/scss/bootstrap.scss';
 import 'assets/scss/core_ui.scss';
 import 'assets/scss/bootstraptable.scss';
-import 'assets/common_styles/style.scss';
+import 'assets/commonStyles/style.scss';
 import 'assets/scss/styles.scss';
 import 'assets/scss/react_datepicker.scss';
 import 'assets/scss/react-timeline.scss';
 import 'assets/scss/timeline_min.scss';
 import 'assets/scss/reactTabs.scss';
 import 'react-circular-progressbar/dist/styles.css';
-// import "react-tabs/style/react-tabs.css";
+import 'assets/commonStyles/loader.scss'
 
 class App extends Component {
 

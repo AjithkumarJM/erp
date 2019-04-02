@@ -31,7 +31,7 @@ class CurrentAssets extends Component {
 
         let timeline = previousAssignedAsset.map((data, index) => {
             return (
-                <article className="timeline-entry assetMarginWrap">
+                <article className="timeline-entry mt-3">
                     <div className="timeline-entry-inner">
                         <time className="timeline-time" datetime="2014-01-10T03:45">Released On<span>{this.formatDate(data.released_on)}</span> <span>{moment(data.released_on).format('dddd')}</span></time>
                         <div className="timeline-icon">

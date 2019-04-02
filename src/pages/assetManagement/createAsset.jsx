@@ -160,7 +160,7 @@ class CreateAsset extends Component {
                             </div>
                         </form >
                         <div className="text-center">
-                            <button type='submit' onClick={handleSubmit(this.onSubmitAddasset)} className="btn-spacing btn btn-sm btn-ems-primary" disabled={pristine || submitting}>Add</button>
+                            <button type='submit' onClick={handleSubmit(this.onSubmitAddasset)} className="mr-1 btn btn-sm btn-ems-primary" disabled={pristine || submitting}>Add</button>
                             <button type='reset' onClick={reset} disabled={pristine || submitting} className="btn btn-sm btn-ems-clear">Clear</button>
                         </div >
                     </Col>

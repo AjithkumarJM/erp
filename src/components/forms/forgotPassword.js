@@ -106,7 +106,7 @@ class ForgotPassword extends Component {
                 <div className="card-block">
                     <h4>Forgot Your Password?</h4>
                     <div>{this.renderLoginError()}</div>
-                    <form onSubmit={handleSubmit(this.onSubmitForgotPassword)} className='customHeight'>
+                    <form onSubmit={handleSubmit(this.onSubmitForgotPassword)} >
                         <FormField
                             placeholder="Enter your email"
                             name="employee_email"
@@ -117,7 +117,7 @@ class ForgotPassword extends Component {
                         />
                         <button type="submit" className="btn btn-sm btn-ems-primary float-right" disabled={pristine || submitting}>Submit</button>
                     </form>
-                    <div className={toggleForgotPassword !== true ? 'hide' : 'display'}>
+                    <div className={toggleForgotPassword !== true ? 'd-none' : 'd-block'}>
                         <p className="alert alert-success">Please check your email and find the link to reset your password</p></div>
                 </div>
             )
@@ -168,7 +168,7 @@ class ForgotPassword extends Component {
                 return (
                     <div>
                         <p className="alert alert-success">Your password has been reset successfully click<span>
-                            <Link to='/' className='resetCustomLink'> here</Link> to login
+                            <Link to='/' > here</Link> to login
                         </span></p>
 
                     </div>

@@ -119,7 +119,7 @@ class ApproveReject extends Component {
                                 <label className=' font-weight-bold'>Notes</label>
                                 <Field className='col-12' name="remarks" component="textarea" />
                                 <div className='text-center mt-1'>
-                                    <button type="submit" disabled={pristine || submitting} onClick={() => handleSubmit(this.onApproveReject('approve'))} className='btn btn-spacing btn-sm btn-ems-primary'>Approve</button>
+                                    <button type="submit" disabled={pristine || submitting} onClick={() => handleSubmit(this.onApproveReject('approve'))} className='btn mr-1 btn-sm btn-ems-primary'>Approve</button>
                                     <button type="submit" disabled={pristine || submitting} onClick={() => handleSubmit(this.onApproveReject('reject'))} className=' btn btn-ems-clear btn-sm'>Reject</button>
                                 </div>
                             </form>

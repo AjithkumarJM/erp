@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Col } from 'reactstrap';
-import moment from 'moment';
 import Loader from 'react-loader-advanced';
 import _ from 'lodash';
 
-import { getActiveClients } from '../../services/clientManagement';
+import { getAllClients } from '../../services/clientManagement';
 import { userInfo, spinner, tableOptions } from '../../const'
 
-class ActiveClients extends Component {
+class AllClients extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,9 +18,9 @@ class ActiveClients extends Component {
 
     componentWillMount = () => {
         const { role_id } = userInfo;
-        const { getActiveClients } = this.props;
+        const { getAllClients } = this.props;
 
-        if (role_id === 3) getActiveClients();
+        if (role_id === 3) getAllClients();
     }
 
     renderupdate = (row, { client_id }) => <Link to={`/client_management/update_client/${client_id}`} className="btn btn-ems-ternary btn-sm mr-1">Update</Link>
@@ -30,7 +28,7 @@ class ActiveClients extends Component {
     toggle = () => this.setState({ modal: !this.state.modal });
 
     renderTable = () => {
-        const { data } = this.props.activeClients.response;
+        const { data } = this.props.allClients.response;
         const { role_id } = userInfo;
         
         return (
@@ -45,7 +43,7 @@ class ActiveClients extends Component {
     }
 
     render() {
-        const { activeClients: { requesting } } = this.props;
+        const { allClients: { requesting } } = this.props;
 
         if (requesting) return <Loader show={true} message={spinner} />
         else {
@@ -60,8 +58,8 @@ class ActiveClients extends Component {
     }
 }
 
-function mapStateToProps({ activeClients }) {
-    return { activeClients };
+function mapStateToProps({ allClients }) {
+    return { allClients };
 }
 
-export default connect(mapStateToProps, { getActiveClients })(ActiveClients);
+export default connect(mapStateToProps, { getAllClients })(AllClients);

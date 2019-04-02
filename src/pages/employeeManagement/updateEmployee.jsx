@@ -9,7 +9,7 @@ import AlertContainer from 'react-alert'
 import Loader from 'react-loader-advanced';
 
 import { getDesignationList, getReportingToList, getSystemRole, getEmployeeById, updateEmployee } from '../../services/employeeTracker'
-import { spinner, alertOptions, genderList, employeeTypeList } from '../../const';
+import { spinner, alertOptions, genderList, activeInactiveType } from '../../const';
 import FormField from '../../const/form-field';
 import { validator } from '../../const/form-field/validator';
 
@@ -121,7 +121,7 @@ class UpdateEmployee extends Component {
                                         name="is_active"
                                         fieldRequire={true}
                                         type="select"
-                                        list={employeeTypeList}
+                                        list={activeInactiveType}
                                         keyword="value"
                                         option="name"
                                         validate={[required]}

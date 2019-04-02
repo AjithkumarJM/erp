@@ -20,7 +20,7 @@ const genderList = [
     { name: 'Male', value: 'Male' }, { name: 'Female', value: 'Female' }
 ]
 
-const employeeTypeList = [
+const activeInactiveType = [
     { name: 'Active', value: 1 }, { name: 'inActive', value: 0 }
 ]
 
@@ -69,5 +69,5 @@ const maleLeaveType = {
 
 export {
     ROOT_URL, spinner, userInfo, alertOptions, genderList,
-    employeeTypeList, tableOptions, allLeaveType, leaveFormat, femaleLeaveType, maleLeaveType
+    activeInactiveType, tableOptions, allLeaveType, leaveFormat, femaleLeaveType, maleLeaveType
 }

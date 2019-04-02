@@ -141,7 +141,7 @@ class LeaveManagement extends Component {
                                     />
 
                                     <div className='float-right'>
-                                        <button type='submit' className=" btn btn-sm btn-ems-primary btn-spacing" onClick={handleSubmit(this.applyLeave.bind(this))} disabled={pristine || submitting}>Apply</button>
+                                        <button type='submit' className=" btn btn-sm btn-ems-primary mr-1" onClick={handleSubmit(this.applyLeave.bind(this))} disabled={pristine || submitting}>Apply</button>
                                         <button type='reset' className="btn btn-sm btn-ems-clear" onClick={reset} disabled={pristine || submitting}>Clear</button>
                                     </div>
                                     <br />

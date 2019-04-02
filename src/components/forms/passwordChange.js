@@ -42,11 +42,12 @@ class ChangePassword extends Component {
     renderLoginError = () => {
         const { loginError, message } = this.state;
 
-        if (loginError) {
+        if (!loginError) {
             return (
-                <div className='alert-wrap'>
+                <div>
                     <div className="alert alert-danger text-center" role="alert">
-                        {message}
+                        {/* {message} */}
+                        Sample Error message
                         <i className="fa fa-times-circle-o float-right" onClick={() => { this.setState({ loginError: false }); }}></i>
                     </div>
                 </div>
@@ -113,7 +114,7 @@ class ChangePassword extends Component {
                 </form >
                 {this.renderLoginError()}
                 <div className='float-right'>
-                    <button type='submit' disabled={pristine || submitting} onClick={handleSubmit(this.onPasswordSubmit.bind(this))} className="btn btn-spacing btn-sm btn-ems-primary" data-dismiss={modal}>Submit</button>
+                    <button type='submit' disabled={pristine || submitting} onClick={handleSubmit(this.onPasswordSubmit.bind(this))} className="btn mr-1 btn-sm btn-ems-primary" data-dismiss={modal}>Submit</button>
                     <button type="button" disabled={pristine || submitting} className="btn btn-sm btn-ems-clear" onClick={() => {
                         reset();
                         this.setState({ loginError: false });

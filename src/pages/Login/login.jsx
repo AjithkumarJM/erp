@@ -81,7 +81,7 @@ class Login extends Component {
                                             validate={[required]}
                                             login={true}
                                         />
-                                        <Link to='/forgot_password' className='customLink align-middle'>forgot password?</Link>
+                                        <Link to='/forgot_password' className='position-absolute mt-1'>forgot password?</Link>
                                         <button type="submit" className="btn btn-sm btn-ems-primary float-right">Log In</button>
                                     </form>
                                 </div>
