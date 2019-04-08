@@ -12,7 +12,8 @@ import {
     leaveHistory, reporteesLeaveHistory, allLeaveHistory, pendingLeaveHistory
 } from '../services/leaveManagement/reducers';
 
-import { clientTypeList, activeClients, clientById, allClients } from '../services/clientManagement/reducers'
+import { clientTypeList, activeClients, clientById, allClients } from '../services/clientManagement/reducers';
+import { allProjects, activeProjects, inActiveProjects } from '../services/projectManagement/reducers';
 import { commonEmployeesInfo } from '../services/commonEmployees/reducers';
 import { dashboardData, monthlyNotifications } from '../services/dashboard/reducers';
 import { assetsList, assetTypes, assetInfo, assetById } from '../services/assetManagement/reducers';
@@ -55,6 +56,10 @@ const rootReducer = combineReducers({
     activeClients,
     clientById,
     allClients,
+
+    allProjects,
+    activeProjects,
+    inActiveProjects,
 
     form: formReducer,
 });

@@ -26,7 +26,7 @@ export default {
       icon: 'fa fa-user-friends',
     }, {
       name: 'Project Management',
-      url: '/project_management',
+      url: '/project_tracker',
       icon: 'fa fa-tasks',
       children: [
         {

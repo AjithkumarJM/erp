@@ -1,6 +1,12 @@
-.actionBtnStyling{
+.actionBtnStyling {
     position: absolute;
     top: 140px;
     right: 118px;
     transition: 0.4s;
+}
+
+.parent-wrap {
+    max-height: 67.6vh !important;
+    overflow: auto !important;
+    background: #f0f0f070;
 }

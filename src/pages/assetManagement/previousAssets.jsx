@@ -46,7 +46,7 @@ class CurrentAssets extends Component {
             )
         })
         return (
-            <div className='row justify-content-md-center'>
+            <div className='row justify-content-md-center parent-wrap'>
                 <div className="timeline-centered">{timeline}</div>
             </div>
         )

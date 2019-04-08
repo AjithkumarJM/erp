@@ -42,12 +42,11 @@ class ChangePassword extends Component {
     renderLoginError = () => {
         const { loginError, message } = this.state;
 
-        if (!loginError) {
+        if (loginError) {
             return (
                 <div>
                     <div className="alert alert-danger text-center" role="alert">
-                        {/* {message} */}
-                        Sample Error message
+                        {message}
                         <i className="fa fa-times-circle-o float-right" onClick={() => { this.setState({ loginError: false }); }}></i>
                     </div>
                 </div>

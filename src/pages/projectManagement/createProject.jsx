@@ -1,40 +1,40 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { reduxForm } from 'redux-form';
-import { Form, FormGroup, Row, Col } from "reactstrap";
-import _ from 'lodash';
+import { connect } from 'react-redux';
 import moment from 'moment';
 import AlertContainer from 'react-alert'
 import Loader from 'react-loader-advanced';
+import { Link } from 'react-router-dom';
+import { Form, FormGroup } from "reactstrap";
 
-import { getDesignationList, getReportingToList, getSystemRole, getEmployeeById, updateEmployee } from '../../services/employeeTracker'
-import { spinner, alertOptions, genderList, employeeTypeList } from '../../const';
+import { getDesignationList, getReportingToList, getSystemRole, getPrevEmployeeId, createEmployee } from '../../services/employeeTracker'
+import { spinner, alertOptions, genderList } from '../../const';
 import FormField from '../../const/form-field';
 import { validator } from '../../const/form-field/validator';
 
-class UpdateEmployee extends Component {
+class CreateEmployee extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { loader: false };
+        this.state = {
+            loader: false
+        };
     }
 
     componentDidMount = () => {
-        const { getDesignationList, getReportingToList, getSystemRole, getEmployeeById } = this.props;
-        const { employeeId } = this.props.match.params;
+        const { getDesignationList, getReportingToList, getSystemRole, getPrevEmployeeId } = this.props;
 
-        getEmployeeById(employeeId);
         getDesignationList();
         getReportingToList();
         getSystemRole();
+        getPrevEmployeeId();
     }
 
     notify = (message, type) => this.msg.show(message, { type });
 
     submitForm = values => {
 
-        const { updateEmployee, history } = this.props;
+        const { createEmployee, reset, history } = this.props;
         const { date_of_birth, date_of_joining } = values;
 
         if (date_of_birth._isValid) return values.date_of_birth = moment(date_of_birth._d).format('YYYY/MM/DD')
@@ -43,10 +43,11 @@ class UpdateEmployee extends Component {
         Object.keys(values).map(k => values[k] = values[k].toString().trim());
 
         this.setState({ loader: true })
-        updateEmployee(values, data => {
+        createEmployee(values, data => {
             const { code, message } = data.data;
-            if (code == 'EMS_001') {
+            if (code === 'EMS_001') {
                 this.setState({ loader: false })
+                reset();
                 this.notify(message, 'success')
                 setTimeout(() => history.push('/employee_tracker'), 3000);
             } else {
@@ -66,27 +67,28 @@ class UpdateEmployee extends Component {
     }
 
     render() {
-        const { handleSubmit, reset, pristine, submitting, employeeById, designationList, systemRoles, reportingToList, systemRoles: { response } } = this.props;
+        const {
+            handleSubmit, reset, pristine, submitting, previousEmpId,
+            designationList, systemRoles, reportingToList, systemRoles: { response }
+        } = this.props;
         const { loader } = this.state;
-
         let { required, email, mobile_number } = validator;
 
-        if (employeeById.requesting === true) return <Loader show={true} message={spinner} />
-        else if (response.data && response) {
+        if (previousEmpId.requesting === true) return <Loader show={true} message={spinner} />
+        else if (response && response.data) {
             return (
                 <div className='p-2'>
                     <Loader show={loader} message={spinner} />
                     <AlertContainer ref={a => this.msg = a} {...alertOptions} />
-                    <Row>
-                        <Col md={12} className="page-header">
-                            <h2>Update Employee</h2>
+                    <div className='row'>
+                        <div className="col-12 page-header">
+                            <h2>Create Project</h2>
                             <Link to='/employee_tracker' className='btn btn-sm btn-ems-navigate float-right'><i className="fa fa-arrow-left" aria-hidden="true"></i> Back</Link>
-                        </Col>
-                    </Row>
-
-                    <Form>
-                        <Row>
-                            <Col sm={12} md={6}>
+                        </div>
+                    </div>
+                    <div>
+                        <Form className='row'>
+                            <div className='col-md-6'>
                                 <FormGroup>
                                     <FormField
                                         label="First Name"
@@ -114,17 +116,6 @@ class UpdateEmployee extends Component {
                                         placeholder="Enter Employee ID"
                                         validate={[required]}
                                         disable={true}
-                                    />
-
-                                    <FormField
-                                        label="Employee Type"
-                                        name="is_active"
-                                        fieldRequire={true}
-                                        type="select"
-                                        list={employeeTypeList}
-                                        keyword="value"
-                                        option="name"
-                                        validate={[required]}
                                     />
 
                                     <FormField
@@ -198,9 +189,8 @@ class UpdateEmployee extends Component {
 
                                 </FormGroup>
 
-                            </Col>
-                            <Col sm={12} md={6}>
-
+                            </div>
+                            <div className='col-md-6'>
                                 <FormGroup>
                                     <FormField
                                         label="Reporting To"
@@ -286,38 +276,31 @@ class UpdateEmployee extends Component {
                                         placeholder="Enter Con. Person name"
                                     />
                                 </FormGroup>
-                            </Col>
-                        </Row >
+                            </div>
+                        </Form >
                         <div className="row justify-content-md-center">
-                            <button type='submit' onClick={() => handleSubmit(this.submitForm)} className="mr-2 btn btn-sm btn-ems-primary" disabled={pristine || submitting}>Update</button>
+                            <button type='submit' onClick={handleSubmit(this.submitForm)} className="mr-1 btn btn-sm btn-ems-primary" disabled={pristine || submitting}>Add</button>
                             <button type='reset' onClick={reset} disabled={pristine || submitting} className="btn btn-sm btn-ems-clear">Clear</button>
                         </div >
-
-                    </Form >
-
+                    </div >
                 </div >
             );
         } else return <Loader show={true} message={spinner} />
     }
 }
 
-const mapTostateProps = ({ systemRoles, reportingToList, designationList, employeeById }) => {
-    let initialValues = employeeById.response.data;
+const mapTostateProps = ({ systemRoles, reportingToList, designationList, previousEmpId }) => {
+    let initialValues = { id: previousEmpId.response.data }
 
-    if (initialValues) {
-        let { date_of_birth, date_of_joining } = initialValues;
-
-        initialValues.date_of_birth = moment(date_of_birth).format('YYYY/MM/DD');
-        initialValues.date_of_joining = moment(date_of_joining).format('YYYY/MM/DD');
-        initialValues.isActive = 'Active'
-    }
-
-    return { systemRoles, reportingToList, designationList, initialValues, employeeById }
+    return { systemRoles, reportingToList, designationList, initialValues, previousEmpId }
 }
 
-UpdateEmployee = reduxForm({
-    enableReinitialize: true,
-    form: 'UpdateEmployeeForm',
-})(UpdateEmployee)
+CreateEmployee = reduxForm({
+    form: 'CreateEmployeeForm',
+    enableReinitialize: true
+})(CreateEmployee)
 
-export default connect(mapTostateProps, { getEmployeeById, updateEmployee, getDesignationList, getReportingToList, getSystemRole })(UpdateEmployee)
+export default connect(mapTostateProps, {
+    createEmployee, getDesignationList,
+    getPrevEmployeeId, getReportingToList, getSystemRole
+})(CreateEmployee)

@@ -4,12 +4,14 @@ import { Col } from 'reactstrap';
 import { Route, Switch, Redirect } from "react-router-dom";
 import { NavTab } from 'react-router-tabs';
 
-import CreateEmployee from './createEmployee';
-import EmployeeTracker from './employeeTracker';
-import UpdateEmployee from './updateEmployee';
-import ActiveEmployees from './activeEmployees';
-import InActiveEmployees from './inActiveEmployees';
-import EmployeeDetails from './employeeDetails';
+import AllProjects from './allProjects';
+import CreateProject from './createProject';
+import UpdateProject from './updateProject';
+import ActiveProjects from './activeProjects';
+import InActiveProjects from './inActiveProjects';
+import ProjectDetails from './projectDetails';
+import AssignProject from './assignProject';
+
 import { userInfo } from '../../const';
 
 export default class ProjectManagementHome extends Component {
@@ -22,9 +24,8 @@ export default class ProjectManagementHome extends Component {
         const { location: { pathname }, history } = this.props;
         const { role_id } = userInfo;
 
-        pathname === '/employee_tracker/' || pathname === '/employee_tracker' ?
-            role_id === 3 ? history.push('/employee_tracker/active_employees') : history.push('/employee_tracker/reporting_employees')
-            : null
+        pathname === '/project_management/' || pathname === '/project_management' ?
+            history.push('/project_management/all_projects') : null
     }
 
     renderNavLinks = () => {
@@ -34,15 +35,16 @@ export default class ProjectManagementHome extends Component {
         return (
             <div>
                 {
-                    role_id === 3 && (pathname === '/employee_tracker/active_employees' || pathname === '/employee_tracker/inActive_employees') ?
+                    role_id === 3 && (pathname === '/project_management/all_projects' || pathname === '/project_management/active_projects' || pathname === '/project_management/inActive_projects') ?
                         <span>
                             <Col md={12} className="page-header">
-                                <h2>Employee Tracker</h2>
+                                <h2>Project Management</h2>
                             </Col>
 
-                            <NavTab to="/employee_tracker/active_employees" >Active Employees</NavTab>
-                            <NavTab to="/employee_tracker/inActive_employees">In Active Employees</NavTab>
-                            <Link to='/employee_tracker/create_employee' className='btn btn-ems-ternary btn-sm float-right m-2'>Add Employee <i className="ml-2 fa fa-plus-circle"></i></Link>
+                            <NavTab to="/project_management/all_projects" >All Projects</NavTab>
+                            <NavTab to="/project_management/active_projects">Active Projects</NavTab>
+                            <NavTab to="/project_management/inActive_projects">InActive Projects</NavTab>
+                            <Link to='/project_management/create_project' className='btn btn-ems-ternary btn-sm float-right m-2'>Add Project <i className="ml-2 fa fa-plus-circle"></i></Link>
                         </span> : null
                 }
             </div>
@@ -56,14 +58,15 @@ export default class ProjectManagementHome extends Component {
                 {this.renderNavLinks()}
 
                 <Switch>
-                    <Route path='/employee_tracker/create_employee' render={(props) => <CreateEmployee {...props} />} />
-                    <Route path='/employee_tracker/update_employee/:employeeId' render={(props) => <UpdateEmployee {...props} />} />
-                    <Route path='/employee_tracker/info/:employeeId' render={(props) => <EmployeeDetails {...props} />} />
-                    <Route path='/employee_tracker/active_employees' render={(props) => <ActiveEmployees {...props} />} />
-                    <Route path='/employee_tracker/inActive_employees' render={(props) => <InActiveEmployees {...props} />} />
-                    <Route path='/employee_tracker/reporting_employees' render={(props) => <EmployeeTracker {...props} />} />
+                    <Route path='/project_management/create_project' render={(props) => <CreateProject {...props} />} />
+                    <Route path='/project_management/update_project/:projectId' render={(props) => <UpdateProject {...props} />} />
+                    <Route path='/project_management/info/:projectId' render={(props) => <ProjectDetails {...props} />} />
+                    <Route path='/project_management/all_projects' render={(props) => <AllProjects {...props} />} />
+                    <Route path='/project_management/active_projects' render={(props) => <ActiveProjects {...props} />} />
+                    <Route path='/project_management/inActive_projects' render={(props) => <InActiveProjects {...props} />} />
+                    <Route path='/project_management/assign_project' render={(props) => <AssignProject {...props} />} />
 
-                    <Redirect to='/employee_tracker' />
+                    <Redirect to='/project_management' />
                 </Switch>
             </div>
         );

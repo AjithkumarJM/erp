@@ -20,11 +20,9 @@ export default class ClientManagementHome extends Component {
 
     handleNavigation = () => {
         const { location: { pathname }, history } = this.props;
-        const { role_id } = userInfo;
 
         pathname === '/client_management/' || pathname === '/client_management' ?
-            role_id === 3 ? history.push('/client_management/active_clients') : history.push('/client_management/clients')
-            : null
+            history.push('/client_management/all_clients') : null
     }
 
     renderNavLinks = () => {
