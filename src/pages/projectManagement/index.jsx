@@ -12,8 +12,6 @@ import InActiveProjects from './inActiveProjects';
 import ProjectDetails from './projectDetails';
 import AssignProject from './assignProject';
 
-import { userInfo } from '../../const';
-
 export default class ProjectManagementHome extends Component {
 
     componentDidMount = () => this.handleNavigation()
@@ -22,20 +20,18 @@ export default class ProjectManagementHome extends Component {
 
     handleNavigation = () => {
         const { location: { pathname }, history } = this.props;
-        const { role_id } = userInfo;
 
         pathname === '/project_management/' || pathname === '/project_management' ?
             history.push('/project_management/all_projects') : null
     }
 
     renderNavLinks = () => {
-        const { role_id } = userInfo;
         const { location: { pathname } } = this.props;
 
         return (
             <div>
                 {
-                    role_id === 3 && (pathname === '/project_management/all_projects' || pathname === '/project_management/active_projects' || pathname === '/project_management/inActive_projects') ?
+                    pathname === '/project_management/all_projects' || pathname === '/project_management/active_projects' || pathname === '/project_management/inActive_projects' ?
                         <span>
                             <Col md={12} className="page-header">
                                 <h2>Project Management</h2>

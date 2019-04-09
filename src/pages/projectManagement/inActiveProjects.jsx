@@ -22,7 +22,7 @@ class EmployeeTracker extends Component {
         const { role_id } = userInfo;
         const { getInactiveProjects } = this.props;
 
-        if (role_id === 3) getInactiveProjects();
+        getInactiveProjects();
     }
 
     formatDate = date => typeof (date == 'string') ? moment(date).format('YYYY/MM/DD') : date

@@ -21,7 +21,7 @@ class AllProjects extends Component {
         const { role_id } = userInfo;
         const { getAllProjects } = this.props;
 
-        if (role_id === 3) getAllProjects();
+        getAllProjects();
     }
 
     formatDate = date => typeof (date == 'string') ? moment(date).format('YYYY/MM/DD') : date

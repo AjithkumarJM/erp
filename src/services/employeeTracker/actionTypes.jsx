@@ -41,7 +41,13 @@ const inActiveEmployeesType = {
     FAIL: 'INACTIVE_EMPLOYEES_FAIL'
 }
 
+const allEmployeeInfoByIdType = {
+    REQ: 'ALL_EMPLOYEE_BY_ID_REQ',
+    RES: 'ALL_EMPLOYEE_BY_ID_RES',
+    FAIL: 'ALL_EMPLOYEE_BY_ID_FAIL'
+}
+
 export {
     allEmployeeInfoType, employeeByIdType, systemRoleType,
-    inActiveEmployeesType, reportingToListType, designationListType, prevEmpIdType
+    inActiveEmployeesType, reportingToListType, designationListType, prevEmpIdType, allEmployeeInfoByIdType
 }

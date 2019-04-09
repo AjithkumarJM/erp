@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Timeline, TimelineEvent } from 'react-event-timeline';
 import moment from 'moment';
 import Loader from 'react-loader-advanced';
 
-import { spinner, alertOptions, userInfo, tableOptions } from '../../const';
+import { spinner } from '../../const';
 import { getAssetById } from '../../services/assetManagement';
 
 class CurrentAssets extends Component {
@@ -31,7 +30,7 @@ class CurrentAssets extends Component {
 
         let timeline = previousAssignedAsset.map((data, index) => {
             return (
-                <article className="timeline-entry mt-3">
+                <article className="timeline-entry mt-3" key={index}>
                     <div className="timeline-entry-inner">
                         <time className="timeline-time" datetime="2014-01-10T03:45">Released On<span>{this.formatDate(data.released_on)}</span> <span>{moment(data.released_on).format('dddd')}</span></time>
                         <div className="timeline-icon">

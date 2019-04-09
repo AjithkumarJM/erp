@@ -1,4 +1,6 @@
-import { commonEmployeesType } from './actionTypes';
 import API_CALL from '..';
+import { commonEmployeesType } from './actionTypes';
 
-export const getCommonEmployeeInfo = () => API_CALL('get', 'get/common/employee/details', null, commonEmployeesType)
+const getCommonEmployeeInfo = () => API_CALL('get', 'get/common/employee/details', null, commonEmployeesType)
+
+export { getCommonEmployeeInfo };

@@ -6,7 +6,7 @@ import Loader from 'react-loader-advanced';
 import { Col } from 'reactstrap';
 import _ from 'lodash';
 
-import { getEmployeesInfo } from '../../services/employeeTracker';
+import { getEmployeesInfoById } from '../../services/employeeTracker';
 import { userInfo, spinner, tableOptions } from '../../const'
 
 class EmployeeTracker extends Component {
@@ -19,9 +19,9 @@ class EmployeeTracker extends Component {
 
     componentWillMount = () => {
         const { role_id } = userInfo;
-        const { getEmployeesInfo } = this.props;
+        const { getEmployeesInfoById } = this.props;
 
-        if (role_id === 3) getEmployeesInfo();
+        getEmployeesInfoById(role_id);
     }
 
     formatDate = date => typeof (date == 'string') ? moment(date).format('YYYY/MM/DD') : date
@@ -31,7 +31,7 @@ class EmployeeTracker extends Component {
     generateName = (row, cell) => <Link to={`/employee_tracker/info/${cell.id}`}>{`${cell.first_name} ${cell.last_name}`}</Link>
 
     renderTable = () => {
-        const { data } = this.props.allEmployeeInfo.response;
+        const { data } = this.props.allEmployeeInfoById.response;
         const { role_id } = userInfo;
 
         return (
@@ -49,7 +49,7 @@ class EmployeeTracker extends Component {
     }
 
     render() {
-        const { allEmployeeInfo: { requesting } } = this.props;
+        const { allEmployeeInfoById: { requesting } } = this.props;
 
         if (requesting) return <Loader show={true} message={spinner} />
         else {
@@ -67,8 +67,8 @@ class EmployeeTracker extends Component {
     }
 }
 
-const mapStateToProps = ({ userInformation, allEmployeeInfo }) => {
-    return { userInformation, allEmployeeInfo };
+const mapStateToProps = ({ allEmployeeInfoById }) => {
+    return { allEmployeeInfoById };
 }
 
-export default connect(mapStateToProps, { getEmployeesInfo })(EmployeeTracker);
+export default connect(mapStateToProps, { getEmployeesInfoById })(EmployeeTracker);

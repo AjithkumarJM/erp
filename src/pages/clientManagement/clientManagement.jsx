@@ -18,10 +18,9 @@ class ClientManagement extends Component {
     }
 
     componentWillMount = () => {
-        const { role_id } = userInfo;
         const { getEmployeesInfo } = this.props;
 
-        if (role_id === 3) getEmployeesInfo();
+        getEmployeesInfo();
     }
 
     formatDate = date => typeof (date == 'string') ? moment(date).format('YYYY/MM/DD') : date

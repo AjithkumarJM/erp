@@ -10,7 +10,6 @@ import UpdateClient from './updateClient';
 import ActiveClients from './activeClients';
 import AllClients from './allClients';
 import ClientDetails from './clientDetails';
-import { userInfo } from '../../const';
 
 export default class ClientManagementHome extends Component {
 
@@ -26,13 +25,12 @@ export default class ClientManagementHome extends Component {
     }
 
     renderNavLinks = () => {
-        const { role_id } = userInfo;
         const { location: { pathname } } = this.props;
 
         return (
             <div>
                 {
-                    role_id === 3 && (pathname === '/client_management/active_clients' || pathname === '/client_management/all_clients') ?
+                    pathname === '/client_management/active_clients' || pathname === '/client_management/all_clients' ?
                         <span>
                             <Col md={12} className="page-header">
                                 <h2>Client Management</h2>

@@ -22,7 +22,7 @@ class ActiveProjects extends Component {
         const { role_id } = userInfo;
         const { getActiveProjects } = this.props;
 
-        if (role_id === 3) getActiveProjects();
+        getActiveProjects();
     }
 
     formatDate = date => typeof (date == 'string') ? moment(date).format('YYYY/MM/DD') : date

@@ -1,6 +1,6 @@
 import {
     allEmployeeInfoType, employeeByIdType, systemRoleType,
-    reportingToListType, designationListType, prevEmpIdType, inActiveEmployeesType
+    reportingToListType, designationListType, prevEmpIdType, inActiveEmployeesType, allEmployeeInfoByIdType
 } from './actionTypes';
 
 const initialState = {
@@ -37,4 +37,6 @@ const previousEmpId = (state = initialState, action) => reducer(state, action, p
 
 const inActiveEmployees = (state = initialState, action) => reducer(state, action, inActiveEmployeesType);
 
-export { allEmployeeInfo, employeeById, systemRoles, reportingToList, designationList, previousEmpId, inActiveEmployees }
+const allEmployeeInfoById = (state = initialState, action) => reducer(state, action, allEmployeeInfoByIdType);
+
+export { allEmployeeInfo, employeeById, systemRoles, reportingToList, designationList, previousEmpId, inActiveEmployees, allEmployeeInfoById }

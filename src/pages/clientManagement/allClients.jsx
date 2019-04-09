@@ -20,7 +20,7 @@ class AllClients extends Component {
         const { role_id } = userInfo;
         const { getAllClients } = this.props;
 
-        if (role_id === 3) getAllClients();
+        getAllClients();
     }
 
     renderupdate = (row, { client_id }) => <Link to={`/client_management/update_client/${client_id}`} className="btn btn-ems-ternary btn-sm mr-1">Update</Link>
@@ -30,7 +30,7 @@ class AllClients extends Component {
     renderTable = () => {
         const { data } = this.props.allClients.response;
         const { role_id } = userInfo;
-        
+
         return (
             <BootstrapTable data={data} maxHeight='500' version='4' options={tableOptions} ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
                 <TableHeaderColumn isKey dataField='client_name' dataAlign="center" dataFormat={this.generateName} searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>CLIENT NAME</TableHeaderColumn>
