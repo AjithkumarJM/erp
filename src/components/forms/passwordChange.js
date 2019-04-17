@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Field, reduxForm } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import Loader from 'react-loader-advanced';
 import AlertContainer from 'react-alert'
+import FormField from '../../const/form-field';
+import { validator } from '../../const/form-field/validator';
 
 import { spinner, alertOptions, userInfo } from '../../const';
 import API_CALL from '../../services';
@@ -14,29 +16,6 @@ class ChangePassword extends Component {
             loginError: false,
             loader: false
         }
-    }
-
-    renderField = field => {
-        const { meta: { touched, error }, usage, input, placeholder } = field;
-        const childClassName = `form-control form-control-sm ${touched && error ? 'is-invalid' : ''}`
-
-        return (
-            < div className='form-group row'>
-                <label className=" col-sm-5 col-form-label col-form-label-sm">{field.label}</label>
-                <div className='col-sm-7'>
-                    <input
-                        disabled={usage}
-                        className={childClassName}
-                        type="password"
-                        placeholder={placeholder}
-                        {...input}
-                    />
-                    <div className="text-help">
-                        {touched && error ? <div className='text-danger'>{error} <span ><i className='fa fa-exclamation-circle' /></span></div> : ''}
-                    </div>
-                </div >
-            </div>
-        );
     }
 
     renderLoginError = () => {
@@ -75,6 +54,7 @@ class ChangePassword extends Component {
     render() {
         const { handleSubmit, pristine, submitting, reset } = this.props;
         const { loader, modal } = this.state;
+        const { required } = validator;
 
         return (
             <div>
@@ -82,32 +62,32 @@ class ChangePassword extends Component {
                 <AlertContainer ref={a => this.msg = a} {...alertOptions} />
                 <form className="row">
                     <div className="col-md-12">
-                        <Field
+                        <FormField
                             label='Current Password'
                             type="password"
                             name="oldpassword"
                             placeholder="Enter Current Password"
-                            component={this.renderField}
+                            validate={[required]}
                         />
                     </div>
 
                     <div className='col-md-12'>
-                        <Field
+                        <FormField
                             label='New Password'
                             type="password"
                             name="new_password"
                             placeholder="Enter New Password"
-                            component={this.renderField}
+                            validate={[required]}
                         />
                     </div>
 
                     <div className='col-md-12'>
-                        <Field
+                        <FormField
                             label='Confirm Password'
                             type="password"
                             name="confirm_password"
                             placeholder="Confirm Password"
-                            component={this.renderField}
+                            validate={[required]}
                         />
                     </div>
                 </form >
@@ -126,21 +106,9 @@ class ChangePassword extends Component {
 function validate(values) {
     const errors = {};
 
-    if (!values.oldpassword) {
-        errors.oldpassword = "Enter Current Password"
-    }
-
-    if (!values.new_password) {
-        errors.new_password = "Enter New Password"
-    }
-
-    if (!values.confirm_password) {
-        errors.confirm_password = "Enter Confirm Password"
-    }
-
     if (values.new_password !== values.confirm_password) {
         errors.confirm_password = "Confirm Password does not match"
-    } else { }
+    }
 
     if (values.new_password) {
         if (values.new_password.length < 8) {

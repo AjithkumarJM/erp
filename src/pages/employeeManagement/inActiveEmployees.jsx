@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Col, Row } from 'reactstrap';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { Col } from 'reactstrap';
 import Loader from 'react-loader-advanced';
 import _ from 'lodash';
 
 import { getInactiveEmployees } from '../../services/employeeTracker';
 import { userInfo, spinner, tableOptions } from '../../const'
+import maleLogo from '../../assets/images/userMaleLogo.png';
+import femaleLogo from '../../assets/images/userFemaleLogo.png';
 
 class EmployeeTracker extends Component {
     constructor(props) {
@@ -29,7 +31,17 @@ class EmployeeTracker extends Component {
 
     renderupdate = (row, cell) => <Link to={`/employee_tracker/update_employee/${cell.id}`} className="btn btn-ems-ternary btn-sm mr-1">Update</Link>
 
-    generateName = (row, cell) => <Link to={`/employee_tracker/info/${cell.id}`}>{`${cell.first_name} ${cell.last_name}`}</Link>
+    generateName = (row, { gender, id, first_name, last_name, designation }) => {
+        return (
+            <Row>
+                <Col md={3} ><img src={gender === "Male" ? maleLogo : femaleLogo} alt='avatar' height='40' width='40' /></Col>
+                <Col md={9} className='text-left'>
+                    <div >{`${first_name} ${last_name}`}</div>
+                    <p className='text-muted'>Designation</p>
+                </Col>
+            </Row>
+        )
+    }
 
     renderInactiveEmployees = () => {
         const { data } = this.props.inActiveEmployees.response;

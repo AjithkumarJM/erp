@@ -8,6 +8,8 @@ import _ from 'lodash';
 
 import { getEmployeesInfoById } from '../../services/employeeTracker';
 import { userInfo, spinner, tableOptions } from '../../const'
+import maleLogo from '../../assets/images/userMaleLogo.png';
+import femaleLogo from '../../assets/images/userFemaleLogo.png';
 
 class EmployeeTracker extends Component {
     constructor(props) {
@@ -28,7 +30,17 @@ class EmployeeTracker extends Component {
 
     renderupdate = (row, cell) => <Link to={`/employee_tracker/update_employee/${cell.id}`} className="btn btn-ems-ternary btn-sm mr-1">Update</Link>
 
-    generateName = (row, cell) => <Link to={`/employee_tracker/info/${cell.id}`}>{`${cell.first_name} ${cell.last_name}`}</Link>
+    generateName = (row, { gender, id, first_name, last_name, designation }) => {
+        return (
+            <Row>
+                <Col md={3} ><img src={gender === "Male" ? maleLogo : femaleLogo} alt='avatar' height='40' width='40' /></Col>
+                <Col md={9} className='text-left'>
+                    <Link to={`/employee_tracker/info/${id}`}>{`${first_name} ${last_name}`}</Link>
+                    <p>{designation}</p>
+                </Col>
+            </Row>
+        )
+    }
 
     renderTable = () => {
         const { data } = this.props.allEmployeeInfoById.response;
@@ -36,7 +48,7 @@ class EmployeeTracker extends Component {
 
         return (
             <BootstrapTable data={data} maxHeight='500' version='4' options={tableOptions} ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
-                <TableHeaderColumn isKey dataField='first_name' dataAlign="center" dataFormat={this.generateName} searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>EMPLOYEE NAME</TableHeaderColumn>
+                <TableHeaderColumn isKey dataField='first_name' width='20%' dataAlign="center" dataFormat={this.generateName} searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>EMPLOYEE NAME</TableHeaderColumn>
                 <TableHeaderColumn dataField='id' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>EMPLOYEE ID</TableHeaderColumn>
                 <TableHeaderColumn dataField='date_of_joining' dataAlign="center" dataSort dataFormat={this.formatDate}>DATE OF JOINING</TableHeaderColumn>
                 <TableHeaderColumn dataField='date_of_birth' dataAlign="center" dataSort dataFormat={this.formatDate}>DATE OF BIRTH</TableHeaderColumn>
