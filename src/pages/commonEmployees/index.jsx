@@ -21,7 +21,7 @@ class commonEmployees extends Component {
             <Row>
                 <Col md={3} ><img src={gender === "Male" ? maleLogo : femaleLogo} alt='avatar' height='35' width='35' /></Col>
                 <Col md={9} className='text-left'>
-                    <div >{`${first_name} ${last_name}`}</div>
+                    <div className='font-weight-bold'>{`${first_name} ${last_name}`}</div>
                     <p className='text-muted'>{designation}</p>
                 </Col>
             </Row>
@@ -33,7 +33,7 @@ class commonEmployees extends Component {
 
         return (
             <BootstrapTable data={data} options={tableOptions} ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
-                <TableHeaderColumn width='20%' dataAlign="center" dataField='first_name' isKey searchable={false} filter={{ type: 'TextFilter', delay: 1000 }} dataFormat={this.generateName}>EMPLOYEE NAME</TableHeaderColumn>
+                <TableHeaderColumn width='22%' dataAlign="center" dataField='first_name' isKey searchable={false} filter={{ type: 'TextFilter', delay: 1000 }} dataFormat={this.generateName}>EMPLOYEE NAME</TableHeaderColumn>
                 <TableHeaderColumn dataAlign="center" dataField='blood_group' searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>BLOOD GROUP</TableHeaderColumn>
                 <TableHeaderColumn dataAlign="center" dataField='medical_insurance_no'>MEDICAL INSURANCE</TableHeaderColumn>
                 <TableHeaderColumn dataAlign="center" dataField='emergency_contact_no'>EMERGENCY CONTACT #</TableHeaderColumn>

@@ -1,110 +1,118 @@
+$btn-bg-primary: #51b5df;
+$btn-bg-secondary: #1ea8de;
+$background-bg: #f2f5f7;
+$text-primary: #4f5663;
+
 * {
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
 }
 
 body {
-    font-size: 12px;
-    font-weight: 400;
-    background: #f4f7f9;
-    font-family: "Lato  ", sans-serif;
-    color: #4f5663;
+  font-size: 12px;
+  font-weight: 400;
+  background: $background-bg;
+  font-family: "Lato  ", sans-serif;
+  // color: #4f5663;
 }
 
 .secondary-text {
-    color: #4f5663;
+  color: $text-primary;
 }
 
 thead {
-    background-color: #eef1f5;
-    color: #808b95 !important;
-    text-align: center;
-    border-bottom: 3px solid #fff !important;
+  background-color: #eef1f5;
+  color: #808b95 !important;
+  text-align: center;
+  border-bottom: 3px solid #fff !important;
 }
 
 td {
-    background-color: white;
-    color: #4f5663;
+  background-color: white;
+  color: #476374 !important;
 }
 
 .dropdown-menu-right {
-    top: 12px !important;
+  top: 12px !important;
 }
 
 // scrollbar start
 
 ::-webkit-scrollbar {
-    width: 4px;
-    /* for vertical scrollbars */
-    height: 4px;
-    /* for horizontal scrollbars */
+  width: 4px;
+  /* for vertical scrollbars */
+  height: 4px;
+  /* for horizontal scrollbars */
 }
 
 ::-webkit-scrollbar-track {
-    border-radius: 2rem;
-    background: rgba(0, 0, 0, 0.1);
+  border-radius: 2rem;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 ::-webkit-scrollbar-thumb {
-    border-radius: 2rem;
-    background: #2f2d2f4d;
+  border-radius: 2rem;
+  background: #2f2d2f4d;
 }
 
 // scrollbar ends
 
 ::-webkit-input-placeholder {
-    /* WebKit browsers */
-    /* color:    red; */
-    opacity: 0.6 !important;
+  /* WebKit browsers */
+  /* color:    red; */
+  opacity: 0.6 !important;
 }
 
 .btn-ems-navigate {
-    background: #73818fd6;
-    color: white;
+  background: #73818fd6;
+  color: white;
 
-    &:hover {
-        color: #fff;
-    }
+  &:focus {
+    box-shadow: none !important;
+  }
+
+  &:hover {
+    color: #fff;
+  }
 }
 
 .btn-ems-primary {
-    background-color: rgb(40, 177, 254);
-    color: #fff;
+  background-color: rgb(40, 177, 254);
+  color: #fff;
+  
+  &:focus {
+    box-shadow: none !important;
+  }
 }
 
 .btn-ems-ternary {
-    background-color: #76797d !important;
-    color: white !important;
+  background: linear-gradient(to top left, $btn-bg-primary, $btn-bg-secondary);
+  color: white !important;
 
-    &:focus {
-        box-shadow: none !important;
-    }
-
-    &:hover {
-        color: white;
-        transition: cubic-bezier(0.075, 0.82, 0.165, 1);
-    }
+  &:focus {
+    box-shadow: none !important;
+  }
 }
 
 .btn-secondary {
-    &.active,
-    &:active {
-        color: #292b2c;
-        background-color: white;
-        border-radius: 0 !important;
-    }
+  &.active,
+  &:active {
+    color: #292b2c;
+    background-color: white;
+    border-radius: 0 !important;
+  }
 }
 
-// table styling 
+// table styling
 
 .table td {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 .table-bordered {
-    td,
-    th {
-        border: none;
-    }
+  td,
+  th {
+    border: none;
+  }
 }
