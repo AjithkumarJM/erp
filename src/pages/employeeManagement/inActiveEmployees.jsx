@@ -36,7 +36,7 @@ class EmployeeTracker extends Component {
             <Row>
                 <Col md={3} ><img src={gender === "Male" ? maleLogo : femaleLogo} alt='avatar' height='40' width='40' /></Col>
                 <Col md={9} className='text-left'>
-                    <div >{`${first_name} ${last_name}`}</div>
+                    <div className='font-weight-bold'>{`${first_name} ${last_name}`}</div>
                     <p className='text-muted'>Designation</p>
                 </Col>
             </Row>
@@ -47,7 +47,7 @@ class EmployeeTracker extends Component {
         const { data } = this.props.inActiveEmployees.response;
 
         return (
-            <BootstrapTable data={data} maxHeight='500' version='4' options={tableOptions} ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
+            <BootstrapTable data={data} maxHeight='500' version='4' options={tableOptions} ignoreSinglePage pagination >
                 <TableHeaderColumn isKey dataField='first_name' dataAlign="center" dataFormat={this.generateName} searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>EMPLOYEE NAME</TableHeaderColumn>
                 <TableHeaderColumn dataField='id' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>EMPLOYEE ID</TableHeaderColumn>
                 <TableHeaderColumn dataField='date_of_joining' dataAlign="center" dataSort dataFormat={this.formatDate}>DATE OF JOINING</TableHeaderColumn>

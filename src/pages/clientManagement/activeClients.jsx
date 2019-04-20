@@ -34,7 +34,7 @@ class ActiveClients extends Component {
         const { role_id } = userInfo;
 
         return (
-            <BootstrapTable data={data} maxHeight='500' version='4' options={tableOptions} ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
+            <BootstrapTable data={data} maxHeight='500' version='4' options={tableOptions} ignoreSinglePage pagination >
                 <TableHeaderColumn isKey dataField='client_name' dataAlign="center" dataFormat={this.generateName} searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>CLIENT NAME</TableHeaderColumn>
                 <TableHeaderColumn dataField='client_id' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>CLIENT ID</TableHeaderColumn>
                 <TableHeaderColumn dataField='client_type_name' dataAlign="center" dataSort>CLIENT TYPE</TableHeaderColumn>

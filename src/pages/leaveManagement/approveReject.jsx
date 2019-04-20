@@ -43,7 +43,7 @@ class ApproveReject extends Component {
 
     leaveDetails = () => {
         return (
-            <BootstrapTable data={this.state.currentLeaveDetail} maxHeight='500' options={tableOptions} ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
+            <BootstrapTable data={this.state.currentLeaveDetail} maxHeight='500' options={tableOptions} ignoreSinglePage pagination >
                 <TableHeaderColumn isKey dataField='first_name' dataAlign="center" dataFormat={this.generateName}>EMPLOYEE NAME</TableHeaderColumn>
                 <TableHeaderColumn dataField='employee_id' dataAlign="center" >EMPLOYEE ID</TableHeaderColumn>
                 <TableHeaderColumn dataField='type_name' dataAlign="center" dataSort>LEAVE TYPE</TableHeaderColumn>
@@ -58,7 +58,7 @@ class ApproveReject extends Component {
         const { data } = this.props.pendingLeaveHistory.response;
 
         return (
-            <BootstrapTable data={data} options={tableOptions} maxHeight='500' version='4' ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
+            <BootstrapTable data={data} options={tableOptions} maxHeight='500' version='4' ignoreSinglePage pagination >
                 <TableHeaderColumn isKey dataField='first_name' dataAlign="center" dataFormat={this.generateName} searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>EMPLOYEE NAME</TableHeaderColumn>
                 <TableHeaderColumn dataField='employee_id' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>EMPLOYEE ID</TableHeaderColumn>
                 <TableHeaderColumn dataField='type_name' dataAlign="center" filterFormatted

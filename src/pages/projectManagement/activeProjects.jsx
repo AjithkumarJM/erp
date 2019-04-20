@@ -38,7 +38,7 @@ class ActiveProjects extends Component {
         const { role_id } = userInfo;
 
         return (
-            <BootstrapTable data={data} maxHeight='500' version='4' options={tableOptions} ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
+            <BootstrapTable data={data} maxHeight='500' version='4' options={tableOptions} ignoreSinglePage pagination >
                 <TableHeaderColumn dataField='projectName' dataAlign="center" dataFormat={this.generateName} searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>PROJECT NAME</TableHeaderColumn>
                 <TableHeaderColumn isKey dataField='projectId' dataAlign="center" searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>PROJECT ID</TableHeaderColumn>
                 <TableHeaderColumn dataField='startDate' dataAlign="center" dataSort dataFormat={this.formatDate}>START DATE</TableHeaderColumn>

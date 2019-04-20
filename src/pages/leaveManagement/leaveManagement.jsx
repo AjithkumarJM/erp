@@ -40,7 +40,7 @@ class LeaveManagement extends Component {
         const { data } = this.props.upcomingHolidayList.response;
 
         return (
-            <BootstrapTable data={data} maxHeight='500' options={tableOptions} version='4' trClassName={this.rowClassNameFormat}>
+            <BootstrapTable data={data} maxHeight='500' options={tableOptions} version='4' >
                 <TableHeaderColumn isKey dataField='holiday_name' dataAlign="center">HOLIDAY NAME</TableHeaderColumn>
                 <TableHeaderColumn dataField='holiday_date' dataFormat={this.renderDates} dataAlign="center">DATE</TableHeaderColumn>
             </BootstrapTable>

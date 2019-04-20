@@ -203,7 +203,7 @@ class LeaveManagement extends Component {
         };
 
         return (
-            <BootstrapTable data={this.state.holidaylist} maxHeight='200' options={options} version='4' trClassName={this.rowClassNameFormat}>
+            <BootstrapTable data={this.state.holidaylist} maxHeight='200' options={options} version='4' >
                 <TableHeaderColumn isKey dataField='holiday_name' dataAlign="center">Holiday Name</TableHeaderColumn>
                 <TableHeaderColumn dataField='holiday_date' dataFormat={this.renderDates} dataAlign="center">Date</TableHeaderColumn>
                 <TableHeaderColumn dataField='day' dataAlign="center">Day</TableHeaderColumn>
@@ -228,7 +228,7 @@ class LeaveManagement extends Component {
         };
 
         return (
-            <BootstrapTable data={this.state.leavebalance} version='4' options={options} trClassName={this.rowClassNameFormat}>
+            <BootstrapTable data={this.state.leavebalance} version='4' options={options} >
                 <TableHeaderColumn isKey dataField='type_name' dataAlign="center">Leave Type</TableHeaderColumn>
                 <TableHeaderColumn dataField='no_of_days' dataFormat={this.renderDates} dataAlign="center">Balance</TableHeaderColumn>
             </BootstrapTable>

@@ -32,7 +32,7 @@ class commonEmployees extends Component {
         const { data } = this.props.commonEmployeesInfo.response;
 
         return (
-            <BootstrapTable data={data} options={tableOptions} ignoreSinglePage pagination trClassName={this.rowClassNameFormat}>
+            <BootstrapTable data={data} options={tableOptions} ignoreSinglePage pagination >
                 <TableHeaderColumn width='22%' dataAlign="center" dataField='first_name' isKey searchable={false} filter={{ type: 'TextFilter', delay: 1000 }} dataFormat={this.generateName}>EMPLOYEE NAME</TableHeaderColumn>
                 <TableHeaderColumn dataAlign="center" dataField='blood_group' searchable={false} filter={{ type: 'TextFilter', delay: 1000 }}>BLOOD GROUP</TableHeaderColumn>
                 <TableHeaderColumn dataAlign="center" dataField='medical_insurance_no'>MEDICAL INSURANCE</TableHeaderColumn>
