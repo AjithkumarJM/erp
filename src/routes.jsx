@@ -2,7 +2,6 @@
 import Dashboard from './pages/dashboard';
 import EmployeeTrackerHome from './pages/employeeManagement';
 import LeaveManagementHome from './pages/leaveManagement/index';
-import HolidayList from './pages/holidayList';
 import commonEmployees from './pages/commonEmployees';
 import AssetManagementHome from './pages/assetManagement';
 import ClientManagementHome from './pages/clientManagement';
@@ -15,8 +14,7 @@ const routes = [
 
   { path: '/employee_tracker', name: 'employee_tracker', component: EmployeeTrackerHome },
 
-  { path: '/leave_management', name: 'leave_management', component: LeaveManagementHome },
-  { path: '/holiday_list', name: 'holiday_list', component: HolidayList },
+  { path: '/leave_management', name: 'leave_management', component: LeaveManagementHome },  
 
   { path: '/common_employees_info', name: 'common_employees_info', component: commonEmployees },
 

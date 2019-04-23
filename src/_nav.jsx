@@ -17,10 +17,6 @@ export default {
       url: '/asset_management',
       icon: 'fa fa-building',
     }, {
-      name: 'Holilday List',
-      url: '/holiday_list',
-      icon: 'fa fa-list',
-    }, {
       name: "JAISHUians",
       url: '/common_employees_info',
       icon: 'fa fa-user-friends',

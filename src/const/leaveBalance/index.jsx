@@ -38,7 +38,7 @@ const LeaveBalance = ({ leaveBalance, color }) => {
     })
 
     return (
-        <div className='text-center'>
+        <div className='text-center'>            
             <div className="h5">
                 <span className='font-weight-normal secondary-text'>Leave Balance</span> | <span className=' p-2 mt-1 badge badge-secondary'>WFH Taken: {WFHValue}</span> | <span className=' p-2 mt-1 badge badge-secondary'>LOP: {LOPValue}</span>
             </div>

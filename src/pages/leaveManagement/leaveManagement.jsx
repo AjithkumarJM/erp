@@ -8,7 +8,7 @@ import moment from 'moment';
 import Loader from 'react-loader-advanced';
 import _ from 'lodash';
 
-import { getLeaveTypes, getLeaveBalance, alertOptions, postApplyLeave, getUpcomingHolidayList } from '../../services/leaveManagement';
+import { getLeaveTypes, getLeaveBalance, alertOptions, postApplyLeave, getUpcomingHolidayList, getHolidayList } from '../../services/leaveManagement';
 import { userInfo, spinner, tableOptions } from '../../const';
 import { validator } from '../../const/form-field/validator';
 import FormField from '../../const/form-field';
@@ -21,29 +21,44 @@ class LeaveManagement extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loader: false
+            loader: false,
+            tableData: []
         }
     }
 
     componentWillMount = () => {
-        const { getLeaveTypes, getLeaveBalance, getUpcomingHolidayList } = this.props;
+        const { getLeaveTypes, getLeaveBalance, getUpcomingHolidayList, getHolidayList } = this.props;
         const { employee_id } = userInfo;
 
         getLeaveTypes();
+        getHolidayList();
         getLeaveBalance(employee_id);
         getUpcomingHolidayList()
     }
 
+    componentWillReceiveProps({ upcomingHolidayList: { response: { data } } }) {
+        this.setState({ tableData: data })
+    }
+
+
     renderDates = date => `${moment(date).format('ddd, MMM Do YY')}`
 
     holidayListtable = () => {
-        const { data } = this.props.upcomingHolidayList.response;
+        const { upcomingHolidayList: { response: { data } }, holidayList: { response } } = this.props;
+        const { tableData } = this.state;
 
         return (
-            <BootstrapTable data={data} maxHeight='500' options={tableOptions} version='4' >
-                <TableHeaderColumn isKey dataField='holiday_name' dataAlign="center">HOLIDAY NAME</TableHeaderColumn>
-                <TableHeaderColumn dataField='holiday_date' dataFormat={this.renderDates} dataAlign="center">DATE</TableHeaderColumn>
-            </BootstrapTable>
+            <div>
+                <div className='mb-2 text-center'>
+                    <button className='btn btn-outline-info btn-sm mr-1' onClick={() => this.setState({ tableData: data })}>Upcoming Holidays</button>
+                    <button className='btn btn-outline-info btn-sm' onClick={() => this.setState({ tableData: response.data })}>Total Holidays</button>
+                </div>
+
+                <BootstrapTable data={tableData} maxHeight='500' options={tableOptions} version='4' >
+                    <TableHeaderColumn isKey dataField='holiday_name' dataAlign="center">HOLIDAY NAME</TableHeaderColumn>
+                    <TableHeaderColumn dataField='holiday_date' dataFormat={this.renderDates} dataAlign="center">DATE</TableHeaderColumn>
+                </BootstrapTable>
+            </div>
         )
     }
 
@@ -164,8 +179,9 @@ class LeaveManagement extends Component {
 const selector = formValueSelector('leaveManagementForm')
 
 const mapStateToProps = state => {
-    let { leaveBalance, leaveTypes, upcomingHolidayList } = state;
     const { gender } = userInfo;
+
+    let { leaveBalance, leaveTypes, upcomingHolidayList, holidayList } = state;
     let filteredLeaveType = _.filter(leaveTypes.response.data, type => type.leavetype_id !== 3);
     let filteredLeavebalance = _.filter(leaveBalance.response.data, type => type.leavetype_id !== 3);
 
@@ -175,6 +191,7 @@ const mapStateToProps = state => {
         leaveBalance: gender === 'Male' ? filteredLeavebalance : leaveBalance.response.data,
         leaveTypes: gender === 'Male' ? filteredLeaveType : leaveTypes.response.data,
         formValues,
+        holidayList,
         upcomingHolidayList
     }
 }
@@ -186,4 +203,5 @@ export default connect(mapStateToProps, {
     getLeaveBalance,
     postApplyLeave,
     getUpcomingHolidayList,
+    getHolidayList
 })(LeaveManagement);
