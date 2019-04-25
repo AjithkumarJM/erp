@@ -22,7 +22,8 @@ class LeaveManagement extends Component {
         super(props);
         this.state = {
             loader: false,
-            tableData: []
+            tableData: [],
+            toggleBtnStyle: false
         }
     }
 
@@ -45,13 +46,13 @@ class LeaveManagement extends Component {
 
     holidayListtable = () => {
         const { upcomingHolidayList: { response: { data } }, holidayList: { response } } = this.props;
-        const { tableData } = this.state;
+        const { tableData, toggleBtnStyle } = this.state;
 
         return (
             <div>
                 <div className='mb-2 text-center'>
-                    <button className='btn btn-outline-info btn-sm mr-1' onClick={() => this.setState({ tableData: data })}>Upcoming Holidays</button>
-                    <button className='btn btn-outline-info btn-sm' onClick={() => this.setState({ tableData: response.data })}>Total Holidays</button>
+                    <button className={`btn ${!toggleBtnStyle ? 'btn-primary' : 'btn-outline-primary'} btn-sm mr-1`} id="btn-toggle" onClick={() => this.setState({ tableData: data, toggleBtnStyle: !toggleBtnStyle })}>Upcoming Holidays</button>
+                    <button className={`btn ${!toggleBtnStyle ? 'btn-outline-primary' : 'btn-primary'} btn-sm`} id="btn-toggle" onClick={() => this.setState({ tableData: response.data, toggleBtnStyle: !toggleBtnStyle })}>Total Holidays</button>
                 </div>
 
                 <BootstrapTable data={tableData} maxHeight='500' options={tableOptions} version='4' >

@@ -124,10 +124,10 @@ class AvailableAssets extends Component {
 
             return (
                 <div className='actionBtnStyling'>
-                    <button className='btn btn-secondary float-right btn-ems-ternary btn-sm' onClick={this.toggleAssignModal}>Assign Asset
+                    <button className='btn float-right btn-ems-ternary btn-sm' onClick={this.toggleAssignModal}>Assign Asset
                 <i className='fa fa-tasks ml-2' /></button>
 
-                    <button className='btn btn-secondary float-right btn-ems-ternary btn-sm mr-1' onClick={this.toggle}>Scrap Asset
+                    <button className='btn float-right btn-ems-ternary btn-sm mr-1' onClick={this.toggle}>Scrap Asset
                 <i className='fa fa-trash ml-2' /></button>
                 </div>
             );
@@ -157,13 +157,13 @@ class AvailableAssets extends Component {
                         </ModalFooter>
                     </Modal>
 
-                    <Modal isOpen={modalAssign} toggle={this.toggleAssignModal} className={className} backdrop='static'>
-                        <ModalHeader toggle={() => {
-                            const { getAssets } = this.props;
+                    <Modal isOpen={modalAssign} toggle={this.toggleAssignModal} className={className} backdrop='static' onClosed={() => {
+                        const { getAssets } = this.props;
 
-                            this.toggleAssignModal()
-                            getAssets('AVAILABLE')
-                        }}>Assign Asset</ModalHeader>
+                        this.toggleAssignModal
+                        getAssets('AVAILABLE')
+                    }}>
+                        <ModalHeader toggle={this.toggleAssignModal}>Assign Asset</ModalHeader>
                         <ModalBody>
                             <AssignAsset assetIdList={outputValues} />
                         </ModalBody>

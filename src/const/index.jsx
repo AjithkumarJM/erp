@@ -1,7 +1,7 @@
 import React from 'react';
 import cookie from 'react-cookies';
 
-const ROOT_URL = "https://emsapi-dev.azurewebsites.net/api/v2/";
+const ROOT_URL = process.env.ROOT_URL;
 
 // loader spinner
 const spinner = <div className="lds-ripple"><div></div><div></div></div>
