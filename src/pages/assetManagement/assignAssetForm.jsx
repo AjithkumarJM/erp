@@ -6,7 +6,6 @@ import Loader from 'react-loader-advanced';
 import AlertContainer from 'react-alert'
 import { Typeahead } from 'react-bootstrap-typeahead'
 
-import { getStatusList, getTypeList, assetStatus, getAvailableAssets, getAllEmpList } from '../../actions'
 import { spinner, alertOptions } from '../../const';
 import { postAssetStatus, getAssets } from '../../services/assetManagement';
 import { getEmployeesInfo } from '../../services/employeeTracker';
@@ -134,7 +133,5 @@ export default reduxForm({
     form: 'assetStatusForm',
 })(connect(mapStateToProps, {
     getEmployeesInfo,
-    postAssetStatus, getAssets,
-
-    getStatusList, getTypeList, assetStatus, getAvailableAssets, getAllEmpList
+    postAssetStatus, getAssets
 })(AssignForm));
